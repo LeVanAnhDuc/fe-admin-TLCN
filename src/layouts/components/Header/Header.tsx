@@ -5,7 +5,7 @@ import Avatar from '@mui/material/Avatar';
 function Header() {
     return (
         <>
-            <div className="grid grid-cols-12 h-20 m-auto shadow-md p-3 gap-4">
+            <div className="grid grid-cols-12 h-20 m-auto shadow-md p-3 gap-4 bg-header">
                 {/* start logo */}
                 <Image src={logo} className="col-span-2 h-full w-32 "></Image>
                 {/* end logo */}

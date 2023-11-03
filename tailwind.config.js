@@ -17,8 +17,8 @@ module.exports = {
         },
         extend: {
             backgroundColor: {
-                header: 'white',
-                footer: '#787A91',
+                header: '#B3A492',
+                navbar: '#F5F5F5',
                 headerProfile: '#FFEEE8',
             },
             spacing: {

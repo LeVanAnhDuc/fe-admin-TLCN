@@ -4,7 +4,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 
@@ -16,6 +15,8 @@ import Receipt from '@mui/icons-material/Receipt';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardDoubleArrowLeft from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRight from '@mui/icons-material/KeyboardDoubleArrowRight';
+import config from '../../../config';
+import { Link } from 'react-router-dom';
 
 const LIST_MENU_NAVBAR = [
     {
@@ -24,6 +25,7 @@ const LIST_MENU_NAVBAR = [
             {
                 title: 'Dashboard',
                 icon: <Home />,
+                to: config.Routes.home,
             },
         ],
     },
@@ -33,10 +35,12 @@ const LIST_MENU_NAVBAR = [
             {
                 title: 'Product',
                 icon: <Inventory />,
+                to: config.Routes.listProduct,
             },
             {
                 title: 'Category',
                 icon: <Category />,
+                to: config.Routes.listCategory,
             },
         ],
     },
@@ -46,10 +50,12 @@ const LIST_MENU_NAVBAR = [
             {
                 title: 'Customer',
                 icon: <PeopleAlt />,
+                to: config.Routes.listCustomer,
             },
             {
                 title: 'Receipt',
                 icon: <Receipt />,
+                to: config.Routes.listBill,
             },
         ],
     },
@@ -69,7 +75,7 @@ const Navbar = () => {
             <div
                 className={`${
                     toggleNavbar ? 'w-[110px] sm:w-[100px]' : 'w-full sm:w-80'
-                }  h-156 shadow-md overflow-y-auto scroll-smooth hide-scrollbar pt-3`}
+                }  h-156 shadow-md overflow-y-auto scroll-smooth hide-scrollbar pt-3 bg-navbar`}
             >
                 <div className="flex justify-end pr-2 md:pr-3">
                     <Button
@@ -86,15 +92,17 @@ const Navbar = () => {
                     <List key={index} component="nav">
                         <div className="pl-5 text-gray-400 text-xs">{item.title}</div>
                         {item.children.map((item2, index2) => (
-                            <ListItem key={index2}>
-                                <ListItemButton
-                                    selected={selectElement.title === item.title && selectElement.value === index2}
-                                    onClick={() => handleChangeSelet(item.title, index2)}
-                                >
-                                    <ListItemIcon>{item2.icon}</ListItemIcon>
-                                    {!toggleNavbar && <ListItemText primary={item2.title} />}
-                                </ListItemButton>
-                            </ListItem>
+                            <Link to={item2.to}>
+                                <ListItem key={index2}>
+                                    <ListItemButton
+                                        selected={selectElement.title === item.title && selectElement.value === index2}
+                                        onClick={() => handleChangeSelet(item.title, index2)}
+                                    >
+                                        <ListItemIcon>{item2.icon}</ListItemIcon>
+                                        {!toggleNavbar && <span className="font-medium">{item2.title}</span>}
+                                    </ListItemButton>
+                                </ListItem>
+                            </Link>
                         ))}
                     </List>
                 ))}
@@ -106,7 +114,7 @@ const Navbar = () => {
                             <ListItemIcon>
                                 <Logout />
                             </ListItemIcon>
-                            {!toggleNavbar && <ListItemText primary="Logout" />}
+                            {!toggleNavbar && <span className="font-medium">Logout</span>}
                         </ListItemButton>
                     </ListItem>
                 </List>

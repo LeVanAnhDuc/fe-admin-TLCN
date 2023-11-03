@@ -12,7 +12,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
             <Header />
             <div className="flex flex-row ">
                 <Navbar />
-                <div className="w-full">{children}</div>
+                <div className="w-full p-5 h-156 overflow-y-auto scroll-smooth">{children}</div>
             </div>
         </div>
     );

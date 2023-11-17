@@ -17,6 +17,8 @@ import Search from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import config from '../../config';
+import ICategory from '../../interface/category';
+import { getAllCategoryWithPagination } from '../../apis/categoryApii';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -38,37 +40,31 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-interface ProductWishlist {
-    id: number;
-    name: string;
-    createDate: string;
-    totalProducts: number;
-}
-
-const rows: Array<ProductWishlist> = [
-    { id: 1, name: 'Name Category', createDate: '18/04/2002', totalProducts: 18 },
-    { id: 2, name: 'Name Category', createDate: '18/04/2002', totalProducts: 18 },
-    { id: 3, name: 'Name Category', createDate: '18/04/2002', totalProducts: 18 },
-    { id: 4, name: 'Name Category', createDate: '18/04/2002', totalProducts: 18 },
-    { id: 5, name: 'Name Category', createDate: '18/04/2002', totalProducts: 18 },
-    { id: 6, name: 'Name Category', createDate: '18/04/2002', totalProducts: 18 },
-    { id: 7, name: 'Name Category', createDate: '18/04/2002', totalProducts: 18 },
-];
-
 const ListCategory = () => {
     // change page
-    // const [data, setData] = useState([]); // Dữ liệu từ API
-    const [page, setPage] = useState(1); // Trang hiện tại
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [totalPages, setTotalPages] = useState(11); // Tổng số trang
+    const [data, setData] = useState<Array<ICategory>>([]); // Dữ liệu từ API
+    const [page, setPage] = useState<number>(1); // Trang hiện tại
+    const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
+    const itemsPerPage = 5;
+
+    const getAllProducts = async (pageNo: number) => {
+        try {
+            const response = await getAllCategoryWithPagination(pageNo, itemsPerPage);
+            const { content, totalPages } = response.data;
+            console.log(content);
+
+            setData(content);
+            setTotalPages(totalPages);
+        } catch (error) {
+            toast.error('Đang bảo trì quay lại sau');
+        }
+    };
 
     useEffect(() => {
-        // Gọi API để lấy dữ liệu
+        getAllProducts(page);
     }, [page]);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-        console.log(event);
-
         setPage(newPage);
     };
     return (
@@ -102,8 +98,8 @@ const ListCategory = () => {
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell>ID</StyledTableCell>
-                                <StyledTableCell align="left">Name</StyledTableCell>
-                                <StyledTableCell align="center">Create Date</StyledTableCell>
+                                <StyledTableCell align="left">Tên loại</StyledTableCell>
+                                <StyledTableCell align="center">Mô tả</StyledTableCell>
                                 <StyledTableCell align="center">Total Products</StyledTableCell>
                                 <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
                                     Actions
@@ -111,7 +107,7 @@ const ListCategory = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((item, index) => (
+                            {data.map((item, index) => (
                                 <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell component="th" scope="row">
                                         {item.id}
@@ -119,10 +115,10 @@ const ListCategory = () => {
                                     <StyledTableCell align="left">
                                         <div className="">{item.name}</div>
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{item.createDate}</StyledTableCell>
-                                    <StyledTableCell align="center">{item.totalProducts}</StyledTableCell>
+                                    <StyledTableCell align="center">{item.description}</StyledTableCell>
+                                    <StyledTableCell align="center">{}</StyledTableCell>
                                     <StyledTableCell align="center">
-                                        <Link to={config.Routes.detailCategory}>
+                                        <Link to={config.Routes.detailCategory + '#' + item.id}>
                                             <IconButton>
                                                 <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
                                             </IconButton>

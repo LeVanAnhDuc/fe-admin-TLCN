@@ -4,16 +4,16 @@ import InputText from '../../components/InputText/InputText';
 import Image from '../../components/Image';
 import config from '../../config';
 
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import AlertTitle from '@mui/material/AlertTitle';
-import { Link } from 'react-router-dom';
+
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import ICategory, { IUpdateCategory } from '../../interface/category';
+import { getCategoryByIDOrSlug, updateCategory } from '../../apis/categoryApii';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -27,72 +27,67 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-enum AlertColor {
-    Error = 'error',
-    Success = 'success',
-    Info = 'info',
-    Warning = 'warning',
-}
-interface IToast {
-    message: string;
-    alert: AlertColor;
-}
-interface IInfoCategory {
-    id: string;
-    categoryID: string;
-    name: string;
-    image: string;
-    createBy: string;
-    lastModifiedBy: string;
-    createDate: string;
-    lastModifiedDate: string;
-}
-
-const category: IInfoCategory = {
-    id: 'ID01',
-    categoryID: 'C03',
-    name: 'Giày Nam',
-    image: '',
-    createBy: 'LeVanAnhDuc',
-    createDate: '17/4/2002',
-    lastModifiedBy: 'ChauChinHua',
-    lastModifiedDate: '18/4/2002',
-};
-
 const DetailCategory = () => {
+    const navigate = useNavigate();
+    // handle get id
+    const location = useLocation();
+    const idProduct = location.hash.substring(1);
+
+    // handle get data
+    const [category, setCategory] = useState<ICategory>({}); // Dữ liệu từ API
+    const getCategory = async (id: number) => {
+        try {
+            if (idProduct && !isNaN(+idProduct)) {
+                // tồn tai ma san pham và phải là số
+                const response = await getCategoryByIDOrSlug(id);
+
+                if (response.status === 200) {
+                    setCategory(response.data);
+                    await setValue('id', response.data.id);
+                    await setValue('name', response.data.name);
+                    await setValue('createdBy', response.data.createdBy);
+                    await setValue('createdDate', response.data.createdDate);
+                    await setValue('description', response.data.description);
+                    await setValue('lastModifiedBy', response.data.lastModifiedBy);
+                    await setValue('lastModifiedDate', response.data.lastModifiedDate);
+                    await setValue('name', response.data.name);
+                    await setValue('parentId', response.data.parentId);
+                    await setValue('slug', response.data.slug);
+                } else {
+                    toast.error(response.data.message);
+                    navigate(config.Routes.listCategory);
+                }
+            } else {
+                navigate(config.Routes.listCategory);
+            }
+        } catch {
+            toast.error('Đang bảo trì');
+        }
+    };
+    useEffect(() => {
+        getCategory(+idProduct);
+    }, [idProduct]);
+
     const {
         register: registerForm1,
         handleSubmit: handleSubmitForm1,
         formState: formStateForm1,
         setValue,
-    } = useForm<IInfoCategory>({
-        defaultValues: category,
-    });
+    } = useForm<ICategory>({});
 
     // submit form
-    const [textToast, setTextToast] = useState<IToast>({ message: 'Lỗi kìa', alert: AlertColor.Error });
-    const onSubmit1: SubmitHandler<IInfoCategory> = (data) => {
+    const onSubmit1: SubmitHandler<ICategory> = async (data) => {
         console.log(data);
-        handleToggleToast();
-        setTextToast((prev) => ({
-            ...prev,
-            alert: AlertColor.Success,
-            message: 'Cập nhật thông tin thành công',
-        }));
-        //  call api doi update thong tin
-        //
-        //
+        // const objectUpdate: IUpdateCategory = {
+        //     name: data.name,
+        //     description: data.description,
+        //     parentId: data.parentId,
+        //     slug: data.slug,
+        // };
+        // //  call api doi update thong tin
+        // const response = await updateCategory(+idProduct, objectUpdate);
+        // console.log(response);
     };
-
-    // handle show toast
-    const [showToast, setShowToast] = useState(false);
-    const handleToggleToast = useCallback(() => {
-        setShowToast((prev) => !prev);
-    }, []);
 
     // handle change image
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -103,12 +98,7 @@ const DetailCategory = () => {
             setSelectedImage(URL.createObjectURL(file));
             setValue('image', URL.createObjectURL(file));
         }
-        handleToggleToast();
-        setTextToast((prev) => ({
-            ...prev,
-            alert: AlertColor.Success,
-            message: 'Cập nhật ảnh thành công',
-        }));
+
         // call api update anh
         //
         //
@@ -116,18 +106,6 @@ const DetailCategory = () => {
     };
     return (
         <>
-            {/* toast */}
-            <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={showToast}
-                onClose={handleToggleToast}
-            >
-                <Alert severity={textToast.alert}>
-                    <AlertTitle className="uppercase w-52 md:w-80">{textToast.alert}</AlertTitle>
-                    {textToast.message}
-                </Alert>
-            </Snackbar>
-            {/* end toast */}
             <div className="flex justify-between pb-3">
                 <div className="text-lg font-semibold flex items-center ">Thông tin loại hàng</div>
                 <Link to={config.Routes.listCategory}>
@@ -141,13 +119,7 @@ const DetailCategory = () => {
                 <div className="grid grid-cols-12 relative gap-10">
                     {/* start avatar */}
                     <div className="col-span-12 sm:col-span-5 lg:col-span-4 xl:col-span-3 relative">
-                        <Image
-                            src={selectedImage}
-                            className="w-full xs:h-96 h-52 "
-                            register={{
-                                ...registerForm1('image'),
-                            }}
-                        />
+                        <Image src={selectedImage} className="w-full xs:h-96 h-52 " />
 
                         <Button
                             component="label"
@@ -170,20 +142,21 @@ const DetailCategory = () => {
                     {/* end avatar */}
                     {/* start account setting */}
                     <div className="col-span-12 sm:col-span-7 lg:col-span-8 xl:col-span-9">
-                        <div className="mb-5 font-semibold text-xl">Chi tiết loại : {category.id}</div>
+                        <div className="mb-5 font-semibold text-xl">Chi tiết loại : {category?.id}</div>
                         <form className="space-y-6" onSubmit={handleSubmitForm1(onSubmit1)}>
                             {/* start input id and Name */}
                             <div className="grid grid-cols-2 gap-5">
                                 <InputText
                                     labelInput="CategoryID"
-                                    errorInput={formStateForm1.errors.categoryID ? true : false}
+                                    errorInput={formStateForm1.errors.id ? true : false}
                                     isRequired
-                                    errorFormMessage={formStateForm1.errors.categoryID?.message}
+                                    errorFormMessage={formStateForm1.errors.id?.message}
                                     register={{
-                                        ...registerForm1('categoryID', {
+                                        ...registerForm1('id', {
                                             required: 'categoryID is required',
                                         }),
                                     }}
+                                    disabled
                                 />
                                 <InputText
                                     labelInput="Name"
@@ -198,33 +171,74 @@ const DetailCategory = () => {
                                 />
                             </div>
                             {/* end input id and  Name*/}
-                            {/* start input  createBy and createDate  */}
+                            {/* starr description */}
                             <InputText
-                                labelInput="CreateBy"
-                                errorInput={formStateForm1.errors.createBy ? true : false}
+                                labelInput="Mô tả"
+                                errorInput={formStateForm1.errors.description ? true : false}
                                 isRequired
-                                errorFormMessage={formStateForm1.errors.createBy?.message}
+                                errorFormMessage={formStateForm1.errors.description?.message}
                                 register={{
-                                    ...registerForm1('createBy', {
-                                        required: 'createBy is required',
+                                    ...registerForm1('description', {
+                                        required: 'description is required',
                                     }),
                                 }}
                             />
+                            {/* end description */}
+                            {/* starr slug */}
                             <InputText
-                                labelInput="CreateDate"
-                                errorInput={formStateForm1.errors.createDate ? true : false}
+                                labelInput="sSlug"
+                                errorInput={formStateForm1.errors.slug ? true : false}
                                 isRequired
-                                errorFormMessage={formStateForm1.errors.createDate?.message}
+                                errorFormMessage={formStateForm1.errors.slug?.message}
                                 register={{
-                                    ...registerForm1('createDate', {
+                                    ...registerForm1('slug', {
+                                        required: 'slug is required',
+                                    }),
+                                }}
+                            />
+                            {/* end slug */}
+                            {/* start input parentId  */}
+                            <InputText
+                                labelInput="ID Parent"
+                                errorInput={formStateForm1.errors.parentId ? true : false}
+                                isRequired
+                                errorFormMessage={formStateForm1.errors.parentId?.message}
+                                register={{
+                                    ...registerForm1('parentId', {
+                                        required: 'parentId is required',
+                                    }),
+                                }}
+                            />
+                            {/* end input parentId */}
+                            {/* start input  createdBy and createdDate  */}
+                            <InputText
+                                labelInput="Người tạo"
+                                errorInput={formStateForm1.errors.createdBy ? true : false}
+                                isRequired
+                                errorFormMessage={formStateForm1.errors.createdBy?.message}
+                                register={{
+                                    ...registerForm1('createdBy', {
+                                        required: 'createdBy is required',
+                                    }),
+                                }}
+                                disabled
+                            />
+                            <InputText
+                                labelInput="Ngày tạo"
+                                errorInput={formStateForm1.errors.createdDate ? true : false}
+                                isRequired
+                                errorFormMessage={formStateForm1.errors.createdDate?.message}
+                                register={{
+                                    ...registerForm1('createdDate', {
                                         required: 'CreateDate is required',
                                     }),
                                 }}
+                                disabled
                             />
-                            {/* end input createBy and createDate */}
+                            {/* end input createdBy and createdDate */}
                             {/* start input  lastModifiedBy and lastModifiedDate  */}
                             <InputText
-                                labelInput="LastModifiedBy"
+                                labelInput="Người chỉnh sửa cuối"
                                 errorInput={formStateForm1.errors.lastModifiedBy ? true : false}
                                 isRequired
                                 errorFormMessage={formStateForm1.errors.lastModifiedBy?.message}
@@ -233,9 +247,10 @@ const DetailCategory = () => {
                                         required: 'lastModifiedBy is required',
                                     }),
                                 }}
+                                disabled
                             />
                             <InputText
-                                labelInput="LastModifiedDate"
+                                labelInput="Ngày chỉnh sửa cuối"
                                 errorInput={formStateForm1.errors.lastModifiedDate ? true : false}
                                 isRequired
                                 errorFormMessage={formStateForm1.errors.lastModifiedDate?.message}
@@ -244,9 +259,10 @@ const DetailCategory = () => {
                                         required: 'lastModifiedDate is required',
                                     }),
                                 }}
+                                disabled
                             />
                             {/* end input lastModifiedBy and lastModifiedDate */}
-                            {/* end input phone */}
+
                             <Button
                                 style={{ float: 'right', width: '100px' }}
                                 type="submit"

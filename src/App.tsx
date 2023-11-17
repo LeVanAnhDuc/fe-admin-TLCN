@@ -17,7 +17,7 @@ function App() {
                             {publishRoute.map((item, index) => {
                                 const Layout = item.layout === null ? Fragment : item.layout || DefaultLayout;
 
-                                const Element: (() => void) | (() => JSX.Element) = item.component;
+                                const Element = item.component;
                                 return (
                                     <Route
                                         key={index}

@@ -15,6 +15,8 @@ import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
 import Search from '@mui/icons-material/Search';
 
 import { styled } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
+import config from '../../config';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -125,9 +127,11 @@ const ListProduct = () => {
                                     <StyledTableCell align="center">{item.quantityAvailable}</StyledTableCell>
                                     <StyledTableCell align="left">{item.price} $</StyledTableCell>
                                     <StyledTableCell align="center">
-                                        <IconButton>
-                                            <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
-                                        </IconButton>
+                                        <Link to={config.Routes.detailProduct}>
+                                            <IconButton>
+                                                <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                                            </IconButton>
+                                        </Link>
                                         <IconButton>
                                             <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
                                         </IconButton>

@@ -92,8 +92,8 @@ const Navbar = () => {
                     <List key={index} component="nav">
                         <div className="pl-5 text-gray-400 text-xs">{item.title}</div>
                         {item.children.map((item2, index2) => (
-                            <Link to={item2.to}>
-                                <ListItem key={index2}>
+                            <Link to={item2.to} key={index2}>
+                                <ListItem>
                                     <ListItemButton
                                         selected={selectElement.title === item.title && selectElement.value === index2}
                                         onClick={() => handleChangeSelet(item.title, index2)}

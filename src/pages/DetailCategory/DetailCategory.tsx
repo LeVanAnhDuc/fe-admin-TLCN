@@ -31,6 +31,16 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+enum AlertColor {
+    Error = 'error',
+    Success = 'success',
+    Info = 'info',
+    Warning = 'warning',
+}
+interface IToast {
+    message: string;
+    alert: AlertColor;
+}
 interface IInfoCategory {
     id: string;
     categoryID: string;
@@ -42,18 +52,7 @@ interface IInfoCategory {
     lastModifiedDate: string;
 }
 
-enum AlertColor {
-    Error = 'error',
-    Success = 'success',
-    Info = 'info',
-    Warning = 'warning',
-}
-interface IToast {
-    message: string;
-    alert: AlertColor;
-}
-
-const user: IInfoCategory = {
+const category: IInfoCategory = {
     id: 'ID01',
     categoryID: 'C03',
     name: 'Giày Nam',
@@ -71,7 +70,7 @@ const DetailCategory = () => {
         formState: formStateForm1,
         setValue,
     } = useForm<IInfoCategory>({
-        defaultValues: user,
+        defaultValues: category,
     });
 
     // submit form
@@ -171,7 +170,7 @@ const DetailCategory = () => {
                     {/* end avatar */}
                     {/* start account setting */}
                     <div className="col-span-12 sm:col-span-7 lg:col-span-8 xl:col-span-9">
-                        <div className="mb-5 font-semibold text-xl">Chi tiết loại : {user.id}</div>
+                        <div className="mb-5 font-semibold text-xl">Chi tiết loại : {category.id}</div>
                         <form className="space-y-6" onSubmit={handleSubmitForm1(onSubmit1)}>
                             {/* start input id and Name */}
                             <div className="grid grid-cols-2 gap-5">

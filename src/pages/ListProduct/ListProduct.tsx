@@ -17,6 +17,9 @@ import Search from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import config from '../../config';
+import IProduct from '../../interface/product';
+import { getAllProductWithinPagination } from '../../apis/productApi';
+import { toast } from 'react-toastify';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -38,40 +41,34 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-interface ProductWishlist {
-    Category: string;
-    name: string;
-    sold: number;
-    quantityAvailable: number;
-    price: number;
-}
-
-const rows: Array<ProductWishlist> = [
-    { Category: 'Giày', name: 'Name Product', sold: 4, quantityAvailable: 18, price: 100 },
-    { Category: 'Áo', name: 'Name Product', sold: 4, quantityAvailable: 18, price: 100 },
-    { Category: 'Quần', name: 'Name Product', sold: 4, quantityAvailable: 18, price: 1000 },
-    { Category: 'Giày', name: 'Name Product', sold: 4, quantityAvailable: 18, price: 100 },
-    { Category: 'Giày', name: 'Name Product', sold: 4, quantityAvailable: 18, price: 10000 },
-    { Category: 'Giày', name: 'Name Product', sold: 4, quantityAvailable: 18, price: 100 },
-    { Category: 'Giày', name: 'Name Product', sold: 4, quantityAvailable: 18, price: 100000 },
-];
-
 const ListProduct = () => {
     // change page
-    // const [data, setData] = useState([]); // Dữ liệu từ API
-    const [page, setPage] = useState(1); // Trang hiện tại
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [totalPages, setTotalPages] = useState(11); // Tổng số trang
+    const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
+    const [page, setPage] = useState<number>(1); // Trang hiện tại
+    const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
+    const itemsPerPage = 5;
+
+    const getAllProducts = async (pageNo: number) => {
+        try {
+            const response = await getAllProductWithinPagination(pageNo, itemsPerPage);
+            const { content, totalPages } = response.data;
+            console.log(content);
+
+            setData(content);
+            setTotalPages(totalPages);
+        } catch (error) {
+            toast.error('Đang bảo trì quay lại sau');
+        }
+    };
 
     useEffect(() => {
-        // Gọi API để lấy dữ liệu
+        getAllProducts(page);
     }, [page]);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-        console.log(event);
-
         setPage(newPage);
     };
+
     return (
         <div>
             <div className="grid grid-cols-1 pb-3 md:grid-cols-2">
@@ -102,8 +99,8 @@ const ListProduct = () => {
                     <Table stickyHeader aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>Category</StyledTableCell>
-                                <StyledTableCell align="left">Name</StyledTableCell>
+                                <StyledTableCell>ID</StyledTableCell>
+                                <StyledTableCell align="left">Tên sản phẩm</StyledTableCell>
                                 <StyledTableCell align="center">Sold</StyledTableCell>
                                 <StyledTableCell align="center">SLCL</StyledTableCell>
                                 <StyledTableCell align="left" sx={{ minWidth: '90px' }}>
@@ -115,17 +112,19 @@ const ListProduct = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((item, index) => (
+                            {data.map((item, index) => (
                                 <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell component="th" scope="row">
-                                        {item.Category}
+                                        {item.id}
                                     </StyledTableCell>
                                     <StyledTableCell align="left">
                                         <div className="">{item.name}</div>
                                     </StyledTableCell>
                                     <StyledTableCell align="center">{item.sold}</StyledTableCell>
                                     <StyledTableCell align="center">{item.quantityAvailable}</StyledTableCell>
-                                    <StyledTableCell align="left">{item.price} $</StyledTableCell>
+                                    <StyledTableCell align="left">
+                                        {item.price.toLocaleString('vi-VN')} VNĐ
+                                    </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailProduct}>
                                             <IconButton>

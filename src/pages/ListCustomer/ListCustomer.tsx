@@ -52,7 +52,7 @@ const ListCustomer = () => {
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
-    // get all category
+    // get all Customers
     const getAllCustomers = async (pageNo: number) => {
         try {
             const response = await getAllUserWithinPanigation(pageNo, itemsPerPage);

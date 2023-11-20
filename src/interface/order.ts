@@ -12,6 +12,7 @@ export default interface IOrder {
     createdDate: string;
     id: number;
     isPaidBefore: boolean;
+    lastModifiedBy: string;
     lastModifiedDate: string;
     note: string;
     orderItems: IProductCart;

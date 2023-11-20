@@ -1,74 +1,184 @@
-import { Button } from '@mui/material';
-import React from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import { Link } from 'react-router-dom';
+
+import InputText from '../../components/InputText/InputText';
 import config from '../../config';
+import { getOrderByID } from '../../apis/orderApi';
+import IOrder from '../../interface/order';
+import IProductCart from '../../interface/productCart';
+import DetailOrder from './DetailOrder/DetailOrder';
+import IAddress from '../../interface/address';
 
-enum EStatusOrder {
-    PENDING_PROCESSING = 'Đang chờ xử lý',
-    PROCESSING = 'Đang xử lý',
-    SHIPPED = 'Đã gửi',
-    DELIVERED = 'Đã giao',
-    CANCELED = 'Đã hủy',
-}
-
-interface IInfoCustomer {
-    id: string;
-    userID: string;
-    Address: string;
-    status: EStatusOrder;
-    total: number;
-    note: string;
-    paymentType: string;
-    createBy: string;
-    createDate: string;
-}
-
-const user: IInfoCustomer = {
-    id: 'InfoCustomer',
-    userID: 'InfoCustomer',
-    Address: 'InfoCustomer',
-    status: EStatusOrder.DELIVERED,
-    total: 100,
-    paymentType: 'InfoCustomer',
-    createBy: 'InfoCustomer',
-    createDate: 'InfoCustomer',
-    note: 'InfoCustomer',
-};
 const DetailBill = () => {
+    const navigate = useNavigate();
+    // handle get id
+    const location = useLocation();
+    const idProduct = location.hash.substring(1);
+    // set product
+    const [products, setProducts] = useState<Array<IProductCart>>([]);
+    const [address, setAddress] = useState<IAddress>();
+
+    // handle get data
+    const getOrder = async (id: number) => {
+        try {
+            if (idProduct && !isNaN(+idProduct)) {
+                // tồn tai ma san pham và phải là số
+                const response = await getOrderByID(id);
+                console.log(response);
+
+                if (response.status === 200) {
+                    //  set address
+                    setAddress(response.data.address);
+
+                    await setValue('createdDate', response.data.createdDate);
+                    await setValue('isPaidBefore', response.data.isPaidBefore);
+                    await setValue('lastModifiedBy', response.data.lastModifiedBy);
+                    await setValue('lastModifiedDate', response.data.lastModifiedDate);
+                    await setValue('note', response.data.note);
+                    // ds item
+                    setProducts(response.data.orderItems);
+                    //
+                    await setValue('paymentType', response.data.paymentType);
+                    await setValue('status', response.data.status);
+                    await setValue('total', response.data.total.toLocaleString('vi-VN'));
+                    await setValue('userId', response.data.userId);
+                } else {
+                    toast.error(response.data.message);
+                    navigate(config.Routes.listCategory);
+                }
+            } else {
+                navigate(config.Routes.listCategory);
+            }
+        } catch {
+            toast.error('Đang bảo trì');
+        }
+    };
+    useEffect(() => {
+        getOrder(+idProduct);
+    }, [idProduct]);
+
+    const { register, handleSubmit, setValue } = useForm<IOrder>({});
+
+    // submit form
+    const onSubmit: SubmitHandler<IOrder> = () => {};
+
     return (
-        <div>
-            <div className="flex justify-between pb-3">
-                <div className="text-lg font-semibold flex items-center ">Thông tin hóa đơn</div>
+        <>
+            <div className="flex flex-wrap justify-between pb-3 gap-5">
+                <div className="text-2xl font-semibold flex items-center ">Thông tin mã hóa đơn : {idProduct}</div>
                 <Link to={config.Routes.listBill}>
-                    <Button variant="outlined">
+                    <Button variant="contained">
                         <KeyboardArrowLeft />
+                        <span className="normal-case">Danh sách hóa đơn</span>
                     </Button>
                 </Link>
             </div>
-            <div className="grid grid-cols-12 gap-x-2 gap-y-1">
-                {Object.keys(user).map((item, index) => (
-                    <React.Fragment key={index}>
-                        <div className="col-span-4 md:col-span-2 h-max rounded-lg border-2 flex items-center p-3">
-                            {item}
-                        </div>
-                        <div
-                            className={`${
-                                user[item as keyof IInfoCustomer] === EStatusOrder.PENDING_PROCESSING && 'bg-[#E5D9B6]'
-                            }
-                                ${user[item as keyof IInfoCustomer] === EStatusOrder.PROCESSING && 'bg-[#FFD460]'}
-                                ${user[item as keyof IInfoCustomer] === EStatusOrder.SHIPPED && 'bg-[#93B5C6]'}
-                                ${user[item as keyof IInfoCustomer] === EStatusOrder.DELIVERED && 'bg-[#5F8D4E]'}
-                                ${user[item as keyof IInfoCustomer] === EStatusOrder.CANCELED && 'bg-[#E23E57]'}
-                        } col-span-8 md:col-span-10 h-max rounded-lg border-2 flex items-center p-3 break-all`}
-                        >
-                            {user[item as keyof IInfoCustomer]}
-                            {item === 'total' ? ' $' : ''}
-                        </div>
-                    </React.Fragment>
-                ))}
+            <div className="my-5">
+                {/* start account setting */}
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                    {/* start input userId*/}
+                    <InputText labelInput="Tên người đặt" value={`${address?.fullName}`} disabled />
+                    {/* end input userId*/}
+
+                    {/* start input addressId*/}
+                    <InputText
+                        labelInput="Địa chỉ"
+                        value={`${address?.orderDetails}, ${address?.ward}, ${address?.district}, ${address?.city}`}
+                        disabled
+                    />
+                    {/* end input addressId*/}
+
+                    {/* start input phone*/}
+                    <InputText labelInput="Số điện thoại" value={`${address?.phoneNumber}`} disabled />
+                    {/* end input phone*/}
+
+                    {/* starr createdDate */}
+                    <InputText
+                        labelInput="Ngày tạo"
+                        register={{
+                            ...register('createdDate', {
+                                required: 'createdDate is required',
+                            }),
+                        }}
+                        disabled
+                    />
+                    {/* end createdDate */}
+                    {/* start input isPaidBefore  */}
+                    <InputText
+                        labelInput="isPaidBefore"
+                        register={{
+                            ...register('isPaidBefore'),
+                        }}
+                        disabled
+                    />
+                    {/* end input isPaidBefore */}
+                    {/* start input  lastModifiedDate  */}
+                    <InputText
+                        labelInput="Ngày chỉnh sửa cuối"
+                        register={{
+                            ...register('lastModifiedDate', {
+                                required: 'lastModifiedDate is required',
+                            }),
+                        }}
+                        disabled
+                    />
+                    {/* end input lastModifiedDate */}
+                    {/* starr note */}
+                    <InputText
+                        labelInput="Ghi chú"
+                        register={{
+                            ...register('note', {
+                                required: 'note is required',
+                            }),
+                        }}
+                        disabled
+                    />
+                    {/* end note */}
+
+                    {/* start input  paymentType*/}
+                    <InputText
+                        labelInput="Hình thức thanh toán"
+                        register={{
+                            ...register('paymentType', {
+                                required: 'createdBy is required',
+                            }),
+                        }}
+                        disabled
+                    />
+                    {/* end input paymentType */}
+                    {/* start input  status*/}
+                    <InputText
+                        labelInput="Trạng thái"
+                        register={{
+                            ...register('status', {
+                                required: 'status is required',
+                            }),
+                        }}
+                        disabled
+                    />
+                    {/* end input status*/}
+                    {/* start input total*/}
+                    <InputText
+                        labelInput="Tổng tiền"
+                        register={{
+                            ...register('total', {
+                                required: 'total is required',
+                            }),
+                        }}
+                        disabled
+                    />
+                    {/* end input total*/}
+                </form>
+                <DetailOrder products={products} />
             </div>
-        </div>
+
+            {/* end account setting */}
+        </>
     );
 };
 

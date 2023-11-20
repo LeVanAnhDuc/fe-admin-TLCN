@@ -17,6 +17,10 @@ import Search from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import config from '../../config';
+import IOrder from '../../interface/order';
+import { deleteOrderByAdmin, getAllOrderWithinPagination } from '../../apis/orderApi';
+import { toast } from 'react-toastify';
+import SelectStatus from './SelectStatus/SelectStatus';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -38,70 +42,53 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-enum EStatusOrder {
-    PENDING_PROCESSING = 'Đang chờ xử lý',
-    PROCESSING = 'Đang xử lý',
-    SHIPPED = 'Đã gửi',
-    DELIVERED = 'Đã giao',
-    CANCELED = 'Đã hủy',
-}
-
-interface IItemBill {
-    id: string;
-    fName: string;
-    lName: string;
-    total: number;
-    note: string;
-    status: EStatusOrder;
-}
-
-const rows: Array<IItemBill> = [
-    {
-        id: 'asd',
-        fName: 'Lê',
-        lName: 'Đức',
-        total: 1000,
-        note: '',
-        status: EStatusOrder.PENDING_PROCESSING,
-    },
-    {
-        id: 'cxz',
-        fName: 'Lê',
-        lName: 'Đức',
-        total: 1000,
-        note: 'Giao hàng cẩn thậnaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaaaa',
-        status: EStatusOrder.PROCESSING,
-    },
-    { id: 'rwe', fName: 'Lê', lName: 'Đức', total: 1000, note: 'Giao hàng cẩn thận', status: EStatusOrder.CANCELED },
-    { id: 'e34', fName: 'Lê', lName: 'Đức', total: 1000, note: 'Giao hàng cẩn thận', status: EStatusOrder.DELIVERED },
-    { id: 'f45', fName: 'Lê', lName: 'Đức', total: 1000, note: 'Giao hàng cẩn thận', status: EStatusOrder.SHIPPED },
-    { id: 'scf', fName: 'Lê', lName: 'Đức', total: 1000, note: 'Giao hàng cẩn thận', status: EStatusOrder.DELIVERED },
-    {
-        id: '123',
-        fName: 'Lê',
-        lName: 'Đức',
-        total: 1000,
-        note: '',
-        status: EStatusOrder.CANCELED,
-    },
-];
-
 const ListBill = () => {
-    // change page
-    // const [data, setData] = useState([]); // Dữ liệu từ API
-    const [page, setPage] = useState(1); // Trang hiện tại
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [totalPages, setTotalPages] = useState(11); // Tổng số trang
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    useEffect(() => {
-        // Gọi API để lấy dữ liệu
-    }, [page]);
+    // change page
+    const [data, setData] = useState<Array<IOrder>>([]); // Dữ liệu từ API
+    const [page, setPage] = useState(1); // Trang hiện tại
+    const [totalPages, setTotalPages] = useState(11); // Tổng số trang
+    const itemsPerPage = 4;
+
+    // get all Order
+    const getAllOrder = async (pageNo: number) => {
+        try {
+            const response = await getAllOrderWithinPagination(pageNo, itemsPerPage);
+
+            if (response.status === 200) {
+                const { content, totalPages } = response.data;
+
+                setData(content);
+                setTotalPages(totalPages);
+                if (content.length <= 0) {
+                    setPage((prev) => prev - 1);
+                }
+            } else {
+                toast.error(response.data.message || response.data);
+            }
+        } catch (error) {
+            toast.error('Đang bảo trì quay lại sau');
+        }
+    };
+    // delete order
+    const handleDeleteOrder = async (idOrder: number) => {
+        const response = await deleteOrderByAdmin(idOrder);
+        if (response.status === 200) {
+            toast.success(response.data);
+        } else {
+            toast.error(response.data.message || response.data);
+        }
+        setIsLoading((prev) => !prev);
+    };
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-        console.log(event);
-
         setPage(newPage);
     };
+
+    useEffect(() => {
+        getAllOrder(page);
+    }, [page, isLoading]);
     return (
         <div>
             <div className="grid grid-cols-1 pb-3 md:grid-cols-2">
@@ -134,52 +121,41 @@ const ListBill = () => {
                             <TableRow>
                                 <StyledTableCell>ID</StyledTableCell>
                                 <StyledTableCell align="left" sx={{ minWidth: '100px' }}>
-                                    Name Customer
+                                    Người đặt hàng
                                 </StyledTableCell>
-                                <StyledTableCell align="left">Total</StyledTableCell>
-                                <StyledTableCell align="left">Note</StyledTableCell>
+                                <StyledTableCell align="left">Thành tiền</StyledTableCell>
+                                <StyledTableCell align="left">Ghi chú</StyledTableCell>
                                 <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
-                                    Status
+                                    Trạng thái
                                 </StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
-                                    Actions
-                                </StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}></StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((item, index) => (
+                            {data.map((item, index) => (
                                 <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell component="th" scope="row">
                                         {item.id}
                                     </StyledTableCell>
-                                    <StyledTableCell align="left">
-                                        {item.fName} {item.lName}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="left">{item.total}</StyledTableCell>
+                                    <StyledTableCell align="left">{item.address.fullName}</StyledTableCell>
+                                    <StyledTableCell align="left">{item.total.toLocaleString('vi-VN')}</StyledTableCell>
                                     <StyledTableCell align="left" sx={{ minWidth: '10rem' }}>
                                         {item.note}
                                     </StyledTableCell>
+
+                                    {/* start select status */}
                                     <StyledTableCell align="center">
-                                        <div
-                                            className={`${
-                                                item.status === EStatusOrder.PENDING_PROCESSING && 'bg-[#E5D9B6]'
-                                            }
-                                                    ${item.status === EStatusOrder.PROCESSING && 'bg-[#FFD460]'}
-                                                    ${item.status === EStatusOrder.SHIPPED && 'bg-[#93B5C6]'}
-                                                    ${item.status === EStatusOrder.DELIVERED && 'bg-[#5F8D4E]'}
-                                                    ${item.status === EStatusOrder.CANCELED && 'bg-[#E23E57]'}
-                                            } h-10 flex place-content-center items-center text-black font-semibold`}
-                                        >
-                                            {item.status}
-                                        </div>
+                                        <SelectStatus status={item.status} idOrder={item.id} />
                                     </StyledTableCell>
+                                    {/*end select status */}
+
                                     <StyledTableCell align="center">
-                                        <Link to={config.Routes.detailBill}>
+                                        <Link to={config.Routes.detailBill + '#' + item.id}>
                                             <IconButton>
                                                 <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
                                             </IconButton>
                                         </Link>
-                                        <IconButton>
+                                        <IconButton onClick={() => handleDeleteOrder(item.id)}>
                                             <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
                                         </IconButton>
                                     </StyledTableCell>

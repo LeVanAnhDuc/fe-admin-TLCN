@@ -2,6 +2,15 @@
 import { IOrderCheckOut } from '../interface/order.js';
 import axios from './axiosConfig.js';
 
+export const getAllOrderWithinPagination = async (pageNo: number, pageSize: number) => {
+    try {
+        const response = await axios.get(`/orders?pageNo=${pageNo}&pageSize=${pageSize}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getHistoryOrderForCurrentUser = async () => {
     try {
         const response = await axios.get(`/orders/token`);
@@ -20,7 +29,7 @@ export const getCheckOutDataForPage = async () => {
     }
 };
 
-export const getOrderByID = async (idOrder: string) => {
+export const getOrderByID = async (idOrder: number) => {
     try {
         const response = await axios.get(`/orders/${idOrder}`);
         return response;
@@ -38,7 +47,7 @@ export const getListOrderByUserName = async (userName: string) => {
     }
 };
 
-export const getListOrderByUserID = async (idUserName: string) => {
+export const getListOrderByUserID = async (idUserName: number) => {
     try {
         const response = await axios.get(`/orders/user/${idUserName}`);
         return response;
@@ -61,7 +70,7 @@ export const addOrderByToken = async (data: IOrderCheckOut) => {
     }
 };
 
-export const updateOrderStatusByID = async (idOrder: string, status: string) => {
+export const updateOrderStatusByID = async (idOrder: number, status: string) => {
     try {
         const response = await axios.put(`/orders/${idOrder}/status?status=${status}`);
         return response;
@@ -70,7 +79,16 @@ export const updateOrderStatusByID = async (idOrder: string, status: string) => 
     }
 };
 
-export const deleteOrderByUser = async (idOrder: string) => {
+export const deleteOrderByUser = async (idOrder: number) => {
+    try {
+        const response = await axios.delete(`/orders/isdeleted/${idOrder}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deleteOrderByAdmin = async (idOrder: number) => {
     try {
         const response = await axios.delete(`/orders/${idOrder}`);
         return response;

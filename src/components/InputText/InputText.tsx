@@ -9,10 +9,10 @@ interface IProps {
     labelInput: string;
     typeInput?: string;
     isRequired?: boolean;
-    errorInput: boolean;
+    errorInput?: boolean;
     errorFormMessage?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    register: any;
+    register?: any;
     autoComplete?: string;
     [key: string]: unknown;
 }

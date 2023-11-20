@@ -6,7 +6,7 @@ import { DefaultLayout } from './layouts';
 import ScrollAutoTop from './components/ScrollAutoTop/ScrollAutoTop.ts';
 
 function App() {
-    const isSignIn = false;
+    const isSignIn = localStorage.getItem('isLogin');
     return (
         <>
             {(!isSignIn && (
@@ -38,7 +38,7 @@ function App() {
                     <ScrollAutoTop />
                     <div className="App">
                         <Routes>
-                            {[...publishRoute, ...privateRoute].map((item, index) => {
+                            {privateRoute.map((item, index) => {
                                 const Layout = item.layout === null ? Fragment : item.layout || DefaultLayout;
 
                                 const Element = item.component;

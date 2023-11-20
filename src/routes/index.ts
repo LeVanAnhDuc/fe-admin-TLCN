@@ -11,11 +11,13 @@ import ListProduct from '../pages/ListProduct/ListProduct';
 import LogIn from '../pages/LogIn/LogIn';
 
 import Error404 from '../pages/Error404';
-
-const publishRoute = [
+type TRouters = {
+    path: string;
+    component: React.ComponentType;
+    layout?: React.ComponentType | null;
+};
+const publishRoute: Array<TRouters> = [
     { path: config.Routes.home, component: Home },
-
-    { path: config.Routes.logIn, component: LogIn },
 
     { path: config.Routes.detailBill, component: DetailBill },
     { path: config.Routes.detailCategory, component: DetailCategory },
@@ -25,13 +27,18 @@ const publishRoute = [
     { path: config.Routes.listCategory, component: ListCategory },
     { path: config.Routes.listCustomer, component: ListCustomer },
     { path: config.Routes.listProduct, component: ListProduct },
-    { path: config.Routes.logIn, component: LogIn },
+
+    { path: config.Routes.logIn, component: LogIn, layout: null },
 
     { path: config.Routes.error, component: Error404, layout: null },
 ];
 
 // required sign in
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const privateRoute: any[] = [];
+const privateRoute: any[] = [
+    { path: config.Routes.logIn, component: LogIn, layout: null },
+
+    { path: config.Routes.error, component: Error404, layout: null },
+];
 
 export { publishRoute, privateRoute };

@@ -1,6 +1,6 @@
 const Routes = {
-    home: '/',
-    logIn: '/dang-nhap',
+    home: '/trang-chu',
+    logIn: '/',
     register: '/dang-ki',
     listCategory: '/danh-sach-loai',
     detailCategory: '/chi-tiet-loai',

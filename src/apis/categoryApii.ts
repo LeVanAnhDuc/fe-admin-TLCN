@@ -20,22 +20,12 @@ export const getCategoryByIDOrSlug = async (idOrSlug: number) => {
     }
 };
 
-export const createNewCategory = async (name: string, description: string) => {
+export const createNewCategory = async (objectUpdate: IUpdateCategory) => {
     try {
         const response = await axios.post(`/categories`, {
-            name: name,
-            description: description,
-        });
-        return response;
-    } catch (error) {
-        throw error;
-    }
-};
-// viet lai
-export const updateCategory = async (idCategory: number, objectUpdate: IUpdateCategory) => {
-    try {
-        const response = await axios.put(`/categories/${idCategory}`, {
-            objectUpdate,
+            name: objectUpdate.name,
+            description: objectUpdate.description,
+            parentId: objectUpdate.parentId,
         });
         return response;
     } catch (error) {
@@ -43,9 +33,22 @@ export const updateCategory = async (idCategory: number, objectUpdate: IUpdateCa
     }
 };
 
-export const dateleASingleCategory = async (idCategory: number) => {
+export const updateCategory = async (idCategory: number, objectUpdate: IUpdateCategory) => {
     try {
-        const response = await axios.post(`/categories/${idCategory}`);
+        const response = await axios.put(`/categories/${idCategory}`, {
+            name: objectUpdate.name,
+            description: objectUpdate.description,
+            parentId: objectUpdate.parentId,
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deteleASingleCategory = async (idCategory: number) => {
+    try {
+        const response = await axios.delete(`/categories/${idCategory}`);
         return response;
     } catch (error) {
         throw error;

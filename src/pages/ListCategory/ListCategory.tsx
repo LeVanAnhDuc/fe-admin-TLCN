@@ -12,13 +12,16 @@ import Pagination from '@mui/material/Pagination';
 
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
-import Search from '@mui/icons-material/Search';
 
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import config from '../../config';
 import ICategory from '../../interface/category';
-import { getAllCategoryWithPagination } from '../../apis/categoryApii';
+import { deteleASingleCategory, getAllCategoryWithPagination } from '../../apis/categoryApii';
+import { toast } from 'react-toastify';
+import Search from '../../components/Search/Search';
+import Button from '@mui/material/Button';
+import ModalCategory from './ModalCategory/ModalCategory';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -41,56 +44,67 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ListCategory = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     // change page
     const [data, setData] = useState<Array<ICategory>>([]); // Dữ liệu từ API
     const [page, setPage] = useState<number>(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
     const itemsPerPage = 5;
-
+    // panigation
+    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+        setPage(newPage);
+    };
+    // get all category
     const getAllProducts = async (pageNo: number) => {
         try {
             const response = await getAllCategoryWithPagination(pageNo, itemsPerPage);
-            const { content, totalPages } = response.data;
-            console.log(content);
+            if (response.status === 200) {
+                const { content, totalPages } = response.data;
 
-            setData(content);
-            setTotalPages(totalPages);
+                setData(content);
+                setTotalPages(totalPages);
+                if (content.length <= 0) {
+                    setPage((prev) => prev - 1);
+                }
+            } else {
+                toast.error(response.data.message || response.data);
+            }
         } catch (error) {
             toast.error('Đang bảo trì quay lại sau');
         }
     };
 
+    // delete item
+    const handleDeleteItem = async (idItem: number) => {
+        const response = await deteleASingleCategory(idItem);
+        if (response.status === 200) {
+            toast.success(response.data);
+        } else {
+            toast.error(response.data.message || response.data);
+        }
+        setIsLoading((prev) => !prev);
+    };
+
+    // modal
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
     useEffect(() => {
         getAllProducts(page);
-    }, [page]);
-
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-        setPage(newPage);
-    };
+    }, [page, open, isLoading]);
     return (
-        <div>
-            <div className="grid grid-cols-1 pb-3 md:grid-cols-2">
+        <>
+            <ModalCategory open={open} handleClose={handleClose} />
+            <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách loại sản phẩm</div>
-                <form>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <Search sx={{ color: 'gray' }} />
-                        </div>
-                        <input
-                            type="search"
-                            id="default-search"
-                            className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
-                            placeholder="Search..."
-                            required
-                        />
-                        <button
-                            type="submit"
-                            className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
-                        >
-                            Search
-                        </button>
-                    </div>
-                </form>
+                <Button variant="contained" onClick={handleOpen}>
+                    Thêm mới
+                </Button>
+            </div>
+            <div className="flex justify-center m-auto my-4 md:w-7/12">
+                <Search />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer sx={{ maxHeight: 460 }}>
@@ -123,7 +137,7 @@ const ListCategory = () => {
                                                 <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
                                             </IconButton>
                                         </Link>
-                                        <IconButton>
+                                        <IconButton onClick={() => handleDeleteItem(item.id)}>
                                             <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
                                         </IconButton>
                                     </StyledTableCell>
@@ -143,7 +157,7 @@ const ListCategory = () => {
                     boundaryCount={1}
                 />
             </div>
-        </div>
+        </>
     );
 };
 

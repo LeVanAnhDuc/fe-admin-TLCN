@@ -12,7 +12,6 @@ export default interface ICategory {
 
 export interface IUpdateCategory {
     name: string;
-    slug: string;
     description: string;
-    parentId: number;
+    parentId: number | null;
 }

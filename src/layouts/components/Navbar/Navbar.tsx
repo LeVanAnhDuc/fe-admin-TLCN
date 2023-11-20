@@ -17,6 +17,8 @@ import KeyboardDoubleArrowLeft from '@mui/icons-material/KeyboardDoubleArrowLeft
 import KeyboardDoubleArrowRight from '@mui/icons-material/KeyboardDoubleArrowRight';
 import config from '../../../config';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../hook/AuthContext';
 
 const LIST_MENU_NAVBAR = [
     {
@@ -70,6 +72,16 @@ const Navbar = () => {
     const handleChangeToggle = useCallback(() => {
         setToggleNavbar((prev) => !prev);
     }, []);
+
+    // logout
+    const navigate = useNavigate();
+    const { logout } = useAuth();
+    const handleLogout = () => {
+        localStorage.removeItem('tokenType');
+        localStorage.removeItem('accessToken');
+        navigate(config.Routes.logIn);
+        logout();
+    };
     return (
         <>
             <div
@@ -110,7 +122,7 @@ const Navbar = () => {
                 <List component="nav">
                     <div className="pl-5 text-gray-400 text-xs">Log out</div>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
                                 <Logout />
                             </ListItemIcon>

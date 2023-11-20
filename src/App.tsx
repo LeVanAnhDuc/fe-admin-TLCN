@@ -5,11 +5,13 @@ import { publishRoute, privateRoute } from './routes';
 import { DefaultLayout } from './layouts';
 import ScrollAutoTop from './components/ScrollAutoTop/ScrollAutoTop.ts';
 
+import { useAuth } from './hook/AuthContext.tsx';
+
 function App() {
-    const isSignIn = localStorage.getItem('isLogin');
+    const { isLoggedIn } = useAuth();
     return (
         <>
-            {(isSignIn && (
+            {(isLoggedIn && (
                 <Router>
                     <ScrollAutoTop />
                     <div className="App">

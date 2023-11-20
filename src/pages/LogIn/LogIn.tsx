@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useAuth } from '../../hook/AuthContext';
 
 type FormData = {
     email: string;
@@ -16,6 +17,9 @@ type FormData = {
 
 const LogIn = () => {
     const navigate = useNavigate();
+    // useContext
+    const { login } = useAuth();
+
     const {
         register,
         handleSubmit,
@@ -48,7 +52,7 @@ const LogIn = () => {
             if (response?.data?.jwt) {
                 toast.success('Đăng nhập thành công');
                 // set local
-                localStorage.setItem('isLogin', 'true');
+                login();
 
                 // chuyen next page home
                 navigate(config.Routes.home);

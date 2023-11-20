@@ -1,7 +1,6 @@
 const Routes = {
     home: '/trang-chu',
     logIn: '/',
-    register: '/dang-ki',
     listCategory: '/danh-sach-loai',
     detailCategory: '/chi-tiet-loai',
     listProduct: '/danh-sach-san-pham',

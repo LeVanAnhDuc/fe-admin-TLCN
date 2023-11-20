@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,18 +11,15 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
-
+import Button from '@mui/material/Button';
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
-
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+
 import config from '../../config';
 import ICategory from '../../interface/category';
 import { deteleASingleCategory, getAllCategoryWithPagination } from '../../apis/categoryApii';
-import { toast } from 'react-toastify';
 import Search from '../../components/Search/Search';
-import Button from '@mui/material/Button';
 import ModalCategory from './ModalCategory/ModalCategory';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

@@ -77,7 +77,7 @@ const DetailCategory = () => {
 
     return (
         <>
-            <div className="flex justify-between pb-3">
+            <div className="flex flex-wrap justify-between pb-3 gap-5">
                 <div className="text-2xl font-semibold flex items-center ">Thông tin mã loại : {idProduct}</div>
                 <Link to={config.Routes.listCategory}>
                     <Button variant="contained">

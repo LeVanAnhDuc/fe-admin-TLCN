@@ -1,8 +1,17 @@
 /* eslint-disable no-useless-catch */
-import { IInfoProfileUser } from '../interface/user.js';
+import IUser from '../interface/user.js';
 import axios from './axiosConfig.js';
 
-export const getSingleUserByID = async (idUser: string) => {
+export const getAllUserWithinPanigation = async (pageNo: number, pageSize: number) => {
+    try {
+        const response = await axios.get(`/users?pageNo=${pageNo}&pageSize=${pageSize}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getSingleUserByID = async (idUser: number) => {
     try {
         const response = await axios.get(`/users/id/${idUser}`);
         return response;
@@ -19,9 +28,12 @@ export const getUserByUserNameOrEmail = async (userNameOrEmail: string) => {
         throw error;
     }
 };
-export const changePassWordByToken = async (passWord: string) => {
+export const changePassWordByToken = async (oldPassword: string, newPassword: string) => {
     try {
-        const response = await axios.put(`/users/password/change?newPassword=${passWord}`);
+        const response = await axios.put(`/users/password/change`, {
+            oldPassword,
+            newPassword,
+        });
         return response;
     } catch (error) {
         throw error;
@@ -37,7 +49,7 @@ export const forgotPassWord = async (email: string, newPassword: string) => {
     }
 };
 
-export const updateAccountProfileOfSignedinAccount = async (data: IInfoProfileUser) => {
+export const updateAccountProfileByToken = async (data: IUser) => {
     try {
         const response = await axios.put(`/users/profile`, {
             username: data.username,
@@ -53,9 +65,9 @@ export const updateAccountProfileOfSignedinAccount = async (data: IInfoProfileUs
     }
 };
 
-export const updateAccountProfileByIDUser = async (userID: string) => {
+export const changeLockUnlockUserAccountByIDUser = async (idUser: number) => {
     try {
-        const response = await axios.put(`/users/profile/${userID}`);
+        const response = await axios.put(`/users/${idUser}/status`);
         return response;
     } catch (error) {
         throw error;

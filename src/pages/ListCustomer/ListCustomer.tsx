@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,14 +10,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
-
-import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
+import LockOpenTwoTone from '@mui/icons-material/LockOpenTwoTone';
+import LockTwoTone from '@mui/icons-material/LockTwoTone';
 import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
-import Search from '@mui/icons-material/Search';
-
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+
 import config from '../../config';
+import Search from '../../components/Search/Search';
+import { changeLockUnlockUserAccountByIDUser, getAllUserWithinPanigation } from '../../apis/userApi';
+import { toast } from 'react-toastify';
+import IUser from '../../interface/user';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -38,65 +41,62 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-interface ProductWishlist {
-    username: string;
-    fName: string;
-    lName: string;
-    email: string;
-    phone: string;
-    gender: string;
-}
-
-const rows: Array<ProductWishlist> = [
-    { username: 'leduc', fName: 'Lê', lName: 'Đức', email: 'leduc@gmail.com', phone: '0123456789', gender: 'Nam' },
-    { username: 'leduc', fName: 'Lê', lName: 'Đức', email: 'leduc@gmail.com', phone: '0123456789', gender: 'Nam' },
-    { username: 'leduc', fName: 'Lê', lName: 'Đức', email: 'leduc@gmail.com', phone: '0123456789', gender: 'Nữ' },
-    { username: 'leduc', fName: 'Lê', lName: 'Đức', email: 'leduc@gmail.com', phone: '0123456789', gender: 'Nam' },
-    { username: 'leduc', fName: 'Lê', lName: 'Đức', email: 'leduc@gmail.com', phone: '0123456789', gender: 'Nữ' },
-    { username: 'leduc', fName: 'Lê', lName: 'Đức', email: 'leduc@gmail.com', phone: '0123456789', gender: 'Nam' },
-    { username: 'leduc', fName: 'Lê', lName: 'Đức', email: 'leduc@gmail.com', phone: '0123456789', gender: 'Nữ' },
-];
-
 const ListCustomer = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     // change page
-    // const [data, setData] = useState([]); // Dữ liệu từ API
+    const [data, setData] = useState<Array<IUser>>([]); // Dữ liệu từ API
     const [page, setPage] = useState(1); // Trang hiện tại
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [totalPages, setTotalPages] = useState(11); // Tổng số trang
-
-    useEffect(() => {
-        // Gọi API để lấy dữ liệu
-    }, [page]);
+    const itemsPerPage = 5;
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-        console.log(event);
-
         setPage(newPage);
     };
+    // get all category
+    const getAllCustomers = async (pageNo: number) => {
+        try {
+            const response = await getAllUserWithinPanigation(pageNo, itemsPerPage);
+
+            if (response.status === 200) {
+                const { content, totalPages } = response.data;
+                console.log(content);
+
+                setData(content);
+                setTotalPages(totalPages);
+                if (content.length <= 0) {
+                    setPage((prev) => prev - 1);
+                }
+            } else {
+                toast.error(response.data.message || response.data);
+            }
+        } catch (error) {
+            toast.error('Đang bảo trì quay lại sau');
+        }
+    };
+    const handleLockAccount = async (idUser: number) => {
+        const response = await changeLockUnlockUserAccountByIDUser(idUser);
+        if (response.status === 200) {
+            setIsLoading((prev) => !prev);
+            if (response.data.locked) {
+                toast.success('Tài khoản đã bị khóa');
+            } else {
+                toast.success('Tài khoản đã mở khóa');
+            }
+        } else {
+            toast.error(response.data.message || response.data);
+        }
+    };
+
+    useEffect(() => {
+        getAllCustomers(page);
+    }, [page, isLoading]);
     return (
         <div>
-            <div className="grid grid-cols-1 pb-3 md:grid-cols-2">
+            <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách khách hàng</div>
-                <form>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <Search sx={{ color: 'gray' }} />
-                        </div>
-                        <input
-                            type="search"
-                            id="default-search"
-                            className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
-                            placeholder="Search..."
-                            required
-                        />
-                        <button
-                            type="submit"
-                            className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
-                        >
-                            Search
-                        </button>
-                    </div>
-                </form>
+            </div>
+            <div className="flex justify-center m-auto my-4 md:w-7/12">
+                <Search />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer sx={{ maxHeight: 460 }}>
@@ -105,38 +105,36 @@ const ListCustomer = () => {
                             <TableRow>
                                 <StyledTableCell>Username</StyledTableCell>
                                 <StyledTableCell align="left" sx={{ minWidth: '100px' }}>
-                                    Name
+                                    Tên
                                 </StyledTableCell>
-                                <StyledTableCell align="center">Gender</StyledTableCell>
+                                <StyledTableCell align="center">Giới tính</StyledTableCell>
                                 <StyledTableCell align="left">Email</StyledTableCell>
                                 <StyledTableCell align="left">SĐT</StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
-                                    Actions
-                                </StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}></StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((item, index) => (
+                            {data.map((item, index) => (
                                 <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell component="th" scope="row">
                                         {item.username}
                                     </StyledTableCell>
-                                    <StyledTableCell align="left">
-                                        <div className="">
-                                            {item.fName} {item.lName}
-                                        </div>
-                                    </StyledTableCell>
+                                    <StyledTableCell align="left">{item.name}</StyledTableCell>
                                     <StyledTableCell align="center">{item.gender}</StyledTableCell>
                                     <StyledTableCell align="left">{item.email}</StyledTableCell>
-                                    <StyledTableCell align="left">{item.phone}</StyledTableCell>
+                                    <StyledTableCell align="left">{item.phoneNumber}</StyledTableCell>
                                     <StyledTableCell align="center">
-                                        <Link to={config.Routes.detailCustomer}>
+                                        <Link to={config.Routes.detailCustomer + '#' + item.id}>
                                             <IconButton>
                                                 <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
                                             </IconButton>
                                         </Link>
-                                        <IconButton>
-                                            <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                        <IconButton onClick={() => handleLockAccount(item.id)}>
+                                            {item.locked ? (
+                                                <LockTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                            ) : (
+                                                <LockOpenTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                            )}
                                         </IconButton>
                                     </StyledTableCell>
                                 </StyledTableRow>

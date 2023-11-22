@@ -27,6 +27,8 @@ import config from '../../config';
 import OptionSize from './OptionSize/OptionSize';
 import OptionColor from './OptionColor/OptionColor';
 import { ISku } from '../../interface/productCart';
+import ICategory from '../../interface/category';
+import { getAllCategory } from '../../apis/categoryApii';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -61,6 +63,16 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const DetailProduct = () => {
+    const [listCate, setListCate] = useState<Array<ICategory>>([]);
+    const handleGetListCate = async () => {
+        const res = await getAllCategory();
+        if (res.status === 200) {
+            setListCate(res.data.content);
+        }
+    };
+    useEffect(() => {
+        handleGetListCate();
+    }, []);
     const {
         register,
         handleSubmit,
@@ -157,9 +169,11 @@ const DetailProduct = () => {
                                 required
                                 defaultValue={''}
                             >
-                                <MenuItem value={10}>Ten (10)</MenuItem>
-                                <MenuItem value={20}>Twenty (20)</MenuItem>
-                                <MenuItem value={30}>Thirty (30)</MenuItem>
+                                {listCate.map((item, index) => (
+                                    <MenuItem key={index} value={item.name}>
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                         <InputText

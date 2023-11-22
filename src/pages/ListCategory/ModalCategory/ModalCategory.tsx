@@ -5,9 +5,14 @@ import Button from '@mui/material/Button';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-import { IUpdateCategory } from '../../../interface/category';
+import ICategory, { IUpdateCategory } from '../../../interface/category';
 import InputText from '../../../components/InputText/InputText';
-import { createNewCategory } from '../../../apis/categoryApii';
+import { createNewCategory, getAllCategory } from '../../../apis/categoryApii';
+import { useEffect, useState } from 'react';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 const style = {
     position: 'absolute',
@@ -29,7 +34,16 @@ interface IPropsAddress {
 
 const ModalCategory = (propsCh: IPropsAddress) => {
     const { open, handleClose } = propsCh;
-    // get info address
+    const [listCate, setListCate] = useState<Array<ICategory>>([]);
+    const handleGetListCate = async () => {
+        const res = await getAllCategory();
+        if (res.status === 200) {
+            setListCate(res.data.content);
+        }
+    };
+    useEffect(() => {
+        handleGetListCate();
+    }, []);
 
     // form
     const {
@@ -37,19 +51,21 @@ const ModalCategory = (propsCh: IPropsAddress) => {
         handleSubmit,
         setValue,
         formState: { errors },
-    } = useForm<IUpdateCategory>();
+    } = useForm<IUpdateCategory>({});
     const onSubmit: SubmitHandler<IUpdateCategory> = async (data) => {
+        console.log(data);
+
         const objectUpdate: IUpdateCategory = {
             name: data.name,
             description: data.description,
-            parentId: data.parentId || null,
+            parentName: data.parentName || null,
         };
         const response = await createNewCategory(objectUpdate);
         if (response.status === 201) {
             toast.success('Thêm thành công');
             setValue('description', '');
             setValue('name', '');
-            setValue('parentId', null);
+            setValue('parentName', '');
         } else {
             toast.error(response.data.message || response.data);
         }
@@ -65,7 +81,6 @@ const ModalCategory = (propsCh: IPropsAddress) => {
                         <InputText
                             labelInput="Tên loại"
                             errorInput={errors.name ? true : false}
-                            isRequired
                             errorFormMessage={errors.name?.message}
                             register={{
                                 ...register('name', {
@@ -73,6 +88,7 @@ const ModalCategory = (propsCh: IPropsAddress) => {
                                 }),
                             }}
                         />
+
                         <InputText
                             labelInput="Mô tả"
                             errorInput={errors.description ? true : false}
@@ -84,14 +100,17 @@ const ModalCategory = (propsCh: IPropsAddress) => {
                                 }),
                             }}
                         />
-                        <InputText
-                            labelInput="Mã sản phẩm cha"
-                            errorInput={errors.parentId ? true : false}
-                            errorFormMessage={errors.parentId?.message}
-                            register={{
-                                ...register('parentId'),
-                            }}
-                        />
+                        <FormControl fullWidth>
+                            <InputLabel>Tên loại cha</InputLabel>
+                            <Select label="parentName" {...register('parentName')} defaultValue={''}>
+                                <MenuItem value={''}>None</MenuItem>
+                                {listCate.map((item, index) => (
+                                    <MenuItem key={index} value={item.name}>
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
 
                         <div className="float-right">
                             <Button sx={{ width: 140 }} onClick={handleClose}>

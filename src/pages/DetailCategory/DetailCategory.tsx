@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import Button from '@mui/material/Button';
@@ -9,13 +9,30 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import InputText from '../../components/InputText/InputText';
 import config from '../../config';
 import ICategory, { IUpdateCategory } from '../../interface/category';
-import { getCategoryByIDOrSlug, updateCategory } from '../../apis/categoryApii';
+import { getAllCategory, getCategoryByIDOrSlug, updateCategory } from '../../apis/categoryApii';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 const DetailCategory = () => {
     const navigate = useNavigate();
     // handle get id
     const location = useLocation();
     const idProduct = location.hash.substring(1);
+    // list cate
+    const [listCate, setListCate] = useState<Array<ICategory>>([]);
+    const handleGetListCate = async () => {
+        const res = await getAllCategory();
+        if (res.status === 200) {
+            setListCate(res.data.content);
+        }
+    };
+    useEffect(() => {
+        handleGetListCate();
+    }, []);
+    // cate origan
+    const [cateCurrent, setCateCurrent] = useState<string>('');
 
     // handle get data
     const getCategory = async (id: number) => {
@@ -23,6 +40,7 @@ const DetailCategory = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getCategoryByIDOrSlug(id);
+                console.log(response);
 
                 if (response.status === 200) {
                     await setValue('id', response.data.id);
@@ -33,6 +51,9 @@ const DetailCategory = () => {
                     await setValue('lastModifiedBy', response.data.lastModifiedBy);
                     await setValue('lastModifiedDate', response.data.lastModifiedDate);
                     await setValue('name', response.data.name);
+
+                    await setCateCurrent(response.data.parentName);
+
                     await setValue('parentId', response.data.parentId);
                     await setValue('slug', response.data.slug);
                 } else {
@@ -62,7 +83,7 @@ const DetailCategory = () => {
         const objectUpdate: IUpdateCategory = {
             name: data.name,
             description: data.description,
-            parentId: data.parentId || null,
+            parentName: data.parentName || null,
         };
 
         //  call api doi update thong tin
@@ -77,7 +98,6 @@ const DetailCategory = () => {
     return (
         <>
             <div className="flex flex-wrap justify-between pb-3 gap-5">
-                <div className="text-2xl font-semibold flex items-center ">Thông tin mã loại : {idProduct}</div>
                 <Link to={config.Routes.listCategory}>
                     <Button variant="contained">
                         <KeyboardArrowLeft />
@@ -115,16 +135,27 @@ const DetailCategory = () => {
                         }}
                     />
                     {/* end description */}
-                    {/* start input parentId  */}
-                    <InputText
-                        labelInput="ID Parent"
-                        errorInput={errors.parentId ? true : false}
-                        errorFormMessage={errors.parentId?.message}
-                        register={{
-                            ...register('parentId'),
-                        }}
-                    />
-                    {/* end input parentId */}
+                    {/* start input parentName  */}
+
+                    <FormControl fullWidth>
+                        <InputLabel>Tên loại cha</InputLabel>
+                        <Select
+                            label="parentName"
+                            {...register('parentName')}
+                            value={cateCurrent}
+                            onChange={(e) => {
+                                setCateCurrent(e.target.value);
+                            }}
+                        >
+                            <MenuItem value={''}>None</MenuItem>
+                            {listCate.map((item, index) => (
+                                <MenuItem key={index} value={item.name}>
+                                    {item.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    {/* end input parentName */}
                     {/* starr slug */}
                     <InputText
                         labelInput="Slug"

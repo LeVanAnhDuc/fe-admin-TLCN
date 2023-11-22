@@ -129,7 +129,7 @@ const ListCategory = () => {
                                         <div className="">{item.name}</div>
                                     </StyledTableCell>
                                     <StyledTableCell align="center">{item.description}</StyledTableCell>
-                                    <StyledTableCell align="center">{}</StyledTableCell>
+                                    <StyledTableCell align="center">{item.productNumber}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCategory + '#' + item.id}>
                                             <IconButton>

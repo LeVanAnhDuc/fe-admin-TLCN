@@ -10,6 +10,14 @@ export const getAllCategoryWithPagination = async (pageNo: number, pageSize: num
         throw error;
     }
 };
+export const getAllCategory = async () => {
+    try {
+        const response = await axios.get(`/categories`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
 
 export const getCategoryByIDOrSlug = async (idOrSlug: number) => {
     try {
@@ -25,7 +33,7 @@ export const createNewCategory = async (objectUpdate: IUpdateCategory) => {
         const response = await axios.post(`/categories`, {
             name: objectUpdate.name,
             description: objectUpdate.description,
-            parentId: objectUpdate.parentId,
+            parentName: objectUpdate.parentName,
         });
         return response;
     } catch (error) {
@@ -38,7 +46,7 @@ export const updateCategory = async (idCategory: number, objectUpdate: IUpdateCa
         const response = await axios.put(`/categories/${idCategory}`, {
             name: objectUpdate.name,
             description: objectUpdate.description,
-            parentId: objectUpdate.parentId,
+            parentName: objectUpdate.parentName,
         });
         return response;
     } catch (error) {

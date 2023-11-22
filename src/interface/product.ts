@@ -1,13 +1,14 @@
 export interface IValue {
-    valueId: number;
+    valueId?: number;
     valueName: string;
-    imageUrl: string;
+    imageUrl?: string;
 }
 export interface IOption {
-    optionId: number;
+    optionId?: number;
     optionName: string;
     values: Array<IValue>;
 }
+
 export default interface IProduct {
     id: string;
     name: string;

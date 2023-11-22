@@ -101,14 +101,12 @@ const ListProduct = () => {
                             <TableRow>
                                 <StyledTableCell>ID</StyledTableCell>
                                 <StyledTableCell align="left">Tên sản phẩm</StyledTableCell>
-                                <StyledTableCell align="center">Sold</StyledTableCell>
+                                <StyledTableCell align="center">Đã bán</StyledTableCell>
                                 <StyledTableCell align="center">SLCL</StyledTableCell>
                                 <StyledTableCell align="left" sx={{ minWidth: '90px' }}>
-                                    Price
+                                    Giá
                                 </StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
-                                    Actions
-                                </StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}></StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -122,9 +120,7 @@ const ListProduct = () => {
                                     </StyledTableCell>
                                     <StyledTableCell align="center">{item.sold}</StyledTableCell>
                                     <StyledTableCell align="center">{item.quantityAvailable}</StyledTableCell>
-                                    <StyledTableCell align="left">
-                                        {item.price.toLocaleString('vi-VN')} VNĐ
-                                    </StyledTableCell>
+                                    <StyledTableCell align="left">{item.price.toLocaleString('vi-VN')}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailProduct}>
                                             <IconButton>

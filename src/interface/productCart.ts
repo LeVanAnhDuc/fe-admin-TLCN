@@ -6,12 +6,12 @@ interface IProductChildrenCart {
 
 export interface IValue {
     valueName: string;
-    imageUrl: string;
+    imageUrl?: string;
 }
 export interface ISku {
-    price: number;
-    sku: string;
-    skuId: number;
+    price?: number;
+    sku?: string;
+    skuId?: number;
     optionValues: Array<IValue>;
 }
 

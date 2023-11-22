@@ -59,7 +59,6 @@ const ListCustomer = () => {
 
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
-                console.log(content);
 
                 setData(content);
                 setTotalPages(totalPages);

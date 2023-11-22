@@ -29,7 +29,6 @@ const DetailBill = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getOrderByID(id);
-                console.log(response);
 
                 if (response.status === 200) {
                     //  set address
@@ -70,7 +69,6 @@ const DetailBill = () => {
     return (
         <>
             <div className="flex flex-wrap justify-between pb-3 gap-5">
-                <div className="text-2xl font-semibold flex items-center ">Thông tin mã hóa đơn : {idProduct}</div>
                 <Link to={config.Routes.listBill}>
                     <Button variant="contained">
                         <KeyboardArrowLeft />

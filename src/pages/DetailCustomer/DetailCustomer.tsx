@@ -27,7 +27,6 @@ const DetailCustomer = () => {
             if (idUser && !isNaN(+idUser)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleUserByID(id);
-                console.log(response.data);
                 if (response.status === 200) {
                     setAvatar(response.data.avatarUrl);
 
@@ -69,7 +68,6 @@ const DetailCustomer = () => {
     return (
         <>
             <div className="flex flex-wrap justify-between pb-3 gap-5">
-                <div className="text-2xl font-semibold flex items-center ">Thông tin khách hàng : {idUser}</div>
                 <Link to={config.Routes.listCustomer}>
                     <Button variant="contained">
                         <KeyboardArrowLeft />

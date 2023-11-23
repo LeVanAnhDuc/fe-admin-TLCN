@@ -2,7 +2,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useEffect, useState } from 'react';
 import useDebounceCustom from '../../hook/useDebounceCustom';
 interface Iprops {
-    setSearch: React.Dispatch<React.SetStateAction<string>>;
+    setSearch?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Search = (props: Iprops) => {
@@ -19,10 +19,10 @@ const Search = (props: Iprops) => {
     useEffect(() => {
         // Nếu không có dữ liệu sẽ không call API
         if (!debounce.trim()) {
-            setSearch('');
+            setSearch && setSearch('');
             return;
         }
-        setSearch(debounce);
+        setSearch && setSearch(debounce);
     }, [debounce]);
 
     return (

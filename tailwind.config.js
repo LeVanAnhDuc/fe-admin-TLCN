@@ -20,6 +20,7 @@ module.exports = {
                 header: '#B3A492',
                 navbar: '#F5F5F5',
                 headerProfile: '#FFEEE8',
+                chart: '#F8F6F4',
             },
             spacing: {
                 22: '88px',

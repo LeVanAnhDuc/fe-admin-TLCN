@@ -20,6 +20,7 @@ import Search from '../../components/Search/Search';
 import { changeLockUnlockUserAccountByIDUser, getAllUserWithinPanigation } from '../../apis/userApi';
 import { toast } from 'react-toastify';
 import IUser from '../../interface/user';
+import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -126,14 +127,20 @@ const ListCustomer = () => {
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCustomer + '#' + item.id}>
                                             <IconButton>
-                                                <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                                                <MouseOverPopover content="Xem thông tin chi tiết">
+                                                    <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                                                </MouseOverPopover>
                                             </IconButton>
                                         </Link>
                                         <IconButton onClick={() => handleLockAccount(item.id)}>
                                             {item.locked ? (
-                                                <LockTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                                <MouseOverPopover content="Mở khóa tài khoản">
+                                                    <LockTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                                </MouseOverPopover>
                                             ) : (
-                                                <LockOpenTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                                <MouseOverPopover content="Khóa tài khoản">
+                                                    <LockOpenTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                                </MouseOverPopover>
                                             )}
                                         </IconButton>
                                     </StyledTableCell>

@@ -21,6 +21,7 @@ import { deleteOrderByAdmin, getAllOrderWithinPagination } from '../../apis/orde
 import { toast } from 'react-toastify';
 import SelectStatus from './SelectStatus/SelectStatus';
 import Search from '../../components/Search/Search';
+import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -74,13 +75,22 @@ const ListBill = () => {
     };
     // delete order
     const handleDeleteOrder = async (idOrder: number) => {
-        const response = await deleteOrderByAdmin(idOrder);
-        if (response.status === 200) {
-            toast.success(response.data);
+        const userConfirmed = window.confirm('Bạn có chắc chắn muốn xóa không?');
+        if (userConfirmed) {
+            try {
+                const response = await deleteOrderByAdmin(idOrder);
+                if (response.status === 200) {
+                    toast.success(response.data);
+                } else {
+                    toast.error(response.data.message || response.data);
+                }
+                setIsLoading((prev) => !prev);
+            } catch (error) {
+                toast.error(`Lỗi xóa: ${error} `);
+            }
         } else {
-            toast.error(response.data.message || response.data);
+            toast.info('Hủy xóa');
         }
-        setIsLoading((prev) => !prev);
     };
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
@@ -138,11 +148,15 @@ const ListBill = () => {
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailBill + '#' + item.id}>
                                             <IconButton>
-                                                <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                                                <MouseOverPopover content="Xem thông tin chi tiết">
+                                                    <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                                                </MouseOverPopover>
                                             </IconButton>
                                         </Link>
                                         <IconButton onClick={() => handleDeleteOrder(item.id)}>
-                                            <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                            <MouseOverPopover content="Xóa đơn hàng">
+                                                <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                            </MouseOverPopover>
                                         </IconButton>
                                     </StyledTableCell>
                                 </StyledTableRow>

@@ -21,6 +21,7 @@ import ICategory from '../../interface/category';
 import { deteleASingleCategory, getAllCategoryWithPagination } from '../../apis/categoryApii';
 import Search from '../../components/Search/Search';
 import ModalCategory from './ModalCategory/ModalCategory';
+import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -76,13 +77,22 @@ const ListCategory = () => {
 
     // delete item
     const handleDeleteItem = async (idItem: number) => {
-        const response = await deteleASingleCategory(idItem);
-        if (response.status === 200) {
-            toast.success(response.data);
+        const userConfirmed = window.confirm('Bạn có chắc chắn muốn xóa không?');
+        if (userConfirmed) {
+            try {
+                const response = await deteleASingleCategory(idItem);
+                if (response.status === 200) {
+                    toast.success(response.data);
+                } else {
+                    toast.error(response.data.message || response.data);
+                }
+                setIsLoading((prev) => !prev);
+            } catch (error) {
+                toast.error(`Lỗi xóa: ${error} `);
+            }
         } else {
-            toast.error(response.data.message || response.data);
+            toast.info('Hủy xóa');
         }
-        setIsLoading((prev) => !prev);
     };
 
     // modal
@@ -114,10 +124,8 @@ const ListCategory = () => {
                                 <StyledTableCell align="center">ID</StyledTableCell>
                                 <StyledTableCell align="left">Tên loại</StyledTableCell>
                                 <StyledTableCell align="center">Mô tả</StyledTableCell>
-                                <StyledTableCell align="center">Total Products</StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
-                                    Actions
-                                </StyledTableCell>
+                                <StyledTableCell align="center">Tổng sản phẩm</StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}></StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -134,11 +142,15 @@ const ListCategory = () => {
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCategory + '#' + item.id}>
                                             <IconButton>
-                                                <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                                                <MouseOverPopover content="Xem thông tin chi tiết">
+                                                    <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                                                </MouseOverPopover>
                                             </IconButton>
                                         </Link>
                                         <IconButton onClick={() => handleDeleteItem(item.id)}>
-                                            <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                            <MouseOverPopover content="Xóa loại">
+                                                <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                            </MouseOverPopover>
                                         </IconButton>
                                     </StyledTableCell>
                                 </StyledTableRow>

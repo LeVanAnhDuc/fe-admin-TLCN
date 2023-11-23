@@ -209,7 +209,7 @@ const DetailProduct = () => {
             options: [optionsSize, optionsColor],
             skus: Sku,
             // not value
-            id: '',
+            id: 0,
             quantityAvailable: 0,
             slug: '',
             promotionalPrice: '',

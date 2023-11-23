@@ -63,6 +63,7 @@ const ListProduct = () => {
             const response = await getAllProductWithinPaginationSearch(pageNo, itemsPerPage, search);
 
             const { content, totalPages } = response.data;
+            console.log(content);
 
             setData(content);
             setTotalPages(totalPages);
@@ -79,19 +80,30 @@ const ListProduct = () => {
         setPage(newPage);
     };
 
+    // handle delete
+
     const handleDeleteProduct = async (idProduct: number) => {
-        const response = await toggleIsActiveProduct(idProduct);
-        if (response.status === 200) {
-            toast.success('Xóa thành công');
+        const userConfirmed = window.confirm('Bạn có chắc chắn muốn xóa không?');
+
+        if (userConfirmed) {
+            try {
+                const response = await toggleIsActiveProduct(idProduct);
+                if (response.status === 200) {
+                    toast.success('Xóa thành công');
+                } else {
+                    toast.error('Thất bại');
+                }
+                setLoading((prev) => !prev);
+            } catch (error) {
+                toast.error(`Lỗi xóa: ${error} `);
+            }
         } else {
-            toast.error('Thất bại');
+            toast.info('Hủy xóa');
         }
-        setLoading((prev) => !prev);
     };
 
     const handleIsSellingProduct = async (idProduct: number) => {
         const response = await toggleIsSellingProduct(idProduct);
-        console.log(response);
 
         if (response.status === 200) {
             if (response.data.isSelling) {

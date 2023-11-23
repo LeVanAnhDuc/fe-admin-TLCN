@@ -14,6 +14,7 @@ interface IProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     register?: any;
     autoComplete?: string;
+    readOnly?: boolean;
     [key: string]: unknown;
 }
 
@@ -26,6 +27,7 @@ const InputText = (propsCh: IProps) => {
         errorFormMessage,
         autoComplete,
         register,
+        readOnly,
         ...props
     } = propsCh;
 
@@ -54,6 +56,7 @@ const InputText = (propsCh: IProps) => {
                         ) : (
                             ''
                         ),
+                    readOnly: readOnly ? true : false,
                 }}
                 InputLabelProps={{
                     shrink: true,

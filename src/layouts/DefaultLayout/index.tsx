@@ -1,4 +1,4 @@
-import Header from '../components/Header/Header';
+// import Header from '../components/Header/Header';
 import Navbar from '../components/Navbar/Navbar';
 import { ReactNode } from 'react';
 
@@ -9,10 +9,10 @@ interface DefaultLayoutProps {
 function DefaultLayout({ children }: DefaultLayoutProps) {
     return (
         <div>
-            <Header />
-            <div className="flex flex-row ">
+            {/* <Header /> */}
+            <div className="flex flex-row h-full">
                 <Navbar />
-                <div className="w-full p-5 h-156 overflow-y-auto scroll-smooth">{children}</div>
+                <div className="w-full p-5 h-screen overflow-y-auto scroll-smooth">{children}</div>
             </div>
         </div>
     );

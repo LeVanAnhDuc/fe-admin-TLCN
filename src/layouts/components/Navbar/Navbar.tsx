@@ -87,7 +87,7 @@ const Navbar = () => {
             <div
                 className={`${
                     toggleNavbar ? 'w-[110px] sm:w-[100px]' : 'w-full sm:w-80'
-                }  h-156 shadow-md overflow-y-auto scroll-smooth hide-scrollbar pt-3 bg-navbar`}
+                }  h-screen shadow-md overflow-y-auto scroll-smooth hide-scrollbar pt-3 bg-navbar`}
             >
                 <div className="flex justify-end pr-2 md:pr-3">
                     <Button

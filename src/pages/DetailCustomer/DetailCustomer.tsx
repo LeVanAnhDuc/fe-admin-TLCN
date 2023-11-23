@@ -85,14 +85,13 @@ const DetailCustomer = () => {
                     <InputText
                         labelInput="Username"
                         errorInput={errors.username ? true : false}
-                        isRequired
                         errorFormMessage={errors.username?.message}
                         register={{
                             ...register('username', {
                                 required: 'username is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input id and  username*/}
                     {/* start input name  */}
@@ -103,7 +102,7 @@ const DetailCustomer = () => {
                         register={{
                             ...register('name'),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input name */}
                     {/* start input email  */}
@@ -114,7 +113,7 @@ const DetailCustomer = () => {
                         register={{
                             ...register('email'),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input email */}
                     {/* start input gender  */}
@@ -125,89 +124,83 @@ const DetailCustomer = () => {
                         register={{
                             ...register('gender'),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input gender */}
                     {/* start phoneNumber */}
                     <InputText
                         labelInput="Số điện thoại"
                         errorInput={errors.phoneNumber ? true : false}
-                        isRequired
                         errorFormMessage={errors.phoneNumber?.message}
                         register={{
                             ...register('phoneNumber', {
                                 required: 'phoneNumber is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end phoneNumber */}
                     {/* start createdDate */}
                     <InputText
                         labelInput="Ngày tạo"
                         errorInput={errors.createdDate ? true : false}
-                        isRequired
                         errorFormMessage={errors.createdDate?.message}
                         register={{
                             ...register('createdDate', {
                                 required: 'createdDate is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end createdDate */}
                     {/* start locked */}
                     <InputText
                         labelInput="Trạng thái khóa tài khoản"
                         errorInput={errors.locked ? true : false}
-                        isRequired
                         errorFormMessage={errors.locked?.message}
                         register={{
                             ...register('locked', {
                                 required: 'locked is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end locked */}
                     {/* start input  lastModifiedBy and lastModifiedDate  */}
                     <InputText
                         labelInput="Người chỉnh sửa cuối"
                         errorInput={errors.lastModifiedBy ? true : false}
-                        isRequired
                         errorFormMessage={errors.lastModifiedBy?.message}
                         register={{
                             ...register('lastModifiedBy', {
                                 required: 'lastModifiedBy is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     <InputText
                         labelInput="Ngày chỉnh sửa cuối"
                         errorInput={errors.lastModifiedDate ? true : false}
-                        isRequired
                         errorFormMessage={errors.lastModifiedDate?.message}
                         register={{
                             ...register('lastModifiedDate', {
                                 required: 'lastModifiedDate is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input lastModifiedBy and lastModifiedDate */}
                     {/* start input  isEnabled  */}
                     <InputText
                         labelInput="isEnabled"
                         errorInput={errors.isEnabled ? true : false}
-                        isRequired
                         errorFormMessage={errors.isEnabled?.message}
                         register={{
                             ...register('isEnabled', {
                                 required: 'isEnabled is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input isEnabled  */}
                 </form>

@@ -29,6 +29,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
+        padding: 3,
     },
 }));
 
@@ -48,7 +49,7 @@ const ListCategory = () => {
     const [data, setData] = useState<Array<ICategory>>([]); // Dữ liệu từ API
     const [page, setPage] = useState<number>(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
-    const itemsPerPage = 5;
+    const itemsPerPage = 20;
     // panigation
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
@@ -106,11 +107,11 @@ const ListCategory = () => {
                 <Search />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 460 }}>
+                <TableContainer>
                     <Table stickyHeader aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>ID</StyledTableCell>
+                                <StyledTableCell align="center">ID</StyledTableCell>
                                 <StyledTableCell align="left">Tên loại</StyledTableCell>
                                 <StyledTableCell align="center">Mô tả</StyledTableCell>
                                 <StyledTableCell align="center">Total Products</StyledTableCell>
@@ -122,7 +123,7 @@ const ListCategory = () => {
                         <TableBody>
                             {data.map((item, index) => (
                                 <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <StyledTableCell component="th" scope="row">
+                                    <StyledTableCell align="center" component="th" scope="row">
                                         {item.id}
                                     </StyledTableCell>
                                     <StyledTableCell align="left">

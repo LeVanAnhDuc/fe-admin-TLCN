@@ -37,6 +37,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
+        padding: 3,
     },
 }));
 
@@ -328,7 +329,7 @@ const DetailProduct = () => {
 
                 {/* start table */}
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                    <TableContainer sx={{ maxHeight: 460 }}>
+                    <TableContainer>
                         <Table stickyHeader aria-label="simple table">
                             <TableHead>
                                 <TableRow>

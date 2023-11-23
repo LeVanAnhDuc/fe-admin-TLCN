@@ -28,6 +28,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
+        padding: 3,
     },
 }));
 
@@ -47,7 +48,7 @@ const ListCustomer = () => {
     const [data, setData] = useState<Array<IUser>>([]); // Dữ liệu từ API
     const [page, setPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(11); // Tổng số trang
-    const itemsPerPage = 5;
+    const itemsPerPage = 20;
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
@@ -98,30 +99,30 @@ const ListCustomer = () => {
                 <Search />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 460 }}>
+                <TableContainer>
                     <Table stickyHeader aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>Username</StyledTableCell>
+                                <StyledTableCell align="center">Username</StyledTableCell>
                                 <StyledTableCell align="left" sx={{ minWidth: '100px' }}>
                                     Tên
                                 </StyledTableCell>
                                 <StyledTableCell align="center">Giới tính</StyledTableCell>
                                 <StyledTableCell align="left">Email</StyledTableCell>
-                                <StyledTableCell align="left">SĐT</StyledTableCell>
+                                <StyledTableCell align="center">SĐT</StyledTableCell>
                                 <StyledTableCell align="center" sx={{ minWidth: '120px' }}></StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {data.map((item, index) => (
                                 <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <StyledTableCell component="th" scope="row">
+                                    <StyledTableCell align="center" component="th" scope="row">
                                         {item.username}
                                     </StyledTableCell>
                                     <StyledTableCell align="left">{item.name}</StyledTableCell>
                                     <StyledTableCell align="center">{item.gender}</StyledTableCell>
                                     <StyledTableCell align="left">{item.email}</StyledTableCell>
-                                    <StyledTableCell align="left">{item.phoneNumber}</StyledTableCell>
+                                    <StyledTableCell align="center">{item.phoneNumber}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCustomer + '#' + item.id}>
                                             <IconButton>

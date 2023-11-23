@@ -12,7 +12,6 @@ import Pagination from '@mui/material/Pagination';
 
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
-import Search from '@mui/icons-material/Search';
 
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -21,6 +20,7 @@ import IOrder from '../../interface/order';
 import { deleteOrderByAdmin, getAllOrderWithinPagination } from '../../apis/orderApi';
 import { toast } from 'react-toastify';
 import SelectStatus from './SelectStatus/SelectStatus';
+import Search from '../../components/Search/Search';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -29,6 +29,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
+        padding: 3,
     },
 }));
 
@@ -91,39 +92,22 @@ const ListBill = () => {
     }, [page, isLoading]);
     return (
         <div>
-            <div className="grid grid-cols-1 pb-3 md:grid-cols-2">
+            <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách hóa đơn</div>
-                <form>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <Search sx={{ color: 'gray' }} />
-                        </div>
-                        <input
-                            type="search"
-                            id="default-search"
-                            className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
-                            placeholder="Search..."
-                            required
-                        />
-                        <button
-                            type="submit"
-                            className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
-                        >
-                            Search
-                        </button>
-                    </div>
-                </form>
+            </div>
+            <div className="flex justify-center m-auto my-4 md:w-7/12">
+                <Search />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 460 }}>
+                <TableContainer>
                     <Table stickyHeader aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>ID</StyledTableCell>
-                                <StyledTableCell align="left" sx={{ minWidth: '100px' }}>
+                                <StyledTableCell align="center">ID</StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '100px' }}>
                                     Người đặt hàng
                                 </StyledTableCell>
-                                <StyledTableCell align="left">Thành tiền</StyledTableCell>
+                                <StyledTableCell align="center">Thành tiền</StyledTableCell>
                                 <StyledTableCell align="left">Ghi chú</StyledTableCell>
                                 <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
                                     Trạng thái
@@ -134,11 +118,13 @@ const ListBill = () => {
                         <TableBody>
                             {data.map((item, index) => (
                                 <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <StyledTableCell component="th" scope="row">
+                                    <StyledTableCell align="center" component="th" scope="row">
                                         {item.id}
                                     </StyledTableCell>
-                                    <StyledTableCell align="left">{item.address.fullName}</StyledTableCell>
-                                    <StyledTableCell align="left">{item.total.toLocaleString('vi-VN')}</StyledTableCell>
+                                    <StyledTableCell align="center">{item.address.fullName}</StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        {item.total.toLocaleString('vi-VN')}
+                                    </StyledTableCell>
                                     <StyledTableCell align="left" sx={{ minWidth: '10rem' }}>
                                         {item.note}
                                     </StyledTableCell>

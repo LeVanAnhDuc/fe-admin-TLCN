@@ -80,19 +80,19 @@ const DetailBill = () => {
                 {/* start account setting */}
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     {/* start input userId*/}
-                    <InputText labelInput="Tên người đặt" value={`${address?.fullName}`} disabled />
+                    <InputText labelInput="Tên người đặt" value={`${address?.fullName}`} readOnly />
                     {/* end input userId*/}
 
                     {/* start input addressId*/}
                     <InputText
                         labelInput="Địa chỉ"
                         value={`${address?.orderDetails}, ${address?.ward}, ${address?.district}, ${address?.city}`}
-                        disabled
+                        readOnly
                     />
                     {/* end input addressId*/}
 
                     {/* start input phone*/}
-                    <InputText labelInput="Số điện thoại" value={`${address?.phoneNumber}`} disabled />
+                    <InputText labelInput="Số điện thoại" value={`${address?.phoneNumber}`} readOnly />
                     {/* end input phone*/}
 
                     {/* starr createdDate */}
@@ -103,7 +103,7 @@ const DetailBill = () => {
                                 required: 'createdDate is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end createdDate */}
                     {/* start input isPaidBefore  */}
@@ -112,7 +112,7 @@ const DetailBill = () => {
                         register={{
                             ...register('isPaidBefore'),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input isPaidBefore */}
                     {/* start input  lastModifiedDate  */}
@@ -123,7 +123,7 @@ const DetailBill = () => {
                                 required: 'lastModifiedDate is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input lastModifiedDate */}
                     {/* starr note */}
@@ -134,7 +134,7 @@ const DetailBill = () => {
                                 required: 'note is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end note */}
 
@@ -146,7 +146,7 @@ const DetailBill = () => {
                                 required: 'createdBy is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input paymentType */}
                     {/* start input  status*/}
@@ -157,7 +157,7 @@ const DetailBill = () => {
                                 required: 'status is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input status*/}
                     {/* start input total*/}
@@ -168,7 +168,7 @@ const DetailBill = () => {
                                 required: 'total is required',
                             }),
                         }}
-                        disabled
+                        readOnly
                     />
                     {/* end input total*/}
                 </form>

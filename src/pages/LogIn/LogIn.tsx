@@ -47,7 +47,6 @@ const LogIn = () => {
             toast.error('Mật khẩu phải trên 8 kí tự và không chứa kí tự đặc biệt');
         } else {
             const response = await loginApi(data.email, data.passWord);
-            console.log(response);
 
             if (response?.data?.jwt) {
                 toast.success('Đăng nhập thành công');

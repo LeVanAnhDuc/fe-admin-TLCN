@@ -12,6 +12,10 @@ export default interface ICategory {
     parentName: string;
 }
 
+export interface ICategoryName {
+    name: string;
+}
+
 export interface IUpdateCategory {
     name: string;
     description: string;

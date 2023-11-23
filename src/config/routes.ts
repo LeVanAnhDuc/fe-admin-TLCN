@@ -4,6 +4,7 @@ const Routes = {
     listCategory: '/danh-sach-loai',
     detailCategory: '/chi-tiet-loai',
     listProduct: '/danh-sach-san-pham',
+    addProduct: '/them-san-pham',
     detailProduct: '/chi-tiet-san-pham',
     listCustomer: '/danh-sach-khach-hang',
     detailCustomer: '/chi-tiet-khach-hang',

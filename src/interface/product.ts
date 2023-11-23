@@ -1,3 +1,5 @@
+import { ICategoryName } from './category';
+import { ISku } from './productCart';
 export interface IValue {
     valueId?: number;
     valueName: string;
@@ -10,13 +12,13 @@ export interface IOption {
 }
 
 export default interface IProduct {
-    id: string;
+    id: number;
     name: string;
     description: string;
     price: number;
     quantity: number;
     quantityAvailable: number;
-    categoryId: string;
+    category: ICategoryName;
     slug: string;
     promotionalPrice: string;
     sold: number;
@@ -31,4 +33,5 @@ export default interface IProduct {
     lastModifiedBy: string;
     listImages: Array<string>;
     options: Array<IOption>;
+    skus: Array<ISku>;
 }

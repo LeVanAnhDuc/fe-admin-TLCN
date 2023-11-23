@@ -14,12 +14,19 @@ import Pagination from '@mui/material/Pagination';
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
 import { styled } from '@mui/material/styles';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Button from '@mui/material/Button';
 
 import config from '../../config';
 import IProduct from '../../interface/product';
-import { getAllProductWithinPagination } from '../../apis/productApi';
-import Button from '@mui/material/Button';
+import {
+    getAllProductWithinPaginationSearch,
+    toggleIsActiveProduct,
+    toggleIsSellingProduct,
+} from '../../apis/productApi';
 import Search from '../../components/Search/Search';
+import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -43,17 +50,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ListProduct = () => {
+    const [isLoading, setLoading] = useState<boolean>(false);
     // change page
     const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
     const [page, setPage] = useState<number>(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
+    const [search, setSearch] = useState<string>('');
     const itemsPerPage = 20;
 
     const getAllProducts = async (pageNo: number) => {
         try {
-            const response = await getAllProductWithinPagination(pageNo, itemsPerPage);
+            const response = await getAllProductWithinPaginationSearch(pageNo, itemsPerPage, search);
+
             const { content, totalPages } = response.data;
-            console.log(content);
 
             setData(content);
             setTotalPages(totalPages);
@@ -64,17 +73,44 @@ const ListProduct = () => {
 
     useEffect(() => {
         getAllProducts(page);
-    }, [page]);
+    }, [page, isLoading]);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
+    };
+
+    const handleDeleteProduct = async (idProduct: number) => {
+        const response = await toggleIsActiveProduct(idProduct);
+        if (response.status === 200) {
+            toast.success('Xóa thành công');
+        } else {
+            toast.error('Thất bại');
+        }
+        setLoading((prev) => !prev);
+    };
+    const handleIsSellingProduct = async (idProduct: number) => {
+        const response = await toggleIsSellingProduct(idProduct);
+        console.log(response);
+
+        if (response.status === 200) {
+            if (response.data.isSelling) {
+                toast.success('Mở bán thành công');
+            } else {
+                toast.success('Ẩn bán thành công');
+            }
+        } else {
+            toast.error('Thất bại');
+        }
+        setLoading((prev) => !prev);
     };
 
     return (
         <div>
             <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách sản phẩm</div>
-                <Button variant="contained">Thêm mới</Button>
+                <Link to={config.Routes.addProduct}>
+                    <Button variant="contained">Thêm mới</Button>
+                </Link>
             </div>
             <div className="flex justify-center m-auto my-4 md:w-7/12">
                 <Search />
@@ -115,13 +151,28 @@ const ListProduct = () => {
                                     <StyledTableCell align="center">{item.quantityAvailable}</StyledTableCell>
                                     <StyledTableCell align="left">{item.price.toLocaleString('vi-VN')}</StyledTableCell>
                                     <StyledTableCell align="center">
-                                        <Link to={config.Routes.detailProduct}>
+                                        <Link to={config.Routes.detailProduct + '#' + item.id}>
                                             <IconButton>
-                                                <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                                                <MouseOverPopover content="Xem thông tin chi tiết">
+                                                    <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                                                </MouseOverPopover>
                                             </IconButton>
                                         </Link>
-                                        <IconButton>
-                                            <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                        <IconButton onClick={() => handleDeleteProduct(item.id)}>
+                                            <MouseOverPopover content="Xóa sản phẩm">
+                                                <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                            </MouseOverPopover>
+                                        </IconButton>
+                                        <IconButton onClick={() => handleIsSellingProduct(item.id)}>
+                                            {item.isSelling ? (
+                                                <MouseOverPopover content="Sản phẩm đang được bán">
+                                                    <Visibility sx={{ color: '#E74646', fontSize: 26 }} />
+                                                </MouseOverPopover>
+                                            ) : (
+                                                <MouseOverPopover content="Sản phẩm đã bị ẩn">
+                                                    <VisibilityOff sx={{ color: '#E74646', fontSize: 26 }} />
+                                                </MouseOverPopover>
+                                            )}
                                         </IconButton>
                                     </StyledTableCell>
                                 </StyledTableRow>

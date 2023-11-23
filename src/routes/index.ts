@@ -11,6 +11,7 @@ import ListProduct from '../pages/ListProduct/ListProduct';
 import LogIn from '../pages/LogIn/LogIn';
 
 import Error404 from '../pages/Error404';
+import AddProduct from '../pages/AddlProduct/AddProduct';
 type TRouters = {
     path: string;
     component: React.ComponentType;
@@ -22,7 +23,10 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.detailBill, component: DetailBill },
     { path: config.Routes.detailCategory, component: DetailCategory },
     { path: config.Routes.detailCustomer, component: DetailCustomer },
+
     { path: config.Routes.detailProduct, component: DetailProduct },
+    { path: config.Routes.addProduct, component: AddProduct },
+
     { path: config.Routes.listBill, component: ListBill },
     { path: config.Routes.listCategory, component: ListCategory },
     { path: config.Routes.listCustomer, component: ListCustomer },

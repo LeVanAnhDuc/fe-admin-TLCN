@@ -40,7 +40,6 @@ const DetailCategory = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getCategoryByIDOrSlug(id);
-                console.log(response);
 
                 if (response.status === 200) {
                     await setValue('id', response.data.id);

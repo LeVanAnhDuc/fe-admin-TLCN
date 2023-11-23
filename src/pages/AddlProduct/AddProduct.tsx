@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Button from '@mui/material/Button';
@@ -29,7 +29,7 @@ import OptionColor from './OptionColor/OptionColor';
 import { ISku } from '../../interface/productCart';
 import ICategory from '../../interface/category';
 import { getAllCategory } from '../../apis/categoryApii';
-import { getSingleProduct, updateProduct } from '../../apis/productApi';
+import { createNewProduct } from '../../apis/productApi';
 import { toast } from 'react-toastify';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -65,20 +65,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-const DetailProduct = () => {
-    const navigate = useNavigate();
-    // handle get id
-    const location = useLocation();
-    const idProduct = location.hash.substring(1);
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        setValue,
-    } = useForm<IProduct>({});
-
-    // get list cate
+const AddProduct = () => {
     const [listCate, setListCate] = useState<Array<ICategory>>([]);
     const handleGetListCate = async () => {
         const res = await getAllCategory();
@@ -89,6 +76,12 @@ const DetailProduct = () => {
     useEffect(() => {
         handleGetListCate();
     }, []);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm<IProduct>({});
 
     // handle change image list product
     const [selectedImage, setSelectedImage] = useState<string[]>([]);
@@ -106,13 +99,10 @@ const DetailProduct = () => {
         //
         //
     };
-    // cate current
-    const [cateCurrent, setCateCurrent] = useState<string>('');
-
     // handle biến thể
     const [isLoading, setLoading] = useState<boolean>(false);
-    const [optionsSize, setOptionsSize] = useState<IOption>({ optionId: 0, optionName: '', values: [] });
-    const [optionsColor, setOptionsColor] = useState<IOption>({ optionId: 0, optionName: '', values: [] });
+    const [optionsSize, setOptionsSize] = useState<IOption>({ optionName: '', values: [] });
+    const [optionsColor, setOptionsColor] = useState<IOption>({ optionName: '', values: [] });
 
     const handleSetOptionsSize = (optionName: string, values: Array<IValue>) => {
         setOptionsSize({ optionName, values });
@@ -122,9 +112,8 @@ const DetailProduct = () => {
         setOptionsColor({ optionName, values });
         setLoading((prev) => !prev);
     };
-
-    // auto create sku by biến thể
     const [Sku, setSku] = useState<Array<ISku>>([]);
+
     useEffect(() => {
         setSku([]);
         const combinedArray = [];
@@ -136,7 +125,6 @@ const DetailProduct = () => {
         }
     }, [isLoading]);
 
-    // handle change price in sku
     const handleChangePrice = (id: number, e: ChangeEvent<HTMLInputElement>) => {
         setSku((prev) => {
             const newArray = prev.map((item, index) => {
@@ -149,54 +137,6 @@ const DetailProduct = () => {
             return newArray;
         });
     };
-
-    // handle get data
-    const getProduct = async (id: number) => {
-        try {
-            if (idProduct && !isNaN(+idProduct)) {
-                // tồn tai ma san pham và phải là số
-                const response = await getSingleProduct(id);
-                console.log(response);
-                if (response.status === 200) {
-                    await setCateCurrent(response.data.categoryName);
-
-                    await setValue('name', response.data.name);
-                    await setValue('quantity', response.data.quantity);
-                    await setValue('price', response.data.price);
-
-                    await setValue('sold', response.data.sold);
-                    await setValue('quantityAvailable', response.data.quantityAvailable);
-
-                    await setValue('createdBy', response.data.createdBy);
-                    await setValue('createdDate', response.data.createdDate);
-                    await setValue('lastModifiedBy', response.data.lastModifiedBy);
-                    await setValue('lastModifiedDate', response.data.lastModifiedDate);
-
-                    await setValue('description', response.data.description);
-
-                    await setSelectedImage(response.data.listImages);
-                    await setOptionsSize(
-                        response.data.options.filter((item: IOption) => item.optionName === 'Size')[0],
-                    );
-                    await setOptionsColor(
-                        response.data.options.filter((item: IOption) => item.optionName === 'Màu')[0],
-                    );
-
-                    setSku(response.data.skus);
-                } else {
-                    toast.error(response.data.message);
-                    navigate(config.Routes.listProduct);
-                }
-            } else {
-                navigate(config.Routes.listProduct);
-            }
-        } catch {
-            toast.error('Đang bảo trì');
-        }
-    };
-    useEffect(() => {
-        getProduct(+idProduct);
-    }, [idProduct]);
     // submit form
     const onSubmit: SubmitHandler<IProduct> = async (data) => {
         const object: IProduct = {
@@ -224,11 +164,10 @@ const DetailProduct = () => {
             createdBy: '',
             lastModifiedBy: '',
         };
-        console.log(object);
 
-        const response = await updateProduct(+idProduct, object);
-        if (response.status === 200) {
-            toast.success('Sửa thành công');
+        const response = await createNewProduct(object);
+        if (response.status === 201) {
+            toast.success('Tạo thành công');
         } else {
             toast.error(response.data.message || response.data);
         }
@@ -254,11 +193,11 @@ const DetailProduct = () => {
                             <InputLabel required>CategoryName</InputLabel>
                             <Select
                                 label="CategoryName"
-                                {...register('category.name')}
-                                value={cateCurrent}
-                                onChange={(e) => {
-                                    setCateCurrent(e.target.value);
-                                }}
+                                {...register('category.name', {
+                                    required: 'categoryName is required',
+                                })}
+                                required
+                                defaultValue={''}
                             >
                                 {listCate.map((item, index) => (
                                     <MenuItem key={index} value={item.name}>
@@ -305,61 +244,7 @@ const DetailProduct = () => {
                         />
                     </div>
                     {/* end input quantity and price*/}
-                    {/* start input sold and quantityAvailable */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="Đã bán"
-                            register={{
-                                ...register('sold'),
-                            }}
-                            disabled
-                        />
-                        <InputText
-                            labelInput="Số lượng khả dụng"
-                            register={{
-                                ...register('quantityAvailable'),
-                            }}
-                            disabled
-                        />
-                    </div>
-                    {/* end input sold and quantityAvailable*/}
-                    {/* start input  createBy and createDate  */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="CreateBy"
-                            register={{
-                                ...register('createdBy'),
-                            }}
-                            disabled
-                        />
-                        <InputText
-                            labelInput="CreateDate"
-                            register={{
-                                ...register('createdDate'),
-                            }}
-                            disabled
-                        />
-                    </div>
 
-                    {/* end input createBy and createDate */}
-                    {/* start input  lastModifiedBy and lastModifiedDate  */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="LastModifiedBy"
-                            register={{
-                                ...register('lastModifiedBy'),
-                            }}
-                            disabled
-                        />
-                        <InputText
-                            labelInput="LastModifiedDate"
-                            register={{
-                                ...register('lastModifiedDate'),
-                            }}
-                            disabled
-                        />
-                    </div>
-                    {/* end input lastModifiedBy and lastModifiedDate */}
                     <div className="mb-5 font-semibold text-xl">Danh sách ảnh</div>
                     {/* start list image */}
                     <div className="relative">
@@ -401,8 +286,8 @@ const DetailProduct = () => {
                     />
                     {/* start bien the */}
                     <div className="font-semibold text-xl my-5">Thông tin biến thể</div>
-                    <OptionSize handleSetOptionsSize={handleSetOptionsSize} optionsSize={optionsSize} />
-                    <OptionColor handleSetOptionsColor={handleSetOptionsColor} optionsColor={optionsColor} />
+                    <OptionSize type={config.TypeOption.Size} handleSetOptionsSize={handleSetOptionsSize} />
+                    <OptionColor type={config.TypeOption.Color} handleSetOptionsColor={handleSetOptionsColor} />
                     {/* end bien the */}
 
                     {/* start table */}
@@ -411,7 +296,7 @@ const DetailProduct = () => {
                             <Table stickyHeader aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
-                                        <StyledTableCell align="center">ID</StyledTableCell>
+                                        <StyledTableCell>ID</StyledTableCell>
                                         <StyledTableCell align="center">Size</StyledTableCell>
                                         <StyledTableCell align="center">Color</StyledTableCell>
                                         <StyledTableCell align="center">Price</StyledTableCell>
@@ -423,7 +308,7 @@ const DetailProduct = () => {
                                             key={index}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
-                                            <StyledTableCell align="center" component="th" scope="row">
+                                            <StyledTableCell component="th" scope="row">
                                                 {index}
                                             </StyledTableCell>
                                             {item.optionValues.map((item2, index2) => (
@@ -433,7 +318,7 @@ const DetailProduct = () => {
                                             ))}
                                             <StyledTableCell align="center">
                                                 <input
-                                                    className="bg-stone-200 w-32 text-center"
+                                                    className="bg-stone-300 w-20 text-center"
                                                     type="number"
                                                     value={item.price}
                                                     onChange={(e) => handleChangePrice(index, e)}
@@ -458,4 +343,4 @@ const DetailProduct = () => {
     );
 };
 
-export default DetailProduct;
+export default AddProduct;

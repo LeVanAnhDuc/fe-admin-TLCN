@@ -1,8 +1,9 @@
 import InputText from '../../../components/InputText/InputText';
 import Button from '@mui/material/Button';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { IValue } from '../../../interface/productCart';
+import { IOption } from '../../../interface/product';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -15,16 +16,22 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 interface Iprops {
-    type?: string;
     handleSetOptionsSize?: (title: string, arrayValue: Array<IValue>) => void;
+    optionsSize: IOption;
 }
 
 const OptionSize = (props: Iprops) => {
     // prop
-    const { type, handleSetOptionsSize } = props;
+    const { handleSetOptionsSize, optionsSize } = props;
 
-    const [nameTitle, setNameTitle] = useState<string>(type || '');
+    const [nameTitle, setNameTitle] = useState<string>('');
     const [valueName, setValueName] = useState<Array<IValue>>([]);
+
+    // get data
+    useEffect(() => {
+        setNameTitle(optionsSize.optionName);
+        setValueName(optionsSize.values);
+    }, [optionsSize]);
     // title
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
         setNameTitle(e.target.value);

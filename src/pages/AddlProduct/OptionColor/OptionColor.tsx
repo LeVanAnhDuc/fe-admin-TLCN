@@ -1,25 +1,19 @@
 import InputText from '../../../components/InputText/InputText';
 import Button from '@mui/material/Button';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { IValue } from '../../../interface/productCart';
-import { IOption } from '../../../interface/product';
 
 interface Iprops {
-    optionsColor: IOption;
+    type?: string;
     handleSetOptionsColor?: (title: string, arrayValue: Array<IValue>) => void;
 }
 
 const OptionColor = (props: Iprops) => {
     // prop
-    const { optionsColor, handleSetOptionsColor } = props;
+    const { type, handleSetOptionsColor } = props;
 
-    const [nameTitle, setNameTitle] = useState<string>('');
+    const [nameTitle, setNameTitle] = useState<string>(type || '');
     const [valueName, setValueName] = useState<Array<IValue>>([]);
-    // get data
-    useEffect(() => {
-        setNameTitle(optionsColor.optionName);
-        setValueName(optionsColor.values);
-    }, [optionsColor]);
     // title
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
         setNameTitle(e.target.value);
@@ -62,7 +56,6 @@ const OptionColor = (props: Iprops) => {
                         labelInput="Tên tùy chọn "
                         value={valueName[index]?.valueName || ''} // Display the value from the array if it exists
                         onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeValueName(index, e)}
-                        sx={{ pb: 1 }}
                     />
 
                     <Button onClick={() => handleDeleteValueName(index)}>Xóa </Button>

@@ -53,8 +53,6 @@ const ModalCategory = (propsCh: IPropsAddress) => {
         formState: { errors },
     } = useForm<IUpdateCategory>({});
     const onSubmit: SubmitHandler<IUpdateCategory> = async (data) => {
-        console.log(data);
-
         const objectUpdate: IUpdateCategory = {
             name: data.name,
             description: data.description,

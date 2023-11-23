@@ -73,7 +73,7 @@ const ListProduct = () => {
 
     useEffect(() => {
         getAllProducts(page);
-    }, [page, isLoading]);
+    }, [page, isLoading, search]);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
@@ -88,6 +88,7 @@ const ListProduct = () => {
         }
         setLoading((prev) => !prev);
     };
+
     const handleIsSellingProduct = async (idProduct: number) => {
         const response = await toggleIsSellingProduct(idProduct);
         console.log(response);
@@ -113,7 +114,7 @@ const ListProduct = () => {
                 </Link>
             </div>
             <div className="flex justify-center m-auto my-4 md:w-7/12">
-                <Search />
+                <Search setSearch={setSearch} />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>

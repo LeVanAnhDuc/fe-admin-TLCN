@@ -1,4 +1,10 @@
 import { LineChart } from '@mui/x-charts/LineChart';
+
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import { getRegisterCompleteStatisticByYear } from '../../../apis/statisticApi';
+import { IStaticMonth } from '../../../interface/statistic';
 const xLabels = [
     'Tháng 1',
     'Tháng 2',
@@ -15,13 +21,48 @@ const xLabels = [
 ];
 
 export default function BasicLineChart() {
+    const [data, setData] = useState<IStaticMonth>();
+    const handleGetDataStatistic = async () => {
+        try {
+            const response = await getRegisterCompleteStatisticByYear();
+
+            if (response.status === 200) {
+                setData(response.data);
+            } else {
+                toast.error(response.data.message | response.data);
+            }
+        } catch (error) {
+            toast.error(`${error}`);
+        }
+    };
+    useEffect(() => {
+        handleGetDataStatistic();
+    }, []);
+
+    // Kiểm tra nếu data không tồn tại hoặc có giá trị undefined
+    if (!data) {
+        return null; // Hoặc hiển thị thông báo, hoặc render một thứ gì đó khác tùy thuộc vào yêu cầu của bạn
+    }
     return (
         <>
             <LineChart
                 xAxis={[{ scaleType: 'point', data: xLabels }]}
                 series={[
                     {
-                        data: [24, 8.5, 20, 8.5, 15, 5, 24, 55, 22, 8.5, 15, 5],
+                        data: [
+                            data?.jan,
+                            data?.feb,
+                            data?.mar,
+                            data?.apr,
+                            data?.may,
+                            data?.jun,
+                            data?.jul,
+                            data?.aug,
+                            data?.sep,
+                            data?.oct,
+                            data?.nov,
+                            data?.dec,
+                        ],
                         label: 'Số account được tạo',
                     },
                 ]}

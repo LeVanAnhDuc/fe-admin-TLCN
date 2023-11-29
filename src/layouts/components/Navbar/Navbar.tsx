@@ -32,7 +32,7 @@ const LIST_MENU_NAVBAR = [
         ],
     },
     {
-        title: 'Liên quan đến sản phẩm',
+        title: 'Sản phẩm',
         children: [
             {
                 title: 'Sản phẩm',
@@ -47,7 +47,7 @@ const LIST_MENU_NAVBAR = [
         ],
     },
     {
-        title: 'Liên quan đến khách hàng',
+        title: 'Khách hàng',
         children: [
             {
                 title: 'Khách hàng',

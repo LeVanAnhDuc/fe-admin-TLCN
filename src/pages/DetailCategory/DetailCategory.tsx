@@ -108,119 +108,88 @@ const DetailCategory = () => {
                 {/* start account setting */}
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     {/* start input id and Name */}
-
-                    <InputText
-                        labelInput="Name"
-                        errorInput={errors.name ? true : false}
-                        isRequired
-                        errorFormMessage={errors.name?.message}
-                        register={{
-                            ...register('name', {
-                                required: 'Name is required',
-                            }),
-                        }}
-                    />
-                    {/* end input id and  Name*/}
-                    {/* starr description */}
-                    <InputText
-                        labelInput="Mô tả"
-                        errorInput={errors.description ? true : false}
-                        isRequired
-                        errorFormMessage={errors.description?.message}
-                        register={{
-                            ...register('description', {
-                                required: 'description is required',
-                            }),
-                        }}
-                    />
-                    {/* end description */}
-                    {/* start input parentName  */}
-
-                    <FormControl fullWidth>
-                        <InputLabel>Tên loại cha</InputLabel>
-                        <Select
-                            label="parentName"
-                            {...register('parentName')}
-                            value={cateCurrent}
-                            onChange={(e) => {
-                                setCateCurrent(e.target.value);
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <InputText
+                            labelInput="Name"
+                            errorInput={errors.name ? true : false}
+                            isRequired
+                            register={{
+                                ...register('name', {
+                                    required: 'Name is required',
+                                }),
                             }}
-                        >
-                            <MenuItem value={''}>None</MenuItem>
-                            {listCate.map((item, index) => (
-                                <MenuItem key={index} value={item.name}>
-                                    {item.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    {/* end input parentName */}
-                    {/* starr slug */}
-                    <InputText
-                        labelInput="Slug"
-                        errorInput={errors.slug ? true : false}
-                        isRequired
-                        errorFormMessage={errors.slug?.message}
-                        register={{
-                            ...register('slug', {
-                                required: 'slug is required',
-                            }),
-                        }}
-                        disabled
-                    />
-                    {/* end slug */}
+                        />
+                        <InputText
+                            labelInput="Mô tả"
+                            errorInput={errors.description ? true : false}
+                            isRequired
+                            register={{
+                                ...register('description', {
+                                    required: 'description is required',
+                                }),
+                            }}
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <FormControl fullWidth>
+                            <InputLabel>Tên loại cha</InputLabel>
+                            <Select
+                                label="parentName"
+                                {...register('parentName')}
+                                value={cateCurrent}
+                                onChange={(e) => {
+                                    setCateCurrent(e.target.value);
+                                }}
+                            >
+                                <MenuItem value={''}>None</MenuItem>
+                                {listCate.map((item, index) => (
+                                    <MenuItem key={index} value={item.name}>
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <InputText
+                            labelInput="Slug"
+                            register={{
+                                ...register('slug'),
+                            }}
+                            disabled
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <InputText
+                            labelInput="Người tạo"
+                            register={{
+                                ...register('createdBy'),
+                            }}
+                            disabled
+                        />
+                        <InputText
+                            labelInput="Ngày tạo"
+                            register={{
+                                ...register('createdDate'),
+                            }}
+                            disabled
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <InputText
+                            labelInput="Người chỉnh sửa cuối"
+                            register={{
+                                ...register('lastModifiedBy'),
+                            }}
+                            disabled
+                        />
+                        <InputText
+                            labelInput="Ngày chỉnh sửa cuối"
+                            register={{
+                                ...register('lastModifiedDate'),
+                            }}
+                            disabled
+                        />
+                    </div>
 
-                    {/* start input  createdBy and createdDate  */}
-                    <InputText
-                        labelInput="Người tạo"
-                        errorInput={errors.createdBy ? true : false}
-                        isRequired
-                        errorFormMessage={errors.createdBy?.message}
-                        register={{
-                            ...register('createdBy', {
-                                required: 'createdBy is required',
-                            }),
-                        }}
-                        disabled
-                    />
-                    <InputText
-                        labelInput="Ngày tạo"
-                        errorInput={errors.createdDate ? true : false}
-                        isRequired
-                        errorFormMessage={errors.createdDate?.message}
-                        register={{
-                            ...register('createdDate', {
-                                required: 'CreateDate is required',
-                            }),
-                        }}
-                        disabled
-                    />
-                    {/* end input createdBy and createdDate */}
-                    {/* start input  lastModifiedBy and lastModifiedDate  */}
-                    <InputText
-                        labelInput="Người chỉnh sửa cuối"
-                        errorInput={errors.lastModifiedBy ? true : false}
-                        isRequired
-                        errorFormMessage={errors.lastModifiedBy?.message}
-                        register={{
-                            ...register('lastModifiedBy', {
-                                required: 'lastModifiedBy is required',
-                            }),
-                        }}
-                        disabled
-                    />
-                    <InputText
-                        labelInput="Ngày chỉnh sửa cuối"
-                        errorInput={errors.lastModifiedDate ? true : false}
-                        isRequired
-                        errorFormMessage={errors.lastModifiedDate?.message}
-                        register={{
-                            ...register('lastModifiedDate', {
-                                required: 'lastModifiedDate is required',
-                            }),
-                        }}
-                        disabled
-                    />
                     {/* end input lastModifiedBy and lastModifiedDate */}
 
                     <Button fullWidth type="submit" variant="contained" size="large">

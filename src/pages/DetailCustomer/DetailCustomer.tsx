@@ -89,103 +89,98 @@ const DetailCustomer = () => {
             <div className="my-5">
                 {/* start info user */}
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                    {/* start input id and username */}
-                    <InputText
-                        labelInput="Username"
-                        errorInput={errors.username ? true : false}
-                        errorFormMessage={errors.username?.message}
-                        register={{
-                            ...register('username', {
-                                required: 'username is required',
-                            }),
-                        }}
-                        readOnly
-                    />
-                    {/* end input id and  username*/}
-                    {/* start input name  */}
-                    <InputText
-                        labelInput="Tên"
-                        errorInput={errors.name ? true : false}
-                        errorFormMessage={errors.name?.message}
-                        register={{
-                            ...register('name'),
-                        }}
-                        readOnly
-                    />
-                    {/* end input name */}
-                    {/* start input email  */}
-                    <InputText
-                        labelInput="Email"
-                        errorInput={errors.email ? true : false}
-                        errorFormMessage={errors.email?.message}
-                        register={{
-                            ...register('email'),
-                        }}
-                        readOnly
-                    />
-                    {/* end input email */}
-                    {/* start input gender  */}
-                    <InputText
-                        labelInput="Giới tính"
-                        errorInput={errors.gender ? true : false}
-                        errorFormMessage={errors.gender?.message}
-                        register={{
-                            ...register('gender'),
-                        }}
-                        readOnly
-                    />
-                    {/* end input gender */}
-                    {/* start phoneNumber */}
-                    <InputText
-                        labelInput="Số điện thoại"
-                        errorInput={errors.phoneNumber ? true : false}
-                        errorFormMessage={errors.phoneNumber?.message}
-                        register={{
-                            ...register('phoneNumber', {
-                                required: 'phoneNumber is required',
-                            }),
-                        }}
-                        readOnly
-                    />
-                    {/* end phoneNumber */}
-                    {/* start createdDate */}
-                    <InputText
-                        labelInput="Ngày tạo"
-                        errorInput={errors.createdDate ? true : false}
-                        errorFormMessage={errors.createdDate?.message}
-                        register={{
-                            ...register('createdDate', {
-                                required: 'createdDate is required',
-                            }),
-                        }}
-                        readOnly
-                    />
-                    {/* end createdDate */}
-                    {/* start locked */}
-                    <InputText
-                        labelInput="Trạng thái khóa tài khoản"
-                        errorInput={errors.locked ? true : false}
-                        errorFormMessage={errors.locked?.message}
-                        register={{
-                            ...register('locked', {
-                                required: 'locked is required',
-                            }),
-                        }}
-                        readOnly
-                    />
-                    {/* end locked */}
-                    {/* start input  isEnabled  */}
-                    <InputText
-                        labelInput="Trạng thái kích hoạt"
-                        errorInput={errors.isEnabled ? true : false}
-                        errorFormMessage={errors.isEnabled?.message}
-                        register={{
-                            ...register('isEnabled', {
-                                required: 'isEnabled is required',
-                            }),
-                        }}
-                        readOnly
-                    />
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <InputText
+                            labelInput="Username"
+                            errorInput={errors.username ? true : false}
+                            errorFormMessage={errors.username?.message}
+                            register={{
+                                ...register('username', {
+                                    required: 'username is required',
+                                }),
+                            }}
+                            readOnly
+                        />
+                        <InputText
+                            labelInput="Tên"
+                            errorInput={errors.name ? true : false}
+                            errorFormMessage={errors.name?.message}
+                            register={{
+                                ...register('name'),
+                            }}
+                            readOnly
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <InputText
+                            labelInput="Email"
+                            errorInput={errors.email ? true : false}
+                            errorFormMessage={errors.email?.message}
+                            register={{
+                                ...register('email'),
+                            }}
+                            readOnly
+                        />
+
+                        <InputText
+                            labelInput="Giới tính"
+                            errorInput={errors.gender ? true : false}
+                            errorFormMessage={errors.gender?.message}
+                            register={{
+                                ...register('gender'),
+                            }}
+                            readOnly
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <InputText
+                            labelInput="Số điện thoại"
+                            errorInput={errors.phoneNumber ? true : false}
+                            errorFormMessage={errors.phoneNumber?.message}
+                            register={{
+                                ...register('phoneNumber', {
+                                    required: 'phoneNumber is required',
+                                }),
+                            }}
+                            readOnly
+                        />
+
+                        <InputText
+                            labelInput="Ngày tạo"
+                            errorInput={errors.createdDate ? true : false}
+                            errorFormMessage={errors.createdDate?.message}
+                            register={{
+                                ...register('createdDate', {
+                                    required: 'createdDate is required',
+                                }),
+                            }}
+                            readOnly
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <InputText
+                            labelInput="Trạng thái khóa tài khoản"
+                            errorInput={errors.locked ? true : false}
+                            errorFormMessage={errors.locked?.message}
+                            register={{
+                                ...register('locked', {
+                                    required: 'locked is required',
+                                }),
+                            }}
+                            readOnly
+                        />
+                        <InputText
+                            labelInput="Trạng thái kích hoạt"
+                            errorInput={errors.isEnabled ? true : false}
+                            errorFormMessage={errors.isEnabled?.message}
+                            register={{
+                                ...register('isEnabled', {
+                                    required: 'isEnabled is required',
+                                }),
+                            }}
+                            readOnly
+                        />
+                    </div>
                     {/* end input isEnabled  */}
                     {/* start input  lastModifiedBy and lastModifiedDate  */}
                     {/* <InputText

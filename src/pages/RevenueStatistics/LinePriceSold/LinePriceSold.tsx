@@ -1,21 +1,31 @@
-import { BarChart } from '@mui/x-charts/BarChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { getTotalPriceSoldByYear } from '../../../apis/statisticApi';
 import { IStaticMonth } from '../../../interface/statistic';
-import { getOrderCompleteStatisticByYear } from '../../../apis/statisticApi';
+const xLabels = [
+    'Tháng 1',
+    'Tháng 2',
+    'Tháng 3',
+    'Tháng 4',
+    'Tháng 5',
+    'Tháng 6',
+    'Tháng 7',
+    'Tháng 8',
+    'Tháng 9',
+    'Tháng 10',
+    'Tháng 11',
+    'Tháng 12',
+];
 
-const xLabels = ['T 1', 'T 2', 'T 3', 'T 4', 'T 5', 'T 6', 'T 7', 'T 8', 'T 9', 'T 10', 'T 11', 'T 12'];
-
-export default function BasicBars() {
+export default function LinePriceSold() {
     const [data, setData] = useState<IStaticMonth>();
     const currentYear = new Date().getFullYear();
-
     const handleGetDataStatistic = async () => {
         try {
-            const response = await getOrderCompleteStatisticByYear();
-            console.log(response);
+            const response = await getTotalPriceSoldByYear(currentYear);
 
             if (response.status === 200) {
                 setData(response.data);
@@ -36,8 +46,8 @@ export default function BasicBars() {
     }
     return (
         <>
-            <BarChart
-                xAxis={[{ scaleType: 'band', data: xLabels }]}
+            <LineChart
+                xAxis={[{ scaleType: 'point', data: xLabels }]}
                 series={[
                     {
                         data: [
@@ -54,13 +64,13 @@ export default function BasicBars() {
                             data?.nov,
                             data?.dec,
                         ],
-                        label: 'Số đơn hàng thành công',
+                        label: 'Tổng số tiền doanh thu',
                     },
                 ]}
-                height={300}
+                height={400}
             />
             <div className="w-full text-center font-semibold text-lg">
-                Biểu đồ đơn hàng thành công năm {currentYear}
+                Biểu đồ Tổng số tiền doanh thu trong năm {currentYear}
             </div>
         </>
     );

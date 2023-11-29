@@ -1,5 +1,6 @@
 const Routes = {
     home: '/trang-chu',
+    revenue: '/thong-ke-doanh-thu',
     logIn: '/',
     listCategory: '/danh-sach-loai',
     detailCategory: '/chi-tiet-loai',

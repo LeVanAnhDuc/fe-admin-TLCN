@@ -12,6 +12,7 @@ import Inventory from '@mui/icons-material/Inventory';
 import Category from '@mui/icons-material/Category';
 import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import Receipt from '@mui/icons-material/Receipt';
+import TrendingUp from '@mui/icons-material/TrendingUp';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardDoubleArrowLeft from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRight from '@mui/icons-material/KeyboardDoubleArrowRight';
@@ -28,6 +29,11 @@ const LIST_MENU_NAVBAR = [
                 title: 'Trang chủ',
                 icon: <Home />,
                 to: config.Routes.home,
+            },
+            {
+                title: 'Doanh thu',
+                icon: <TrendingUp />,
+                to: config.Routes.revenue,
             },
         ],
     },

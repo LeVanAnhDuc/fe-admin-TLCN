@@ -73,7 +73,7 @@ export const getTotalProductSoldByYear = async (year: number) => {
 
 export const getTotalPriceSoldByYear = async (year: number) => {
     try {
-        const response = await axios.get(`/statistic/revenue/?year=${year}`);
+        const response = await axios.get(`/statistic/revenue?year=${year}`);
 
         return response;
     } catch (error) {

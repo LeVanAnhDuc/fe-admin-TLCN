@@ -22,6 +22,8 @@ const xLabels = [
 
 export default function BasicLineChart() {
     const [data, setData] = useState<IStaticMonth>();
+    const currentYear = new Date().getFullYear();
+
     const handleGetDataStatistic = async () => {
         try {
             const response = await getRegisterCompleteStatisticByYear();
@@ -69,7 +71,7 @@ export default function BasicLineChart() {
                 height={400}
             />
             <div className="w-full text-center font-semibold text-lg">
-                Biểu đồ số lượng account đã đăng kí thành công
+                Biểu đồ số lượng account đã đăng kí thành công năm {currentYear}
             </div>
         </>
     );

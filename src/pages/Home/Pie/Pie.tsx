@@ -6,6 +6,8 @@ import { IStatisticStatusOrder } from '../../../interface/statistic';
 
 export default function BasicPie() {
     const [data, setData] = useState<IStatisticStatusOrder>();
+    const currentYear = new Date().getFullYear();
+
     const handleGetDataStatistic = async () => {
         try {
             const response = await getOrderStatisticByYear();
@@ -52,7 +54,7 @@ export default function BasicPie() {
                 }}
                 height={200}
             />
-            <div className="w-full text-center font-semibold text-lg">Biểu đồ thông kê đơn hàng theo năm</div>
+            <div className="w-full text-center font-semibold text-lg">Biểu đồ thông kê đơn hàng năm {currentYear}</div>
         </>
     );
 }

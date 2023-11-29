@@ -2,6 +2,27 @@
 import IUser from '../interface/user.js';
 import axios from './axiosConfig.js';
 
+export const getAllUserWithinPaginationSearch = async (pageNo: number, pageSize: number, key?: string) => {
+    try {
+        const params: Record<string, string | number | undefined> = {
+            pageNo: pageNo,
+            pageSize: pageSize,
+        };
+        // Thêm key vào đối tượng nếu key không rỗng
+        if (key !== undefined && key !== null && key !== '') {
+            params['key'] = key;
+        }
+        const url = '/users/search?' + new URLSearchParams(params as Record<string, string>).toString();
+        const response = await axios.get(url);
+        // const response = await axios.get(
+        //     `/categories/search?key=${key}&sort=id:desc&pageNo=${pageNo}&pageSize=${pageSize}`,
+        // );
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getAllUserWithinPanigation = async (pageNo: number, pageSize: number) => {
     try {
         const response = await axios.get(`/users?pageNo=${pageNo}&pageSize=${pageSize}`);

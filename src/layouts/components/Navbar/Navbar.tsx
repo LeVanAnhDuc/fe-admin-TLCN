@@ -22,40 +22,40 @@ import { useAuth } from '../../../hook/AuthContext';
 
 const LIST_MENU_NAVBAR = [
     {
-        title: 'Dashboard',
+        title: 'Trang chủ',
         children: [
             {
-                title: 'Dashboard',
+                title: 'Trang chủ',
                 icon: <Home />,
                 to: config.Routes.home,
             },
         ],
     },
     {
-        title: 'Product',
+        title: 'Liên quan đến sản phẩm',
         children: [
             {
-                title: 'Product',
+                title: 'Sản phẩm',
                 icon: <Inventory />,
                 to: config.Routes.listProduct,
             },
             {
-                title: 'Category',
+                title: 'Phân loại',
                 icon: <Category />,
                 to: config.Routes.listCategory,
             },
         ],
     },
     {
-        title: 'Customer',
+        title: 'Liên quan đến khách hàng',
         children: [
             {
-                title: 'Customer',
+                title: 'Khách hàng',
                 icon: <PeopleAlt />,
                 to: config.Routes.listCustomer,
             },
             {
-                title: 'Receipt',
+                title: 'Hóa đơn',
                 icon: <Receipt />,
                 to: config.Routes.listBill,
             },
@@ -120,13 +120,13 @@ const Navbar = () => {
                 ))}
                 <Divider />
                 <List component="nav">
-                    <div className="pl-5 text-gray-400 text-xs">Log out</div>
+                    <div className="pl-5 text-gray-400 text-xs">Đăng xuất</div>
                     <ListItem>
                         <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
                                 <Logout />
                             </ListItemIcon>
-                            {!toggleNavbar && <span className="font-medium">Logout</span>}
+                            {!toggleNavbar && <span className="font-medium">Đăng xuất</span>}
                         </ListItemButton>
                     </ListItem>
                 </List>

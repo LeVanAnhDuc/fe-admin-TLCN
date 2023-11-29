@@ -2,6 +2,34 @@
 import { IOrderCheckOut } from '../interface/order.js';
 import axios from './axiosConfig.js';
 
+export const getAllOrderWithinPaginationSearch = async (
+    pageNo: number,
+    pageSize: number,
+    key?: string,
+    status?: string,
+) => {
+    try {
+        const params: Record<string, string | number | undefined> = {
+            pageNo: pageNo,
+            pageSize: pageSize,
+            sort: 'id:desc',
+        };
+        // Thêm key vào đối tượng nếu key không rỗng
+        if (key !== undefined && key !== null && key !== '') {
+            params['key'] = key;
+        }
+        if (status !== undefined && status !== null && status !== '') {
+            params['status'] = status;
+        }
+        const url = '/orders/admin/search?' + new URLSearchParams(params as Record<string, string>).toString();
+        const response = await axios.get(url);
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getAllOrderWithinPagination = async (pageNo: number, pageSize: number) => {
     try {
         const response = await axios.get(`/orders?pageNo=${pageNo}&pageSize=${pageSize}`);

@@ -2,6 +2,26 @@
 import { IUpdateCategory } from '../interface/category.js';
 import axios from './axiosConfig.js';
 
+export const getAllCategoryWithinPaginationSearch = async (pageNo: number, pageSize: number, key?: string) => {
+    try {
+        const params: Record<string, string | number | undefined> = {
+            pageNo: pageNo,
+            pageSize: pageSize,
+            sort: 'id:desc',
+        };
+        // Thêm key vào đối tượng nếu key không rỗng
+        if (key !== undefined && key !== null && key !== '') {
+            params['key'] = key;
+        }
+        const url = '/categories/search?' + new URLSearchParams(params as Record<string, string>).toString();
+        const response = await axios.get(url);
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getAllCategoryWithPagination = async (pageNo: number, pageSize: number) => {
     try {
         const response = await axios.get(`/categories?pageNo=${pageNo}&pageSize=${pageSize}`);

@@ -17,11 +17,15 @@ import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import config from '../../config';
 import IOrder from '../../interface/order';
-import { deleteOrderByAdmin, getAllOrderWithinPagination } from '../../apis/orderApi';
+import { deleteOrderByAdmin, getAllOrderWithinPaginationSearch } from '../../apis/orderApi';
 import { toast } from 'react-toastify';
 import SelectStatus from './SelectStatus/SelectStatus';
 import Search from '../../components/Search/Search';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -51,19 +55,23 @@ const ListBill = () => {
     const [data, setData] = useState<Array<IOrder>>([]); // Dữ liệu từ API
     const [page, setPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(11); // Tổng số trang
-    const itemsPerPage = 4;
+    const [search, setSearch] = useState<string>('');
+    const [status, setStatus] = useState<string>('');
+
+    const itemsPerPage = 20;
 
     // get all Order
-    const getAllOrder = async (pageNo: number) => {
+    const getAllOrder = async (pageNo: number, statusValue: string) => {
         try {
-            const response = await getAllOrderWithinPagination(pageNo, itemsPerPage);
+            const response = await getAllOrderWithinPaginationSearch(pageNo, itemsPerPage, search, statusValue);
 
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
+                console.log(content);
 
                 setData(content);
                 setTotalPages(totalPages);
-                if (content.length <= 0) {
+                if (totalPages > 0 && content.length <= 0) {
                     setPage((prev) => prev - 1);
                 }
             } else {
@@ -79,6 +87,7 @@ const ListBill = () => {
         if (userConfirmed) {
             try {
                 const response = await deleteOrderByAdmin(idOrder);
+
                 if (response.status === 200) {
                     toast.success(response.data);
                 } else {
@@ -93,20 +102,37 @@ const ListBill = () => {
         }
     };
 
+    // change status
+    const handleChangeStatus = (event: SelectChangeEvent) => {
+        setStatus(event.target.value as string);
+    };
+
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
 
     useEffect(() => {
-        getAllOrder(page);
-    }, [page, isLoading]);
+        getAllOrder(page, status);
+    }, [page, isLoading, search, status]);
     return (
         <div>
             <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách hóa đơn</div>
             </div>
-            <div className="flex justify-center m-auto my-4 md:w-7/12">
-                <Search />
+            <div className="flex justify-center my-4  gap-10">
+                <Search setSearch={setSearch} placeHolder="Tìm theo tên người mua nhận hàng hoặc tên sản phẩm" />
+                <FormControl sx={{ width: 400 }}>
+                    <InputLabel>Trạng thái</InputLabel>
+                    <Select value={status} label="Trạng thái" onChange={handleChangeStatus}>
+                        <MenuItem value={''}>Tất cả</MenuItem>
+                        <MenuItem value={config.StatusOrder.ORDERED}>{config.StatusOrder.ORDERED}</MenuItem>
+                        <MenuItem value={config.StatusOrder.PROCESSING}>{config.StatusOrder.PROCESSING}</MenuItem>
+                        <MenuItem value={config.StatusOrder.SHIPPED}>{config.StatusOrder.SHIPPED}</MenuItem>
+                        <MenuItem value={config.StatusOrder.DELIVERED}>{config.StatusOrder.DELIVERED}</MenuItem>
+                        <MenuItem value={config.StatusOrder.CANCELED}>{config.StatusOrder.CANCELED}</MenuItem>
+                        <MenuItem value={config.StatusOrder.WAITFORPAY}>{config.StatusOrder.WAITFORPAY}</MenuItem>
+                    </Select>
+                </FormControl>
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>
@@ -131,7 +157,7 @@ const ListBill = () => {
                                     <StyledTableCell align="center" component="th" scope="row">
                                         {item.id}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{item.address.fullName}</StyledTableCell>
+                                    <StyledTableCell align="center">{item.user.username}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         {item.total.toLocaleString('vi-VN')}
                                     </StyledTableCell>
@@ -141,7 +167,11 @@ const ListBill = () => {
 
                                     {/* start select status */}
                                     <StyledTableCell align="center">
-                                        <SelectStatus status={item.status} idOrder={item.id} />
+                                        <SelectStatus
+                                            status={item.status}
+                                            idOrder={item.id}
+                                            setIsLoading={setIsLoading}
+                                        />
                                     </StyledTableCell>
                                     {/*end select status */}
 

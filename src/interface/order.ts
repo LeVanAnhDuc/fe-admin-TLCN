@@ -1,5 +1,6 @@
 import IAddress from './address';
 import IProductCart from './productCart';
+import IUser from './user';
 export interface IOrderCheckOut {
     total: number;
     paymentType: string; //(VNPay) OR (Cash on Delivery)
@@ -20,5 +21,5 @@ export default interface IOrder {
     status: string;
     total: number;
     totalItems: number;
-    userId: number;
+    user: Pick<IUser, 'id' | 'name' | 'username'>;
 }

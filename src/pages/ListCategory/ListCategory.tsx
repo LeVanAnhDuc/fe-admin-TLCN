@@ -18,7 +18,7 @@ import { styled } from '@mui/material/styles';
 
 import config from '../../config';
 import ICategory from '../../interface/category';
-import { deteleASingleCategory, getAllCategoryWithPagination } from '../../apis/categoryApii';
+import { deteleASingleCategory, getAllCategoryWithinPaginationSearch } from '../../apis/categoryApii';
 import Search from '../../components/Search/Search';
 import ModalCategory from './ModalCategory/ModalCategory';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
@@ -50,6 +50,7 @@ const ListCategory = () => {
     const [data, setData] = useState<Array<ICategory>>([]); // Dữ liệu từ API
     const [page, setPage] = useState<number>(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
+    const [search, setSearch] = useState<string>('');
     const itemsPerPage = 20;
     // panigation
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
@@ -58,13 +59,13 @@ const ListCategory = () => {
     // get all category
     const getAllProducts = async (pageNo: number) => {
         try {
-            const response = await getAllCategoryWithPagination(pageNo, itemsPerPage);
+            const response = await getAllCategoryWithinPaginationSearch(pageNo, itemsPerPage, search);
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
 
                 setData(content);
                 setTotalPages(totalPages);
-                if (content.length <= 0) {
+                if (totalPages > 0 && content.length <= 0) {
                     setPage((prev) => prev - 1);
                 }
             } else {
@@ -103,7 +104,7 @@ const ListCategory = () => {
 
     useEffect(() => {
         getAllProducts(page);
-    }, [page, open, isLoading]);
+    }, [page, open, isLoading, search]);
     return (
         <>
             <ModalCategory open={open} handleClose={handleClose} />
@@ -114,7 +115,7 @@ const ListCategory = () => {
                 </Button>
             </div>
             <div className="flex justify-center m-auto my-4 md:w-7/12">
-                <Search />
+                <Search setSearch={setSearch} placeHolder="Tìm theo theo tên danh mục" />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>

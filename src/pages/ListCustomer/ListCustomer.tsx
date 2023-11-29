@@ -17,10 +17,11 @@ import { styled } from '@mui/material/styles';
 
 import config from '../../config';
 import Search from '../../components/Search/Search';
-import { changeLockUnlockUserAccountByIDUser, getAllUserWithinPanigation } from '../../apis/userApi';
+import { changeLockUnlockUserAccountByIDUser, getAllUserWithinPaginationSearch } from '../../apis/userApi';
 import { toast } from 'react-toastify';
 import IUser from '../../interface/user';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
+import { Avatar } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -49,6 +50,7 @@ const ListCustomer = () => {
     const [data, setData] = useState<Array<IUser>>([]); // Dữ liệu từ API
     const [page, setPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(11); // Tổng số trang
+    const [search, setSearch] = useState<string>('');
     const itemsPerPage = 20;
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
@@ -57,14 +59,14 @@ const ListCustomer = () => {
     // get all Customers
     const getAllCustomers = async (pageNo: number) => {
         try {
-            const response = await getAllUserWithinPanigation(pageNo, itemsPerPage);
+            const response = await getAllUserWithinPaginationSearch(pageNo, itemsPerPage, search);
 
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
 
                 setData(content);
                 setTotalPages(totalPages);
-                if (content.length <= 0) {
+                if (totalPages > 0 && content.length <= 0) {
                     setPage((prev) => prev - 1);
                 }
             } else {
@@ -90,21 +92,22 @@ const ListCustomer = () => {
 
     useEffect(() => {
         getAllCustomers(page);
-    }, [page, isLoading]);
+    }, [page, isLoading, search]);
     return (
         <div>
             <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách khách hàng</div>
             </div>
             <div className="flex justify-center m-auto my-4 md:w-7/12">
-                <Search />
+                <Search setSearch={setSearch} placeHolder="Tìm theo theo username, tên, số điện thoại của người dùng" />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>
                     <Table stickyHeader aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell align="center">Username</StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
+                                <StyledTableCell align="left">Username</StyledTableCell>
                                 <StyledTableCell align="left" sx={{ minWidth: '100px' }}>
                                     Tên
                                 </StyledTableCell>
@@ -117,9 +120,17 @@ const ListCustomer = () => {
                         <TableBody>
                             {data.map((item, index) => (
                                 <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <StyledTableCell align="center" component="th" scope="row">
-                                        {item.username}
+                                    <StyledTableCell
+                                        align="center"
+                                        component="th"
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <Avatar src={item.avatarUrl} alt="Avatar" />
                                     </StyledTableCell>
+                                    <StyledTableCell align="left">{item.username}</StyledTableCell>
                                     <StyledTableCell align="left">{item.name}</StyledTableCell>
                                     <StyledTableCell align="center">{item.gender}</StyledTableCell>
                                     <StyledTableCell align="left">{item.email}</StyledTableCell>
@@ -150,7 +161,7 @@ const ListCustomer = () => {
                     </Table>
                 </TableContainer>
             </Paper>
-            <div className="w-full flex justify-center mt-5">
+            <div className="w-full flex justify-center mt-5 ">
                 <Pagination
                     count={totalPages}
                     page={page}

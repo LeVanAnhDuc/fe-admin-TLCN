@@ -30,16 +30,24 @@ const DetailCustomer = () => {
                 if (response.status === 200) {
                     setAvatar(response.data.avatarUrl);
 
-                    await setValue('createdDate', response.data.createdDate);
-                    await setValue('email', response.data.email);
-                    await setValue('gender', response.data.gender);
-                    await setValue('isEnabled', response.data.isEnabled);
-                    await setValue('lastModifiedBy', response.data.lastModifiedBy);
-                    await setValue('lastModifiedDate', response.data.lastModifiedDate);
-                    await setValue('locked', response.data.locked);
-                    await setValue('name', response.data.name);
-                    await setValue('phoneNumber', response.data.phoneNumber);
-                    await setValue('username', response.data.username);
+                    setValue('createdDate', response.data.createdDate);
+                    setValue('email', response.data.email);
+                    setValue('gender', response.data.gender);
+                    if (response.data.isEnabled) {
+                        setValue('isEnabled', 'Đã kích hoạt');
+                    } else {
+                        setValue('isEnabled', 'Chưa kích hoạt ');
+                    }
+                    setValue('lastModifiedBy', response.data.lastModifiedBy);
+                    setValue('lastModifiedDate', response.data.lastModifiedDate);
+                    if (response.data.locked) {
+                        setValue('locked', 'Đang bị khóa');
+                    } else {
+                        setValue('locked', 'Không khóa');
+                    }
+                    setValue('name', response.data.name);
+                    setValue('phoneNumber', response.data.phoneNumber);
+                    setValue('username', response.data.username);
                 } else {
                     toast.error(response.data.message);
                     navigate(config.Routes.listCustomer);
@@ -57,10 +65,10 @@ const DetailCustomer = () => {
         handleSubmit,
         formState: { errors },
         setValue,
-    } = useForm<IUser>({});
+    } = useForm<{ [key: string]: string | number | boolean } | IUser>({});
 
     // submit form
-    const onSubmit: SubmitHandler<IUser> = () => {};
+    const onSubmit: SubmitHandler<{ [key: string]: string | number | boolean } | IUser> = () => {};
 
     useEffect(() => {
         getCustomer(+idUser);
@@ -166,8 +174,21 @@ const DetailCustomer = () => {
                         readOnly
                     />
                     {/* end locked */}
-                    {/* start input  lastModifiedBy and lastModifiedDate  */}
+                    {/* start input  isEnabled  */}
                     <InputText
+                        labelInput="Trạng thái kích hoạt"
+                        errorInput={errors.isEnabled ? true : false}
+                        errorFormMessage={errors.isEnabled?.message}
+                        register={{
+                            ...register('isEnabled', {
+                                required: 'isEnabled is required',
+                            }),
+                        }}
+                        readOnly
+                    />
+                    {/* end input isEnabled  */}
+                    {/* start input  lastModifiedBy and lastModifiedDate  */}
+                    {/* <InputText
                         labelInput="Người chỉnh sửa cuối"
                         errorInput={errors.lastModifiedBy ? true : false}
                         errorFormMessage={errors.lastModifiedBy?.message}
@@ -188,21 +209,8 @@ const DetailCustomer = () => {
                             }),
                         }}
                         readOnly
-                    />
+                    /> */}
                     {/* end input lastModifiedBy and lastModifiedDate */}
-                    {/* start input  isEnabled  */}
-                    <InputText
-                        labelInput="isEnabled"
-                        errorInput={errors.isEnabled ? true : false}
-                        errorFormMessage={errors.isEnabled?.message}
-                        register={{
-                            ...register('isEnabled', {
-                                required: 'isEnabled is required',
-                            }),
-                        }}
-                        readOnly
-                    />
-                    {/* end input isEnabled  */}
                 </form>
             </div>
             {/* end info user */}

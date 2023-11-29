@@ -27,6 +27,7 @@ import {
 } from '../../apis/productApi';
 import Search from '../../components/Search/Search';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
+import Avatar from '@mui/material/Avatar';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -61,12 +62,15 @@ const ListProduct = () => {
     const getAllProducts = async (pageNo: number) => {
         try {
             const response = await getAllProductWithinPaginationSearch(pageNo, itemsPerPage, search);
+            console.log(search);
 
             const { content, totalPages } = response.data;
-            console.log(content);
 
             setData(content);
             setTotalPages(totalPages);
+            if (totalPages > 0 && content.length <= 0) {
+                setPage((prev) => prev - 1);
+            }
         } catch (error) {
             toast.error('Đang bảo trì quay lại sau');
         }
@@ -126,7 +130,7 @@ const ListProduct = () => {
                 </Link>
             </div>
             <div className="flex justify-center m-auto my-4 md:w-7/12">
-                <Search setSearch={setSearch} />
+                <Search setSearch={setSearch} placeHolder="Tìm theo theo tên sản phẩm" />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>
@@ -134,6 +138,7 @@ const ListProduct = () => {
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell align="center">ID</StyledTableCell>
+                                <StyledTableCell align="center">Hình ảnh</StyledTableCell>
                                 <StyledTableCell align="left">Tên sản phẩm</StyledTableCell>
                                 <StyledTableCell align="center">Đã bán</StyledTableCell>
                                 <StyledTableCell align="center">SLCL</StyledTableCell>
@@ -148,6 +153,17 @@ const ListProduct = () => {
                                 <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <StyledTableCell align="center" component="th" scope="row">
                                         {item.id}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        component="th"
+                                        scope="row"
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <Avatar variant="rounded" src={item.listImages[0]} alt="Sản phẩm" />
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="left"

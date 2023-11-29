@@ -2,11 +2,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useEffect, useState } from 'react';
 import useDebounceCustom from '../../hook/useDebounceCustom';
 interface Iprops {
-    setSearch?: React.Dispatch<React.SetStateAction<string>>;
+    setSearch: React.Dispatch<React.SetStateAction<string>>;
+    placeHolder?: string;
 }
 
 const Search = (props: Iprops) => {
-    const { setSearch } = props;
+    const { setSearch, placeHolder } = props;
 
     const [valueSearch, setValueSearch] = useState<string>('');
 
@@ -34,7 +35,7 @@ const Search = (props: Iprops) => {
                 type="search"
                 id="default-search"
                 className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
-                placeholder="Search..."
+                placeholder={placeHolder ? placeHolder : 'Search...'}
                 required
                 value={valueSearch}
                 onChange={handleChange}

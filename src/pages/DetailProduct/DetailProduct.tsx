@@ -31,6 +31,11 @@ import ICategory from '../../interface/category';
 import { getAllCategory } from '../../apis/categoryApii';
 import { getSingleProduct, updateProduct } from '../../apis/productApi';
 import { toast } from 'react-toastify';
+import { uploadProductImages } from '../../apis/uploadImageApi';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -89,23 +94,6 @@ const DetailProduct = () => {
     useEffect(() => {
         handleGetListCate();
     }, []);
-
-    // handle change image list product
-    const [selectedImage, setSelectedImage] = useState<string[]>([]);
-
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (files) {
-            const images = Array.from(files).map((file) => URL.createObjectURL(file));
-            setSelectedImage(images);
-            setValue('listImages', images);
-        }
-
-        // call api update anh
-        //
-        //
-        //
-    };
 
     // handle biến thể
     const [isLoading, setLoading] = useState<boolean>(false);
@@ -175,7 +163,9 @@ const DetailProduct = () => {
 
                     await setValue('description', response.data.description);
 
-                    await setSelectedImage(response.data.listImages);
+                    setDisplayedImages(response.data.listImages);
+                    setListImageCurrent(response.data.listImages);
+
                     await setOptionsSize(
                         response.data.options.filter((item: IOption) => item.optionName === 'Size')[0],
                     );
@@ -205,7 +195,7 @@ const DetailProduct = () => {
             description: data.description,
             price: data.price,
             quantity: data.quantity,
-            listImages: selectedImage,
+            listImages: listImageCurrent,
             category: {
                 name: cateCurrent,
             },
@@ -213,16 +203,72 @@ const DetailProduct = () => {
             skus: Sku,
         };
 
+        setIsLoadingDialog(true);
         const response = await updateProduct(+idProduct, object);
 
+        setIsLoadingDialog(false);
         if (response.status === 200) {
+            handleUpload(response.data.id);
             toast.success('Sửa thành công');
         } else {
             toast.error(response.data.message || response.data);
         }
     };
+
+    // handle change image list product
+    const [listImageCurrent, setListImageCurrent] = useState<Array<string>>([]);
+    const [selectedImages, setSelectedImages] = useState<FileList | null>();
+    const [displayedImages, setDisplayedImages] = useState<string[]>([]);
+
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setSelectedImages(e.target.files);
+
+            const imageUrls = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+            // setDisplayedImages((prev) => [...prev, ...imageUrls]);
+            setDisplayedImages(imageUrls);
+        }
+    };
+    useEffect(() => {
+        selectedImages;
+    }, []);
+    const handleUpload = async (idProduct: number) => {
+        if (!selectedImages || selectedImages.length === 0) {
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+
+            for (let i = 0; i < selectedImages.length; i++) {
+                formData.append('images', selectedImages[i]);
+            }
+
+            // Đặt đường dẫn API lưu danh sách ảnh của bạn
+            setIsLoadingDialog(true);
+            const response = await uploadProductImages(+idProduct, formData);
+            setIsLoadingDialog(false);
+
+            if (response.status === 200) {
+                toast.success('Cập nhật ảnh thành công');
+            } else {
+                toast.error(response.data.message || response.data);
+            }
+            setSelectedImages(null);
+        } catch (error) {
+            toast.error(`${error}`);
+        }
+    };
+    const [isLoadingDialog, setIsLoadingDialog] = useState(false);
+
     return (
         <>
+            <Dialog onClose={() => setIsLoadingDialog(false)} open={isLoadingDialog} fullWidth maxWidth="sm">
+                <DialogTitle>Xác thực </DialogTitle>
+                <DialogContent>
+                    <LinearProgress color="success" />
+                </DialogContent>
+            </Dialog>
             <div className="flex justify-between pb-3">
                 <div className="text-lg font-semibold flex items-center ">Thông tin sản phẩm</div>
                 <Link to={config.Routes.listProduct}>
@@ -293,29 +339,11 @@ const DetailProduct = () => {
                         />
                     </div>
                     {/* end input quantity and price*/}
-                    {/* start input sold and quantityAvailable */}
-                    {/* <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="Đã bán"
-                            register={{
-                                ...register('sold'),
-                            }}
-                            disabled
-                        />
-                        <InputText
-                            labelInput="Số lượng khả dụng"
-                            register={{
-                                ...register('quantityAvailable'),
-                            }}
-                            disabled
-                        />
-                    </div> */}
-                    {/* end input sold and quantityAvailable*/}
                     <div className="mb-5 font-semibold text-xl">Danh sách ảnh</div>
                     {/* start list image */}
                     <div className="relative">
                         <div className="flex flex-wrap gap-3 h-full pb-3">
-                            {selectedImage.map((imageUrl, index) => (
+                            {displayedImages.map((imageUrl, index) => (
                                 <React.Fragment key={index}>
                                     <input type="hidden" value={imageUrl} />
                                     <Image src={imageUrl} alt={`Image ${index}`} className="w-20 h-20 " />
@@ -363,9 +391,9 @@ const DetailProduct = () => {
                                 <TableHead>
                                     <TableRow>
                                         <StyledTableCell align="center">ID</StyledTableCell>
-                                        <StyledTableCell align="center">Size</StyledTableCell>
-                                        <StyledTableCell align="center">Color</StyledTableCell>
-                                        <StyledTableCell align="center">Price</StyledTableCell>
+                                        <StyledTableCell align="center">Kích thước</StyledTableCell>
+                                        <StyledTableCell align="center">Màu</StyledTableCell>
+                                        <StyledTableCell align="center">Giá</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>

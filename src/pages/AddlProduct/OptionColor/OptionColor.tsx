@@ -2,7 +2,7 @@ import InputText from '../../../components/InputText/InputText';
 import Button from '@mui/material/Button';
 import { ChangeEvent, useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { IValue } from '../../../interface/productCart';
+import { IValue } from '../../../interface/product';
 import { uploadImage } from '../../../apis/uploadImageApi';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -25,7 +25,9 @@ const OptionSize = (props: Iprops) => {
     const { type, handleSetOptionsColor } = props;
 
     const [nameTitle, setNameTitle] = useState<string>(type || '');
+    // hiện thị ra màn hình
     const [valueName, setValueName] = useState<Array<IValue>>([]);
+    // dùng để lấy dữ liệu call api
     const [uploadedImages, setUploadedImages] = useState<Array<IValue>>([]);
     // title
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -146,10 +148,16 @@ const OptionSize = (props: Iprops) => {
                             type="file"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => handleImageChange(index, e)}
                         />
-                        <img src={item.imageUrl} className="w-10 h-14 " />
+                        <img
+                            src={typeof item.imageUrl === 'string' ? item.imageUrl : ''}
+                            alt={`Ảnh`}
+                            className="w-20 h-14 "
+                        />
                     </Button>
 
-                    <Button onClick={() => handleDeleteValueName(index)}>Xóa </Button>
+                    <Button onClick={() => handleDeleteValueName(index)} sx={{ color: 'red' }}>
+                        Xóa{' '}
+                    </Button>
                 </div>
             ))}
             <div className="flex justify-between">

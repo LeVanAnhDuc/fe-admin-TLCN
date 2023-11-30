@@ -3,7 +3,7 @@ import { ISku } from './productCart';
 export interface IValue {
     valueId?: number;
     valueName: string;
-    imageUrl?: string;
+    imageUrl?: string | File;
 }
 export interface IOption {
     optionId?: number;

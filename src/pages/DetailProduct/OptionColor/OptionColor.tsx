@@ -4,6 +4,11 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { IValue } from '../../../interface/productCart';
 import { IOption } from '../../../interface/product';
+import { uploadImage } from '../../../apis/uploadImageApi';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import LinearProgress from '@mui/material/LinearProgress';
+import DialogContent from '@mui/material/DialogContent';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -23,14 +28,19 @@ interface Iprops {
 const OptionColor = (props: Iprops) => {
     // prop
     const { handleSetOptionsColor, optionsColor } = props;
+    const [isLoading, setIsLoading] = useState(false);
 
     const [nameTitle, setNameTitle] = useState<string>('');
+    // hiện thị ra màn hình
     const [valueName, setValueName] = useState<Array<IValue>>([]);
+    // dùng để lấy dữ liệu call api
+    const [uploadedImages, setUploadedImages] = useState<Array<IValue>>([]);
 
     // get data
     useEffect(() => {
         setNameTitle(optionsColor.optionName);
         setValueName(optionsColor.values);
+        setUploadedImages(optionsColor.values);
     }, [optionsColor]);
     // title
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -39,9 +49,14 @@ const OptionColor = (props: Iprops) => {
     // list
     const handleAddValueName = () => {
         setValueName((prev) => [...prev, { valueName: '', imageUrl: '' }]);
+        setUploadedImages((prev) => [...prev, { valueName: '', imageUrl: '' }]);
     };
     const handleDeleteValueName = (index: number) => {
         setValueName((prev) => {
+            const updatedArray = prev.filter((_, i) => i !== index);
+            return updatedArray;
+        });
+        setUploadedImages((prev) => {
             const updatedArray = prev.filter((_, i) => i !== index);
             return updatedArray;
         });
@@ -50,6 +65,15 @@ const OptionColor = (props: Iprops) => {
     const handleChangeValueName = (index: number, e: ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setValueName((prev) => {
+            const updatedArray = [...prev];
+            if (updatedArray[index]) {
+                updatedArray[index].valueName = newValue;
+            } else {
+                updatedArray[index] = { valueName: newValue, imageUrl: '' };
+            }
+            return updatedArray;
+        });
+        setUploadedImages((prev) => {
             const updatedArray = [...prev];
             if (updatedArray[index]) {
                 updatedArray[index].valueName = newValue;
@@ -67,6 +91,7 @@ const OptionColor = (props: Iprops) => {
             setValueName((prev) => {
                 const updatedArray = [...prev];
                 const imageURL = URL.createObjectURL(file);
+
                 if (updatedArray[index]) {
                     // Assuming only one file is accepted
                     updatedArray[index].imageUrl = imageURL;
@@ -76,20 +101,61 @@ const OptionColor = (props: Iprops) => {
                 }
                 return updatedArray;
             });
+            setUploadedImages((prev) => {
+                const updatedArray = [...prev];
+                if (updatedArray[index]) {
+                    // Assuming only one file is accepted
+                    updatedArray[index].imageUrl = file;
+                } else {
+                    // If the item doesn't exist in the array, create a new one
+                    updatedArray[index] = { valueName: '', imageUrl: file };
+                }
+                return updatedArray;
+            });
         }
-
-        // call api update anh
-        //
-        //
-        //
     };
 
     const handleSave = () => {
+        const filteredValues = uploadedImages.filter((item) => item.imageUrl !== '');
+        filteredValues.forEach(async (item, index) => {
+            try {
+                if (!item.imageUrl || (typeof item.imageUrl === 'string' && !item.imageUrl.startsWith('blob:'))) {
+                    return;
+                }
+                const formData = new FormData();
+                formData.append('image', item.imageUrl);
+                setIsLoading(true);
+
+                const response = await uploadImage(formData);
+                setIsLoading(false);
+
+                // Thêm URL ảnh đã tải lên vào state uploadedImages
+                setUploadedImages((prev) => {
+                    const updatedArray = [...prev];
+                    if (updatedArray[index]) {
+                        // Assuming only one file is accepted
+                        updatedArray[index].imageUrl = response.data;
+                    } else {
+                        // If the item doesn't exist in the array, create a new one
+                        updatedArray[index] = { valueName: '', imageUrl: response.data };
+                    }
+                    return updatedArray;
+                });
+            } catch (error) {
+                console.error('Upload failed:', error);
+            }
+        });
         handleSetOptionsColor && handleSetOptionsColor(nameTitle, valueName);
     };
 
     return (
         <div className="mt-5 bg-gray-100 p-4 rounded">
+            <Dialog onClose={() => setIsLoading(false)} open={isLoading} fullWidth maxWidth="sm">
+                <DialogTitle>Xác thực </DialogTitle>
+                <DialogContent>
+                    <LinearProgress color="success" />
+                </DialogContent>
+            </Dialog>
             <InputText labelInput="Tên biến thể" value={nameTitle} onChange={handleChangeName} />
             <div className="py-2 font-semibold">Tùy chọn</div>
             {valueName.map((item, index) => (
@@ -105,10 +171,12 @@ const OptionColor = (props: Iprops) => {
                             type="file"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => handleImageChange(index, e)}
                         />
-                        <img src={item.imageUrl} className="w-10 h-14 " />
+                        <img src={typeof item.imageUrl === 'string' ? item.imageUrl : ''} className="w-10 h-14 " />
                     </Button>
 
-                    <Button onClick={() => handleDeleteValueName(index)}>Xóa </Button>
+                    <Button onClick={() => handleDeleteValueName(index)} sx={{ color: 'red' }}>
+                        Xóa{' '}
+                    </Button>
                 </div>
             ))}
             <div className="flex justify-between">

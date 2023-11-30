@@ -65,7 +65,9 @@ const OptionColor = (props: Iprops) => {
                         sx={{ pb: 1 }}
                     />
 
-                    <Button onClick={() => handleDeleteValueName(index)}>Xóa </Button>
+                    <Button onClick={() => handleDeleteValueName(index)} sx={{ color: 'red' }}>
+                        Xóa{' '}
+                    </Button>
                 </div>
             ))}
             <div className="flex justify-between">

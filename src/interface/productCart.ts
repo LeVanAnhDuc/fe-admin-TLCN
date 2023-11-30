@@ -6,7 +6,7 @@ interface IProductChildrenCart {
 
 export interface IValue {
     valueName: string;
-    imageUrl?: string;
+    imageUrl?: string | File;
 }
 export interface ISku {
     price?: number;

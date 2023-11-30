@@ -12,25 +12,27 @@ export interface IOption {
 }
 
 export default interface IProduct {
-    id: number;
+    id?: number;
     name: string;
     description: string;
     price: number;
     quantity: number;
-    quantityAvailable: number;
+    quantityAvailable?: number;
     category: ICategoryName;
-    slug: string;
-    promotionalPrice: string;
-    sold: number;
-    rating: number;
-    numberOfRatings: number;
-    favoriteCount: number;
-    isActive: boolean;
-    isSelling: boolean;
-    createdDate: string;
-    lastModifiedDate: string;
-    createdBy: string;
-    lastModifiedBy: string;
+    categoryId?: number;
+    categoryName?: string;
+    slug?: string;
+    promotionalPrice?: string;
+    sold?: number;
+    rating?: number;
+    numberOfRatings?: number;
+    favoriteCount?: number;
+    isActive?: boolean;
+    isSelling?: boolean;
+    createdDate?: string;
+    lastModifiedDate?: string;
+    createdBy?: string;
+    lastModifiedBy?: string;
     listImages: Array<string>;
     options: Array<IOption>;
     skus: Array<ISku>;

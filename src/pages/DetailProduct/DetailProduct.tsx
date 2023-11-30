@@ -24,8 +24,8 @@ import IProduct, { IOption, IValue } from '../../interface/product';
 import InputText from '../../components/InputText/InputText';
 import Image from '../../components/Image';
 import config from '../../config';
-import OptionSize from './OptionSize/OptionSize';
 import OptionColor from './OptionColor/OptionColor';
+import OptionSize from './OptionSize/OptionSize';
 import { ISku } from '../../interface/productCart';
 import ICategory from '../../interface/category';
 import { getAllCategory } from '../../apis/categoryApii';
@@ -106,8 +106,6 @@ const DetailProduct = () => {
         //
         //
     };
-    // cate current
-    const [cateCurrent, setCateCurrent] = useState<string>('');
 
     // handle biến thể
     const [isLoading, setLoading] = useState<boolean>(false);
@@ -149,6 +147,8 @@ const DetailProduct = () => {
             return newArray;
         });
     };
+    // cate current
+    const [cateCurrent, setCateCurrent] = useState<string>('');
 
     // handle get data
     const getProduct = async (id: number) => {
@@ -160,6 +160,7 @@ const DetailProduct = () => {
                 if (response.status === 200) {
                     await setCateCurrent(response.data.categoryName);
 
+                    await setValue('category', response.data.category);
                     await setValue('name', response.data.name);
                     await setValue('quantity', response.data.quantity);
                     await setValue('price', response.data.price);
@@ -205,28 +206,15 @@ const DetailProduct = () => {
             price: data.price,
             quantity: data.quantity,
             listImages: selectedImage,
-            category: data.category,
+            category: {
+                name: cateCurrent,
+            },
             options: [optionsSize, optionsColor],
             skus: Sku,
-            // not value
-            id: 0,
-            quantityAvailable: 0,
-            slug: '',
-            promotionalPrice: '',
-            sold: 0,
-            rating: 0,
-            numberOfRatings: 0,
-            favoriteCount: 0,
-            isActive: false,
-            isSelling: false,
-            createdDate: '',
-            lastModifiedDate: '',
-            createdBy: '',
-            lastModifiedBy: '',
         };
-        console.log(object);
 
         const response = await updateProduct(+idProduct, object);
+
         if (response.status === 200) {
             toast.success('Sửa thành công');
         } else {
@@ -254,7 +242,6 @@ const DetailProduct = () => {
                             <InputLabel required>Chọn danh mục sản phẩm</InputLabel>
                             <Select
                                 label="Chọn danh mục sản phẩm"
-                                {...register('category.name')}
                                 value={cateCurrent}
                                 onChange={(e) => {
                                     setCateCurrent(e.target.value);
@@ -307,7 +294,7 @@ const DetailProduct = () => {
                     </div>
                     {/* end input quantity and price*/}
                     {/* start input sold and quantityAvailable */}
-                    <div className="grid grid-cols-2 gap-5">
+                    {/* <div className="grid grid-cols-2 gap-5">
                         <InputText
                             labelInput="Đã bán"
                             register={{
@@ -322,45 +309,8 @@ const DetailProduct = () => {
                             }}
                             disabled
                         />
-                    </div>
+                    </div> */}
                     {/* end input sold and quantityAvailable*/}
-                    {/* start input  createBy and createDate  */}
-                    {/* <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="CreateBy"
-                            register={{
-                                ...register('createdBy'),
-                            }}
-                            disabled
-                        />
-                        <InputText
-                            labelInput="CreateDate"
-                            register={{
-                                ...register('createdDate'),
-                            }}
-                            disabled
-                        />
-                    </div> */}
-
-                    {/* end input createBy and createDate */}
-                    {/* start input  lastModifiedBy and lastModifiedDate  */}
-                    {/* <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="LastModifiedBy"
-                            register={{
-                                ...register('lastModifiedBy'),
-                            }}
-                            disabled
-                        />
-                        <InputText
-                            labelInput="LastModifiedDate"
-                            register={{
-                                ...register('lastModifiedDate'),
-                            }}
-                            disabled
-                        />
-                    </div> */}
-                    {/* end input lastModifiedBy and lastModifiedDate */}
                     <div className="mb-5 font-semibold text-xl">Danh sách ảnh</div>
                     {/* start list image */}
                     <div className="relative">

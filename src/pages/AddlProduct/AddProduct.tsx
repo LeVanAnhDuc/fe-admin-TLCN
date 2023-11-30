@@ -24,13 +24,14 @@ import IProduct, { IOption, IValue } from '../../interface/product';
 import InputText from '../../components/InputText/InputText';
 import Image from '../../components/Image';
 import config from '../../config';
-import OptionSize from './OptionSize/OptionSize';
 import OptionColor from './OptionColor/OptionColor';
+import OptionSize from './OptionSize/OptionSize';
 import { ISku } from '../../interface/productCart';
 import ICategory from '../../interface/category';
 import { getAllCategory } from '../../apis/categoryApii';
 import { createNewProduct } from '../../apis/productApi';
 import { toast } from 'react-toastify';
+import { uploadProductImages } from '../../apis/uploadImageApi';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -80,25 +81,8 @@ const AddProduct = () => {
         register,
         handleSubmit,
         formState: { errors },
-        setValue,
     } = useForm<IProduct>({});
 
-    // handle change image list product
-    const [selectedImage, setSelectedImage] = useState<string[]>([]);
-
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (files) {
-            const images = Array.from(files).map((file) => URL.createObjectURL(file));
-            setSelectedImage(images);
-            setValue('listImages', images);
-        }
-
-        // call api update anh
-        //
-        //
-        //
-    };
     // handle biến thể
     const [isLoading, setLoading] = useState<boolean>(false);
     const [optionsSize, setOptionsSize] = useState<IOption>({ optionName: '', values: [] });
@@ -139,37 +123,66 @@ const AddProduct = () => {
     };
     // submit form
     const onSubmit: SubmitHandler<IProduct> = async (data) => {
+        if (data.quantity < 0 || data.price < 0) {
+            toast.error('Giá trị phải lớn hơn 0');
+            return;
+        }
         const object: IProduct = {
             name: data.name,
             description: data.description,
             price: data.price,
             quantity: data.quantity,
-            listImages: selectedImage,
             category: data.category,
             options: [optionsSize, optionsColor],
             skus: Sku,
-            // not value
-            id: '',
-            quantityAvailable: 0,
-            slug: '',
-            promotionalPrice: '',
-            sold: 0,
-            rating: 0,
-            numberOfRatings: 0,
-            favoriteCount: 0,
-            isActive: false,
-            isSelling: false,
-            createdDate: '',
-            lastModifiedDate: '',
-            createdBy: '',
-            lastModifiedBy: '',
+            listImages: [],
         };
 
         const response = await createNewProduct(object);
+
         if (response.status === 201) {
+            handleUpload(response.data.id);
             toast.success('Tạo thành công');
         } else {
             toast.error(response.data.message || response.data);
+        }
+    };
+    // handle change image list product
+    const [selectedImages, setSelectedImages] = useState<FileList | null>(null);
+    const [displayedImages, setDisplayedImages] = useState<string[]>([]);
+
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setSelectedImages(e.target.files);
+
+            const imageUrls = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+            setDisplayedImages(imageUrls);
+        }
+    };
+
+    const handleUpload = async (idProduct: number) => {
+        if (!selectedImages || selectedImages.length === 0) {
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+
+            for (let i = 0; i < selectedImages.length; i++) {
+                formData.append('images', selectedImages[i]);
+            }
+
+            // Đặt đường dẫn API lưu danh sách ảnh của bạn
+            const response = await uploadProductImages(+idProduct, formData);
+
+            if (response.status === 200) {
+                toast.success('Cập nhật ảnh thành công');
+            } else {
+                toast.error(response.data.message || response.data);
+            }
+            setSelectedImages(null);
+        } catch (error) {
+            toast.error(`${error}`);
         }
     };
     return (
@@ -249,7 +262,7 @@ const AddProduct = () => {
                     {/* start list image */}
                     <div className="relative">
                         <div className="flex flex-wrap gap-3 h-full pb-3">
-                            {selectedImage.map((imageUrl, index) => (
+                            {displayedImages.map((imageUrl, index) => (
                                 <React.Fragment key={index}>
                                     <input type="hidden" value={imageUrl} />
                                     <Image src={imageUrl} alt={`Image ${index}`} className="w-20 h-20 " />

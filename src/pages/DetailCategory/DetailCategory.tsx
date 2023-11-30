@@ -40,6 +40,7 @@ const DetailCategory = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getCategoryByIDOrSlug(id);
+                console.log(response);
 
                 if (response.status === 200) {
                     await setValue('id', response.data.id);
@@ -51,9 +52,8 @@ const DetailCategory = () => {
                     await setValue('lastModifiedDate', response.data.lastModifiedDate);
                     await setValue('name', response.data.name);
 
-                    await setCateCurrent(response.data.parentName);
+                    setCateCurrent(response.data.parentName);
 
-                    await setValue('parentId', response.data.parentId);
                     await setValue('slug', response.data.slug);
                 } else {
                     toast.error(response.data.message);
@@ -82,7 +82,7 @@ const DetailCategory = () => {
         const objectUpdate: IUpdateCategory = {
             name: data.name,
             description: data.description,
-            parentName: data.parentName || null,
+            parentName: cateCurrent,
         };
 
         //  call api doi update thong tin
@@ -134,8 +134,7 @@ const DetailCategory = () => {
                         <FormControl fullWidth>
                             <InputLabel>Tên Danh mục cha</InputLabel>
                             <Select
-                                label="parentName"
-                                {...register('parentName')}
+                                label="Tên Danh mục cha"
                                 value={cateCurrent}
                                 onChange={(e) => {
                                     setCateCurrent(e.target.value);

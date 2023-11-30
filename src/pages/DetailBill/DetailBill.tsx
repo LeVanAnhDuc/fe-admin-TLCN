@@ -140,6 +140,7 @@ const DetailBill = () => {
                                 }),
                             }}
                             readOnly
+                            colorText="red"
                         />
                     </div>
                     <InputText

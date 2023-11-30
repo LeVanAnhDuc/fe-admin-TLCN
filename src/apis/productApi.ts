@@ -72,6 +72,16 @@ export const updateProduct = async (idProduct: number, object: IProduct) => {
     }
 };
 
+export const updateQuantityProduct = async (idProduct: number, quantity: number) => {
+    try {
+        const response = await axios.put(`/products/add-quantity?productId=${idProduct}&quantity=${quantity}`);
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const toggleIsActiveProduct = async (idProduct: number) => {
     try {
         const response = await axios.put(`/products/${idProduct}/active`);

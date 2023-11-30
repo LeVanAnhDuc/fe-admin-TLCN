@@ -12,7 +12,7 @@ export interface IOption {
 }
 
 export default interface IProduct {
-    id?: number;
+    id: number;
     name: string;
     description: string;
     price: number;

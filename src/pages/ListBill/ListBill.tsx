@@ -67,7 +67,6 @@ const ListBill = () => {
 
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
-                console.log(content);
 
                 setData(content);
                 setTotalPages(totalPages);
@@ -144,7 +143,7 @@ const ListBill = () => {
                                     Người đặt hàng
                                 </StyledTableCell>
                                 <StyledTableCell align="center">Thành tiền</StyledTableCell>
-                                <StyledTableCell align="left">Ghi chú</StyledTableCell>
+                                <StyledTableCell align="center">Thời gian đặt</StyledTableCell>
                                 <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
                                     Trạng thái
                                 </StyledTableCell>
@@ -161,8 +160,8 @@ const ListBill = () => {
                                     <StyledTableCell align="center">
                                         {item.total.toLocaleString('vi-VN')}
                                     </StyledTableCell>
-                                    <StyledTableCell align="left" sx={{ minWidth: '10rem' }}>
-                                        {item.note}
+                                    <StyledTableCell align="center" sx={{ minWidth: '10rem' }}>
+                                        {item.createdDate}
                                     </StyledTableCell>
 
                                     {/* start select status */}

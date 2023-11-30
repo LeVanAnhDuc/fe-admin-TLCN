@@ -1,6 +1,6 @@
 // import Header from '../components/Header/Header';
-import Navbar from '../components/Navbar/Navbar';
 import { ReactNode } from 'react';
+import Navbar from '../components/Navbar/Navbar';
 
 interface DefaultLayoutProps {
     children: ReactNode;

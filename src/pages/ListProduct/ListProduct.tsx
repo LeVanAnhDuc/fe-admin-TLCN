@@ -15,8 +15,10 @@ import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
 import { styled } from '@mui/material/styles';
 import Visibility from '@mui/icons-material/Visibility';
+import AddCircle from '@mui/icons-material/AddCircle';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
 
 import config from '../../config';
 import IProduct from '../../interface/product';
@@ -27,7 +29,7 @@ import {
 } from '../../apis/productApi';
 import Search from '../../components/Search/Search';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
-import Avatar from '@mui/material/Avatar';
+import ModalQuantity from './ModalQuantity/ModalQuantity';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -121,8 +123,19 @@ const ListProduct = () => {
         setLoading((prev) => !prev);
     };
 
+    // quantity
+    const [IDProduct, setIDProduct] = useState<number>(0);
+    const [open, setOpen] = useState(false);
+    const handleAddQuantityProduct = (idProduct: number) => {
+        setIDProduct(idProduct);
+        setOpen(true);
+    };
+    const handleClose = () => setOpen(false);
+
     return (
         <div>
+            <ModalQuantity open={open} handleClose={handleClose} IDProduct={IDProduct} setLoading={setLoading} />
+
             <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách sản phẩm</div>
                 <Link to={config.Routes.addProduct}>
@@ -202,6 +215,11 @@ const ListProduct = () => {
                                                     <VisibilityOff sx={{ color: '#E74646', fontSize: 26 }} />
                                                 </MouseOverPopover>
                                             )}
+                                        </IconButton>
+                                        <IconButton onClick={() => handleAddQuantityProduct(item.id)}>
+                                            <MouseOverPopover content="Nhập thêm hàng">
+                                                <AddCircle sx={{ color: '#E74646', fontSize: 26 }} />
+                                            </MouseOverPopover>
                                         </IconButton>
                                     </StyledTableCell>
                                 </StyledTableRow>

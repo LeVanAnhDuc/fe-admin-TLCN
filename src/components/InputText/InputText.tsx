@@ -15,6 +15,7 @@ interface IProps {
     register?: any;
     autoComplete?: string;
     readOnly?: boolean;
+    colorText?: string;
     [key: string]: unknown;
 }
 
@@ -28,6 +29,7 @@ const InputText = (propsCh: IProps) => {
         autoComplete,
         register,
         readOnly,
+        colorText,
         ...props
     } = propsCh;
 
@@ -57,6 +59,7 @@ const InputText = (propsCh: IProps) => {
                             ''
                         ),
                     readOnly: readOnly ? true : false,
+                    style: { color: colorText ? 'red' : '' },
                 }}
                 InputLabelProps={{
                     shrink: true,

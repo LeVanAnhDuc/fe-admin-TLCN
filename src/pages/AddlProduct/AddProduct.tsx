@@ -136,6 +136,8 @@ const AddProduct = () => {
             options: [optionsSize, optionsColor],
             skus: Sku,
             listImages: [],
+            // no value
+            id: 0,
         };
 
         const response = await createNewProduct(object);
@@ -344,10 +346,16 @@ const AddProduct = () => {
                         </TableContainer>
                     </Paper>
                     {/* end table */}
-
-                    <Button fullWidth type="submit" variant="contained" color="primary" size="large">
-                        Lưu
-                    </Button>
+                    <div className="grid grid-cols-2 gap-5">
+                        <Link to={config.Routes.listProduct}>
+                            <Button fullWidth variant="outlined" color="primary" size="large">
+                                Hủy
+                            </Button>
+                        </Link>
+                        <Button fullWidth type="submit" variant="contained" color="primary" size="large">
+                            Lưu
+                        </Button>
+                    </div>
                 </form>
                 {/* end product setting */}
             </div>

@@ -37,7 +37,7 @@ const Home = () => {
                     </div>
                     <div className="col-span-2">
                         <div className="font-medium">{data?.registeredCount}</div>
-                        <div className="font-semibold">Số người đăng kí</div>
+                        <div className="font-semibold">Số người dùng</div>
                     </div>
                 </div>
                 <div className="bg-[#EBEBFF] h-28 rounded grid grid-cols-3 items-center">
@@ -68,14 +68,14 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <div className="bg-chart mt-5 p-5">
+            <div className="bg-chart mt-5 p-5 rounded">
                 <BasicLineChart />
             </div>
             <div className="py-5 grid grid-cols-1 2xl:grid-cols-5 gap-5">
-                <div className="bg-chart p-5 col-span-1 2xl:col-span-3">
+                <div className="bg-chart p-5 col-span-1 2xl:col-span-3 rounded">
                     <BasicBars />
                 </div>
-                <div className="bg-chart p-5 flex flex-col col-span-1 2xl:col-span-2">
+                <div className="bg-chart p-5 flex flex-col col-span-1 2xl:col-span-2 rounded">
                     <BasicPie />
                 </div>
             </div>

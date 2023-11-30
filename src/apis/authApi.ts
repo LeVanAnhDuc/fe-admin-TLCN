@@ -1,7 +1,17 @@
 /* eslint-disable no-useless-catch */
 import axios from './axiosConfig.js';
 
-const registerApi = async (username: string, email: string, password: string) => {
+export const checkExpiredToken = async (token: string) => {
+    try {
+        const response = await axios.get(`auth/check-token?token=${token}`);
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const registerApi = async (username: string, email: string, password: string) => {
     try {
         const response = await axios.post('/auth/signup', {
             username,
@@ -15,7 +25,7 @@ const registerApi = async (username: string, email: string, password: string) =>
     }
 };
 
-const loginApi = async (email: string, password: string) => {
+export const loginApi = async (email: string, password: string) => {
     try {
         const response = await axios.post('/auth/signin', {
             usernameOrEmail: email,
@@ -33,7 +43,7 @@ const loginApi = async (email: string, password: string) => {
     }
 };
 
-const verifyOTPRegister = async (email: string, otp: string) => {
+export const verifyOTPRegister = async (email: string, otp: string) => {
     try {
         const response = await axios.post('/auth/otp/verify', {
             email,
@@ -45,21 +55,11 @@ const verifyOTPRegister = async (email: string, otp: string) => {
     }
 };
 
-const sendOTPRegister = async (email: string) => {
+export const sendOTPRegister = async (email: string) => {
     try {
         const response = await axios.post(`auth/otp/send?email=${email}`);
         return response;
     } catch (error) {
         throw error;
     }
-};
-
-export {
-    registerApi,
-    loginApi,
-    verifyOTPRegister,
-    sendOTPRegister,
-    // forgotpass_SendOTP,
-    // forgotpass_CheckOTP,
-    // forgotpass,
 };

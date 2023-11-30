@@ -74,7 +74,7 @@ const ModalCategory = (propsCh: IPropsAddress) => {
         <div>
             <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
-                    <div className="text-lg mb-4">Thêm loại sản phẩm mới</div>
+                    <div className="text-lg mb-4">Thêm Danh mục mới</div>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <InputText
                             labelInput="Tên loại"
@@ -99,9 +99,9 @@ const ModalCategory = (propsCh: IPropsAddress) => {
                             }}
                         />
                         <FormControl fullWidth>
-                            <InputLabel>Tên loại cha</InputLabel>
+                            <InputLabel>Danh mục cha</InputLabel>
                             <Select label="parentName" {...register('parentName')} defaultValue={''}>
-                                <MenuItem value={''}>None</MenuItem>
+                                <MenuItem value={''}>Không có danh mục cha</MenuItem>
                                 {listCate.map((item, index) => (
                                     <MenuItem key={index} value={item.name}>
                                         {item.name}

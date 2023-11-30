@@ -110,7 +110,7 @@ const DetailCategory = () => {
                     {/* start input id and Name */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <InputText
-                            labelInput="Name"
+                            labelInput="Tên Danh mục"
                             errorInput={errors.name ? true : false}
                             isRequired
                             register={{
@@ -132,7 +132,7 @@ const DetailCategory = () => {
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <FormControl fullWidth>
-                            <InputLabel>Tên loại cha</InputLabel>
+                            <InputLabel>Tên Danh mục cha</InputLabel>
                             <Select
                                 label="parentName"
                                 {...register('parentName')}
@@ -141,7 +141,7 @@ const DetailCategory = () => {
                                     setCateCurrent(e.target.value);
                                 }}
                             >
-                                <MenuItem value={''}>None</MenuItem>
+                                <MenuItem value={''}>Không có danh mục cha</MenuItem>
                                 {listCate.map((item, index) => (
                                     <MenuItem key={index} value={item.name}>
                                         {item.name}
@@ -150,14 +150,14 @@ const DetailCategory = () => {
                             </Select>
                         </FormControl>
                         <InputText
-                            labelInput="Slug"
+                            labelInput="Ngày chỉnh sửa cuối"
                             register={{
-                                ...register('slug'),
+                                ...register('lastModifiedDate'),
                             }}
-                            disabled
+                            readOnly
                         />
                     </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <InputText
                             labelInput="Người tạo"
                             register={{
@@ -172,8 +172,8 @@ const DetailCategory = () => {
                             }}
                             disabled
                         />
-                    </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    </div> */}
+                    {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <InputText
                             labelInput="Người chỉnh sửa cuối"
                             register={{
@@ -182,13 +182,13 @@ const DetailCategory = () => {
                             disabled
                         />
                         <InputText
-                            labelInput="Ngày chỉnh sửa cuối"
+                            labelInput="Slug"
                             register={{
-                                ...register('lastModifiedDate'),
+                                ...register('slug'),
                             }}
-                            disabled
+                            readOnly
                         />
-                    </div>
+                    </div> */}
 
                     {/* end input lastModifiedBy and lastModifiedDate */}
 

@@ -70,7 +70,7 @@ export default function LineProductSold() {
                 height={400}
             />
             <div className="w-full text-center font-semibold text-lg">
-                Biểu đồ tổng sản phẩm bán được trong năm {currentYear}
+                Biểu Đồ Thống Kê Doanh Số Sản Phẩm Bán Ra Trong Năm {currentYear}
             </div>
         </>
     );

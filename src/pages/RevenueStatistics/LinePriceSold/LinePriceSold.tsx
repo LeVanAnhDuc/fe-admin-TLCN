@@ -1,24 +1,11 @@
-import { LineChart } from '@mui/x-charts/LineChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { getTotalPriceSoldByYear } from '../../../apis/statisticApi';
 import { IStaticMonth } from '../../../interface/statistic';
-const xLabels = [
-    'Tháng 1',
-    'Tháng 2',
-    'Tháng 3',
-    'Tháng 4',
-    'Tháng 5',
-    'Tháng 6',
-    'Tháng 7',
-    'Tháng 8',
-    'Tháng 9',
-    'Tháng 10',
-    'Tháng 11',
-    'Tháng 12',
-];
+const xLabels = ['T 1', 'T 2', 'T 3', 'T 4', 'T 5', 'T 6', 'T 7', 'T 8', 'T 9', 'T 10', 'T 11', 'T 12'];
 
 export default function LinePriceSold() {
     const [data, setData] = useState<IStaticMonth>();
@@ -46,8 +33,8 @@ export default function LinePriceSold() {
     }
     return (
         <>
-            <LineChart
-                xAxis={[{ scaleType: 'point', data: xLabels }]}
+            <BarChart
+                yAxis={[{ scaleType: 'band', data: xLabels }]}
                 series={[
                     {
                         data: [
@@ -64,13 +51,14 @@ export default function LinePriceSold() {
                             data?.nov,
                             data?.dec,
                         ],
-                        label: 'Tổng số tiền doanh thu',
+                        label: 'Tổng doanh thu (VNĐ)',
                     },
                 ]}
-                height={400}
+                height={600}
+                layout="horizontal"
             />
             <div className="w-full text-center font-semibold text-lg">
-                Biểu đồ Tổng số tiền doanh thu trong năm {currentYear}
+                Biểu Đồ Phân Tích Doanh Thu Trong Năm {currentYear}
             </div>
         </>
     );

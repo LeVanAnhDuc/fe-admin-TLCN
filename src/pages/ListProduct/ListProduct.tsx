@@ -141,7 +141,7 @@ const ListProduct = () => {
                                 <StyledTableCell align="center">Hình ảnh</StyledTableCell>
                                 <StyledTableCell align="left">Tên sản phẩm</StyledTableCell>
                                 <StyledTableCell align="center">Đã bán</StyledTableCell>
-                                <StyledTableCell align="center">SLCL</StyledTableCell>
+                                <StyledTableCell align="center">Có sẵn</StyledTableCell>
                                 <StyledTableCell align="left" sx={{ minWidth: '90px' }}>
                                     Giá
                                 </StyledTableCell>
@@ -194,11 +194,11 @@ const ListProduct = () => {
                                         </IconButton>
                                         <IconButton onClick={() => handleIsSellingProduct(item.id)}>
                                             {item.isSelling ? (
-                                                <MouseOverPopover content="Sản phẩm đang được bán">
+                                                <MouseOverPopover content="Không đăng bán">
                                                     <Visibility sx={{ color: '#E74646', fontSize: 26 }} />
                                                 </MouseOverPopover>
                                             ) : (
-                                                <MouseOverPopover content="Sản phẩm đã bị ẩn">
+                                                <MouseOverPopover content="Đăng bán ngay">
                                                     <VisibilityOff sx={{ color: '#E74646', fontSize: 26 }} />
                                                 </MouseOverPopover>
                                             )}

@@ -251,9 +251,9 @@ const DetailProduct = () => {
                     {/* start input id and Name */}
                     <div className="grid grid-cols-2 gap-5">
                         <FormControl fullWidth>
-                            <InputLabel required>CategoryName</InputLabel>
+                            <InputLabel required>Chọn danh mục sản phẩm</InputLabel>
                             <Select
-                                label="CategoryName"
+                                label="Chọn danh mục sản phẩm"
                                 {...register('category.name')}
                                 value={cateCurrent}
                                 onChange={(e) => {
@@ -292,8 +292,9 @@ const DetailProduct = () => {
                                 }),
                             }}
                         />
+
                         <InputText
-                            labelInput="Giá bán"
+                            labelInput="Giá bán VNĐ"
                             typeInput="number"
                             errorInput={errors.price ? true : false}
                             isRequired
@@ -324,7 +325,7 @@ const DetailProduct = () => {
                     </div>
                     {/* end input sold and quantityAvailable*/}
                     {/* start input  createBy and createDate  */}
-                    <div className="grid grid-cols-2 gap-5">
+                    {/* <div className="grid grid-cols-2 gap-5">
                         <InputText
                             labelInput="CreateBy"
                             register={{
@@ -339,11 +340,11 @@ const DetailProduct = () => {
                             }}
                             disabled
                         />
-                    </div>
+                    </div> */}
 
                     {/* end input createBy and createDate */}
                     {/* start input  lastModifiedBy and lastModifiedDate  */}
-                    <div className="grid grid-cols-2 gap-5">
+                    {/* <div className="grid grid-cols-2 gap-5">
                         <InputText
                             labelInput="LastModifiedBy"
                             register={{
@@ -358,7 +359,7 @@ const DetailProduct = () => {
                             }}
                             disabled
                         />
-                    </div>
+                    </div> */}
                     {/* end input lastModifiedBy and lastModifiedDate */}
                     <div className="mb-5 font-semibold text-xl">Danh sách ảnh</div>
                     {/* start list image */}

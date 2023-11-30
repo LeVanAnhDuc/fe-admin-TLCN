@@ -99,7 +99,10 @@ const ListCustomer = () => {
                 <div className="text-lg font-semibold flex items-center">Danh sách khách hàng</div>
             </div>
             <div className="flex justify-center m-auto my-4 md:w-7/12">
-                <Search setSearch={setSearch} placeHolder="Tìm theo theo username, tên, số điện thoại của người dùng" />
+                <Search
+                    setSearch={setSearch}
+                    placeHolder="Tìm theo theo Tên tài khoản, tên, số điện thoại của người dùng"
+                />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>
@@ -107,7 +110,7 @@ const ListCustomer = () => {
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell></StyledTableCell>
-                                <StyledTableCell align="left">Username</StyledTableCell>
+                                <StyledTableCell align="left">Tên tài khoản</StyledTableCell>
                                 <StyledTableCell align="left" sx={{ minWidth: '100px' }}>
                                     Tên
                                 </StyledTableCell>

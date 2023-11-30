@@ -60,7 +60,7 @@ export default function BasicBars() {
                 height={300}
             />
             <div className="w-full text-center font-semibold text-lg">
-                Biểu đồ đơn hàng thành công năm {currentYear}
+                Biểu Đồ Thống Kê Số Đơn Hàng Hoàn Thành Trong Năm {currentYear}
             </div>
         </>
     );

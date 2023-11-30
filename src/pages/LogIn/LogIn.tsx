@@ -1,6 +1,6 @@
 import config from '../../config';
 import InputText from '../../components/InputText/InputText';
-import { loginApi } from '../../apis/authApi';
+import { checkExpiredToken, loginApi } from '../../apis/authApi';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
 
@@ -30,12 +30,20 @@ const LogIn = () => {
             passWord: '',
         },
     });
+    // check token
+    const handleCheckToken = async (token: string) => {
+        const response = await checkExpiredToken(token);
+        if (response.status === 200) {
+            navigate(config.Routes.home);
+        } else {
+            navigate(config.Routes.logIn);
+        }
+    };
     // handle successful login
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
-            // chuyen qua page home
-            navigate(config.Routes.home);
+            handleCheckToken(accessToken);
         }
     }, []);
     const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {

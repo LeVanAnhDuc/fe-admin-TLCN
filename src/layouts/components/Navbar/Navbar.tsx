@@ -46,7 +46,7 @@ const LIST_MENU_NAVBAR = [
                 to: config.Routes.listProduct,
             },
             {
-                title: 'Phân loại',
+                title: 'Danh mục',
                 icon: <Category />,
                 to: config.Routes.listCategory,
             },

@@ -109,7 +109,7 @@ const ListCategory = () => {
         <>
             <ModalCategory open={open} handleClose={handleClose} />
             <div className="flex justify-between">
-                <div className="text-lg font-semibold flex items-center">Danh sách loại sản phẩm</div>
+                <div className="text-lg font-semibold flex items-center">Danh sách danh mục sản phẩm</div>
                 <Button variant="contained" onClick={handleOpen}>
                     Thêm mới
                 </Button>
@@ -138,7 +138,7 @@ const ListCategory = () => {
                                     <StyledTableCell align="left">
                                         <div className="">{item.name}</div>
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{item.description}</StyledTableCell>
+                                    <StyledTableCell align="left">{item.description}</StyledTableCell>
                                     <StyledTableCell align="center">{item.productNumber}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCategory + '#' + item.id}>

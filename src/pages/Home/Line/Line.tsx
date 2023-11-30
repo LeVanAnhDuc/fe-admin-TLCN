@@ -65,13 +65,13 @@ export default function BasicLineChart() {
                             data?.nov,
                             data?.dec,
                         ],
-                        label: 'Số account được tạo',
+                        label: 'Số người dùng mới',
                     },
                 ]}
                 height={400}
             />
             <div className="w-full text-center font-semibold text-lg">
-                Biểu đồ số lượng account đã đăng kí thành công năm {currentYear}
+                Biểu đồ thể hiện số lượng người dùng mới trong năm {currentYear}
             </div>
         </>
     );

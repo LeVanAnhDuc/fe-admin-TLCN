@@ -5,6 +5,7 @@ import axios from './axiosConfig.js';
 export const getAllOrderWithinPaginationSearch = async (
     pageNo: number,
     pageSize: number,
+    sort: string = 'id:desc',
     key?: string,
     status?: string,
 ) => {
@@ -12,7 +13,7 @@ export const getAllOrderWithinPaginationSearch = async (
         const params: Record<string, string | number | undefined> = {
             pageNo: pageNo,
             pageSize: pageSize,
-            sort: 'id:desc',
+            sort: sort,
         };
         // Thêm key vào đối tượng nếu key không rỗng
         if (key !== undefined && key !== null && key !== '') {

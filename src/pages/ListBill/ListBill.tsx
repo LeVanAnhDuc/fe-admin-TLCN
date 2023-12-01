@@ -57,13 +57,20 @@ const ListBill = () => {
     const [totalPages, setTotalPages] = useState(11); // Tổng số trang
     const [search, setSearch] = useState<string>('');
     const [status, setStatus] = useState<string>('');
+    const [sortBy, setSortBy] = useState<string>('');
 
     const itemsPerPage = 20;
 
     // get all Order
-    const getAllOrder = async (pageNo: number, statusValue: string) => {
+    const getAllOrder = async (pageNo: number, statusValue: string, sortByValue: string) => {
         try {
-            const response = await getAllOrderWithinPaginationSearch(pageNo, itemsPerPage, search, statusValue);
+            const response = await getAllOrderWithinPaginationSearch(
+                pageNo,
+                itemsPerPage,
+                sortByValue,
+                search,
+                statusValue,
+            );
 
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
@@ -105,20 +112,24 @@ const ListBill = () => {
     const handleChangeStatus = (event: SelectChangeEvent) => {
         setStatus(event.target.value as string);
     };
+    // change status
+    const handleChangeSortBy = (event: SelectChangeEvent) => {
+        setSortBy(event.target.value as string);
+    };
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
 
     useEffect(() => {
-        getAllOrder(page, status);
-    }, [page, isLoading, search, status]);
+        getAllOrder(page, status, sortBy);
+    }, [page, isLoading, search, status, sortBy]);
     return (
         <div>
             <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách hóa đơn</div>
             </div>
-            <div className="flex justify-center my-4  gap-10">
+            <div className="flex justify-center my-4  gap-5">
                 <Search setSearch={setSearch} placeHolder="Tìm theo tên người mua nhận hàng hoặc tên sản phẩm" />
                 <FormControl sx={{ width: 400 }}>
                     <InputLabel>Trạng thái</InputLabel>
@@ -132,6 +143,20 @@ const ListBill = () => {
                         <MenuItem value={config.StatusOrder.WAITFORPAY}>{config.StatusOrder.WAITFORPAY}</MenuItem>
                     </Select>
                 </FormControl>
+                <FormControl sx={{ width: 400 }}>
+                    <InputLabel>Lọc đơn hàng</InputLabel>
+                    <Select value={sortBy} label="Lọc" onChange={handleChangeSortBy}>
+                        <MenuItem value={''}>Không lọc</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.dateAsc}>Thời gian: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.dateDesc}>Thời gian: Cap đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.idAsc}>Mã hóa đơn: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.idDesc}>Mã hóa đơn: Cap đến Thấp</MenuItem>
+                        {/* <MenuItem value={config.SearchFilterOrder.statusAsc}>Trạng thái: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.statusDesc}>Trạng thái: Cap đến Thấp</MenuItem> */}
+                        <MenuItem value={config.SearchFilterOrder.totalAsc}>Tổng tiền: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.totalDesc}>Tổng tiền: Cap đến Thấp</MenuItem>
+                    </Select>
+                </FormControl>
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>
@@ -140,7 +165,7 @@ const ListBill = () => {
                             <TableRow>
                                 <StyledTableCell align="center">ID</StyledTableCell>
                                 <StyledTableCell align="center" sx={{ minWidth: '100px' }}>
-                                    Người đặt hàng
+                                    Người nhận hàng
                                 </StyledTableCell>
                                 <StyledTableCell align="center">Thành tiền</StyledTableCell>
                                 <StyledTableCell align="center">Thời gian đặt</StyledTableCell>

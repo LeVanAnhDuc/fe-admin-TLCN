@@ -144,7 +144,6 @@ const DetailProduct = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
-                console.log(response);
                 if (response.status === 200) {
                     await setCateCurrent(response.data.categoryName);
 

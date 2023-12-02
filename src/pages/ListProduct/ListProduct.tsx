@@ -64,7 +64,6 @@ const ListProduct = () => {
     const getAllProducts = async (pageNo: number) => {
         try {
             const response = await getAllProductWithinPaginationSearch(pageNo, itemsPerPage, search);
-            console.log(search);
 
             const { content, totalPages } = response.data;
 

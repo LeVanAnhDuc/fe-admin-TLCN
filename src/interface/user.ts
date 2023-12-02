@@ -13,3 +13,12 @@ export default interface IUser {
     phoneNumber: string;
     username: string;
 }
+
+export interface IInfoProfileUser {
+    username: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    gender: string;
+    avatarUrl: string;
+}

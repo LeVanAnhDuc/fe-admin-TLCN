@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-import IUser from '../interface/user.js';
+import { IInfoProfileUser } from '../interface/user.js';
 import axios from './axiosConfig.js';
 
 export const getAllUserWithinPaginationSearch = async (pageNo: number, pageSize: number, key?: string) => {
@@ -70,7 +70,7 @@ export const forgotPassWord = async (email: string, newPassword: string) => {
     }
 };
 
-export const updateAccountProfileByToken = async (data: IUser) => {
+export const updateAccountProfileOfSignedinAccount = async (data: IInfoProfileUser) => {
     try {
         const response = await axios.put(`/users/profile`, {
             username: data.username,
@@ -78,7 +78,6 @@ export const updateAccountProfileByToken = async (data: IUser) => {
             email: data.email,
             phoneNumber: data.phoneNumber,
             gender: data.gender,
-            avatarUrl: data.avatarUrl,
         });
         return response;
     } catch (error) {

@@ -13,6 +13,7 @@ import LogIn from '../pages/LogIn/LogIn';
 import Error404 from '../pages/Error404';
 import AddProduct from '../pages/AddlProduct/AddProduct';
 import RevenueStatistics from '../pages/RevenueStatistics/RevenueStatistics';
+import Profile from '../pages/Profile/Profile';
 type TRouters = {
     path: string;
     component: React.ComponentType;
@@ -33,6 +34,8 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.listCategory, component: ListCategory },
     { path: config.Routes.listCustomer, component: ListCustomer },
     { path: config.Routes.listProduct, component: ListProduct },
+
+    { path: config.Routes.profileSetting, component: Profile },
 
     { path: config.Routes.logIn, component: LogIn, layout: null },
 

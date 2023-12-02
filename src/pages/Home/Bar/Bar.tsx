@@ -15,7 +15,6 @@ export default function BasicBars() {
     const handleGetDataStatistic = async () => {
         try {
             const response = await getOrderCompleteStatisticByYear();
-            console.log(response);
 
             if (response.status === 200) {
                 setData(response.data);

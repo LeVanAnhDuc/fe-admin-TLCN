@@ -13,6 +13,7 @@ import Category from '@mui/icons-material/Category';
 import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import Receipt from '@mui/icons-material/Receipt';
 import TrendingUp from '@mui/icons-material/TrendingUp';
+import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardDoubleArrowLeft from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRight from '@mui/icons-material/KeyboardDoubleArrowRight';
@@ -67,6 +68,16 @@ const LIST_MENU_NAVBAR = [
             },
         ],
     },
+    {
+        title: 'Cài đặt',
+        children: [
+            {
+                title: 'Tài khoản',
+                icon: <AdminPanelSettings />,
+                to: config.Routes.profileSetting,
+            },
+        ],
+    },
 ];
 
 const Navbar = () => {
@@ -88,6 +99,9 @@ const Navbar = () => {
         navigate(config.Routes.logIn);
         logout();
     };
+
+    const userName = localStorage.getItem('userNameUser');
+
     return (
         <>
             <div
@@ -106,6 +120,11 @@ const Navbar = () => {
                         {toggleNavbar ? <KeyboardDoubleArrowRight /> : <KeyboardDoubleArrowLeft />}
                     </Button>
                 </div>
+                <div className="py-5 flex place-content-center place-items-center text-lg">
+                    {!toggleNavbar && <span className="pr-1">Xin chào </span>}
+                    <span className="font-bold">{userName}</span>
+                </div>
+                <Divider />
                 {LIST_MENU_NAVBAR.map((item, index) => (
                     <List key={index} component="nav">
                         <div className="pl-5 text-gray-400 text-xs">{item.title}</div>

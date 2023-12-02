@@ -11,6 +11,8 @@ const Routes = {
     detailCustomer: '/chi-tiet-khach-hang',
     listBill: '/danh-sach-hoa-don',
     detailBill: '/chi-tiet-hoa-don',
+
+    profileSetting: '/thong-tin-ca-nhan',
     error: '*',
 };
 

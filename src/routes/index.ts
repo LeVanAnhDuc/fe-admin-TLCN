@@ -14,6 +14,7 @@ import Error404 from '../pages/Error404';
 import AddProduct from '../pages/AddlProduct/AddProduct';
 import RevenueStatistics from '../pages/RevenueStatistics/RevenueStatistics';
 import Profile from '../pages/Profile/Profile';
+import ForgotPassWord from '../pages/ForgotPassWord/ForgotPassWord';
 type TRouters = {
     path: string;
     component: React.ComponentType;
@@ -38,6 +39,7 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.profileSetting, component: Profile },
 
     { path: config.Routes.logIn, component: LogIn, layout: null },
+    { path: config.Routes.forgotPass, component: ForgotPassWord, layout: null },
 
     { path: config.Routes.error, component: Error404, layout: null },
 ];
@@ -46,6 +48,7 @@ const publishRoute: Array<TRouters> = [
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const privateRoute: any[] = [
     { path: config.Routes.logIn, component: LogIn, layout: null },
+    { path: config.Routes.forgotPass, component: ForgotPassWord, layout: null },
 
     { path: config.Routes.error, component: Error404, layout: null },
 ];

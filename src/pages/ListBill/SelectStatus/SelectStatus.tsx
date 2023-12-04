@@ -17,16 +17,19 @@ const SelectStatus = (props: Iprops) => {
     const { status, idOrder, setIsLoading } = props;
 
     const handleChangeStatus = async (e: SelectChangeEvent) => {
-        try {
-            const response = await updateOrderStatusByID(idOrder, e.target.value);
-            if (response.status === 200) {
-                setIsLoading((prev) => !prev);
-                toast.success(`Cập nhật hóa đơn ${response.data.id} : ${response.data.status}`);
-            } else {
-                toast.error(response.data.message || response.data);
+        const userConfirmed = window.confirm(`Bạn có chắc chắn muốn đổi sang trạng thái sang ${e.target.value} không?`);
+        if (userConfirmed) {
+            try {
+                const response = await updateOrderStatusByID(idOrder, e.target.value);
+                if (response.status === 200) {
+                    setIsLoading((prev) => !prev);
+                    toast.success(`Cập nhật hóa đơn ${response.data.id} : ${response.data.status}`);
+                } else {
+                    toast.error(response.data.message || response.data);
+                }
+            } catch (error) {
+                toast.error(`${error}`);
             }
-        } catch (error) {
-            toast.error(`${error}`);
         }
     };
 

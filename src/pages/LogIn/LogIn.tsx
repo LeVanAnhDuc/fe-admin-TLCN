@@ -1,12 +1,12 @@
 import config from '../../config';
 import InputText from '../../components/InputText/InputText';
-import { checkExpiredToken, loginApi } from '../../apis/authApi';
+import { checkExpiredToken, loginApiAdmin } from '../../apis/authApi';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import Button from '@mui/material/Button';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAuth } from '../../hook/AuthContext';
 
@@ -54,8 +54,7 @@ const LogIn = () => {
         } else if (!regexPass.test(data.passWord)) {
             toast.error('Mật khẩu phải trên 8 kí tự và không chứa kí tự đặc biệt');
         } else {
-            const response = await loginApi(data.email, data.passWord);
-            console.log(response);
+            const response = await loginApiAdmin(data.email, data.passWord);
             if (response.status === 200) {
                 if (response?.data?.jwt) {
                     toast.success('Đăng nhập thành công');
@@ -65,6 +64,8 @@ const LogIn = () => {
                     // chuyen next page home
                     navigate(config.Routes.home);
                 }
+            } else {
+                toast.error(response.data.message || response.data);
             }
             // error
         }
@@ -110,6 +111,12 @@ const LogIn = () => {
                                 autoComplete="password"
                             />
                         </div>
+                        <Link
+                            to={config.Routes.forgotPass}
+                            className="text-sm font-semibold  text-gray-600 hover:text-black float-right"
+                        >
+                            Quên mật khẩu
+                        </Link>
 
                         <Button
                             style={{ background: 'black' }}

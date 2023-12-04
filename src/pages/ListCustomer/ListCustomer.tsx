@@ -96,7 +96,7 @@ const ListCustomer = () => {
     return (
         <div>
             <div className="flex justify-between">
-                <div className="text-lg font-semibold flex items-center">Danh sách khách hàng</div>
+                <div className="text-lg font-semibold flex items-center">Quản lý người dùng</div>
             </div>
             <div className="flex justify-center m-auto my-4 md:w-7/12">
                 <Search

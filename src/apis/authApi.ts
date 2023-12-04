@@ -25,6 +25,24 @@ export const registerApi = async (username: string, email: string, password: str
     }
 };
 
+export const loginApiAdmin = async (email: string, password: string) => {
+    try {
+        const response = await axios.post('/auth/admin/signin', {
+            usernameOrEmail: email,
+            password,
+        });
+        // handle save token
+        if (response.data.jwt) {
+            localStorage.setItem('accessToken', response.data.jwt.accessToken);
+            localStorage.setItem('tokenType', response.data.jwt.tokenType);
+        }
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const loginApi = async (email: string, password: string) => {
     try {
         const response = await axios.post('/auth/signin', {

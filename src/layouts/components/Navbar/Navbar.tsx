@@ -54,10 +54,10 @@ const LIST_MENU_NAVBAR = [
         ],
     },
     {
-        title: 'Khách hàng',
+        title: 'Người dùng',
         children: [
             {
-                title: 'Khách hàng',
+                title: 'Người dùng',
                 icon: <PeopleAlt />,
                 to: config.Routes.listCustomer,
             },

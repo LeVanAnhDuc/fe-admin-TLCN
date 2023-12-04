@@ -2,6 +2,7 @@ const Routes = {
     home: '/trang-chu',
     revenue: '/thong-ke-doanh-thu',
     logIn: '/',
+    forgotPass: '/quen-mat-khau/OTP',
     listCategory: '/danh-sach-loai',
     detailCategory: '/chi-tiet-loai',
     listProduct: '/danh-sach-san-pham',

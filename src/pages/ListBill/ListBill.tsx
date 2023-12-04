@@ -112,7 +112,7 @@ const ListBill = () => {
     const handleChangeStatus = (event: SelectChangeEvent) => {
         setStatus(event.target.value as string);
     };
-    // change status
+    // change sort status
     const handleChangeSortBy = (event: SelectChangeEvent) => {
         setSortBy(event.target.value as string);
     };
@@ -127,13 +127,13 @@ const ListBill = () => {
     return (
         <div>
             <div className="flex justify-between">
-                <div className="text-lg font-semibold flex items-center">Danh sách hóa đơn</div>
+                <div className="text-lg font-semibold flex items-center">Danh sách đơn hàng</div>
             </div>
             <div className="flex justify-center my-4  gap-5">
                 <Search setSearch={setSearch} placeHolder="Tìm theo tên người mua nhận hàng hoặc tên sản phẩm" />
                 <FormControl sx={{ width: 400 }}>
-                    <InputLabel>Trạng thái</InputLabel>
-                    <Select value={status} label="Trạng thái" onChange={handleChangeStatus}>
+                    <InputLabel>Lọc</InputLabel>
+                    <Select value={status} label="Lọc" onChange={handleChangeStatus}>
                         <MenuItem value={''}>Tất cả</MenuItem>
                         <MenuItem value={config.StatusOrder.ORDERED}>{config.StatusOrder.ORDERED}</MenuItem>
                         <MenuItem value={config.StatusOrder.PROCESSING}>{config.StatusOrder.PROCESSING}</MenuItem>
@@ -144,8 +144,8 @@ const ListBill = () => {
                     </Select>
                 </FormControl>
                 <FormControl sx={{ width: 400 }}>
-                    <InputLabel>Lọc đơn hàng</InputLabel>
-                    <Select value={sortBy} label="Lọc" onChange={handleChangeSortBy}>
+                    <InputLabel>Sắp xếp</InputLabel>
+                    <Select value={sortBy} label="Sắp xếp" onChange={handleChangeSortBy}>
                         <MenuItem value={''}>Không lọc</MenuItem>
                         <MenuItem value={config.SearchFilterOrder.dateAsc}>Thời gian: Thấp đến Cao</MenuItem>
                         <MenuItem value={config.SearchFilterOrder.dateDesc}>Thời gian: Cap đến Thấp</MenuItem>
@@ -165,7 +165,7 @@ const ListBill = () => {
                             <TableRow>
                                 <StyledTableCell align="center">ID</StyledTableCell>
                                 <StyledTableCell align="center" sx={{ minWidth: '100px' }}>
-                                    Người nhận hàng
+                                    Người đặt hàng
                                 </StyledTableCell>
                                 <StyledTableCell align="center">Thành tiền</StyledTableCell>
                                 <StyledTableCell align="center">Thời gian đặt</StyledTableCell>

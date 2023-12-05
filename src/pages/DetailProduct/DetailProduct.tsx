@@ -144,6 +144,8 @@ const DetailProduct = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
+                console.log(response);
+
                 if (response.status === 200) {
                     await setCateCurrent(response.data.categoryName);
 
@@ -151,6 +153,7 @@ const DetailProduct = () => {
                     await setValue('name', response.data.name);
                     await setValue('quantity', response.data.quantity);
                     await setValue('price', response.data.price);
+                    await setValue('promotionalPrice', response.data.promotionalPrice);
 
                     await setValue('sold', response.data.sold);
                     await setValue('quantityAvailable', response.data.quantityAvailable);
@@ -189,6 +192,14 @@ const DetailProduct = () => {
     }, [idProduct]);
     // submit form
     const onSubmit: SubmitHandler<IProduct> = async (data) => {
+        if (data.quantity < 0) {
+            toast.error('Số lượng sản phẩm không được nhỏ hơn 1');
+            return;
+        }
+        if (data.price < 0) {
+            toast.error('Số tiền không được nhỏ hơn 1');
+            return;
+        }
         const object: IProduct = {
             name: data.name,
             description: data.description,
@@ -200,6 +211,8 @@ const DetailProduct = () => {
             },
             options: [optionsSize, optionsColor],
             skus: Sku,
+            // no value
+            id: 0,
         };
 
         setIsLoadingDialog(true);
@@ -338,6 +351,44 @@ const DetailProduct = () => {
                         />
                     </div>
                     {/* end input quantity and price*/}
+                    {/* start input quantityAvailable and promotionalPrice */}
+                    <div className="grid grid-cols-2 gap-5">
+                        <InputText
+                            labelInput="Số lượng có sẵn"
+                            register={{
+                                ...register('quantityAvailable'),
+                            }}
+                            readOnly
+                        />
+
+                        <InputText
+                            labelInput="Giá khuyến mại VNĐ"
+                            register={{
+                                ...register('promotionalPrice'),
+                            }}
+                            readOnly
+                        />
+                    </div>
+                    {/* end input quantityAvailable and promotionalPrice*/}
+                    {/* start input createdDate and lastModifiedDate */}
+                    <div className="grid grid-cols-2 gap-5">
+                        <InputText
+                            labelInput="Ngày tạo"
+                            register={{
+                                ...register('createdDate'),
+                            }}
+                            readOnly
+                        />
+
+                        <InputText
+                            labelInput="Ngày chỉnh sửa cuối"
+                            register={{
+                                ...register('lastModifiedDate'),
+                            }}
+                            readOnly
+                        />
+                    </div>
+                    {/* end input createdDate and lastModifiedDate*/}
                     <div className="mb-5 font-semibold text-xl">Danh sách ảnh</div>
                     {/* start list image */}
                     <div className="relative">
@@ -389,7 +440,7 @@ const DetailProduct = () => {
                             <Table stickyHeader aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
-                                        <StyledTableCell align="center">ID</StyledTableCell>
+                                        <StyledTableCell align="center">Stt</StyledTableCell>
                                         <StyledTableCell align="center">Kích thước</StyledTableCell>
                                         <StyledTableCell align="center">Màu</StyledTableCell>
                                         <StyledTableCell align="center">Giá</StyledTableCell>

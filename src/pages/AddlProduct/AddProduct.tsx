@@ -32,6 +32,10 @@ import { getAllCategory } from '../../apis/categoryApii';
 import { createNewProduct } from '../../apis/productApi';
 import { toast } from 'react-toastify';
 import { uploadProductImages } from '../../apis/uploadImageApi';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -123,10 +127,15 @@ const AddProduct = () => {
     };
     // submit form
     const onSubmit: SubmitHandler<IProduct> = async (data) => {
-        if (data.quantity < 0 || data.price < 0) {
-            toast.error('Giá trị phải lớn hơn 0');
+        if (data.quantity < 0) {
+            toast.error('Số lượng sản phẩm không được nhỏ hơn 1');
             return;
         }
+        if (data.price < 0) {
+            toast.error('Số tiền không được nhỏ hơn 1');
+            return;
+        }
+
         const object: IProduct = {
             name: data.name,
             description: data.description,
@@ -139,14 +148,19 @@ const AddProduct = () => {
             // no value
             id: 0,
         };
+        setIsLoadingDialog(true);
+        try {
+            const response = await createNewProduct(object);
 
-        const response = await createNewProduct(object);
-
-        if (response.status === 201) {
-            handleUpload(response.data.id);
-            toast.success('Tạo thành công');
-        } else {
-            toast.error(response.data.message || response.data);
+            if (response.status === 201) {
+                handleUpload(response.data.id);
+            } else {
+                toast.error(response.data.message || response.data);
+                setIsLoadingDialog(false);
+            }
+        } catch (error) {
+            toast.error(`${error}`);
+            setIsLoadingDialog(false);
         }
     };
     // handle change image list product
@@ -178,7 +192,7 @@ const AddProduct = () => {
             const response = await uploadProductImages(+idProduct, formData);
 
             if (response.status === 200) {
-                toast.success('Cập nhật ảnh thành công');
+                toast.success('Thêm sản phẩm thành công');
             } else {
                 toast.error(response.data.message || response.data);
             }
@@ -186,9 +200,17 @@ const AddProduct = () => {
         } catch (error) {
             toast.error(`${error}`);
         }
+        setIsLoadingDialog(false);
     };
+    const [isLoadingDialog, setIsLoadingDialog] = useState(false);
     return (
         <>
+            <Dialog onClose={() => setIsLoadingDialog(false)} open={isLoadingDialog} fullWidth maxWidth="sm">
+                <DialogTitle>Đang lưu sản phẩm</DialogTitle>
+                <DialogContent>
+                    <LinearProgress color="success" />
+                </DialogContent>
+            </Dialog>
             <div className="flex justify-between pb-3">
                 <div className="text-lg font-semibold flex items-center ">Thông tin sản phẩm</div>
                 <Link to={config.Routes.listProduct}>
@@ -311,7 +333,7 @@ const AddProduct = () => {
                             <Table stickyHeader aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
-                                        <StyledTableCell>ID</StyledTableCell>
+                                        <StyledTableCell>Stt</StyledTableCell>
                                         <StyledTableCell align="center">Size</StyledTableCell>
                                         <StyledTableCell align="center">Color</StyledTableCell>
                                         <StyledTableCell align="center">Price</StyledTableCell>

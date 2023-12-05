@@ -151,7 +151,7 @@ const OptionColor = (props: Iprops) => {
     return (
         <div className="mt-5 bg-gray-100 p-4 rounded">
             <Dialog onClose={() => setIsLoading(false)} open={isLoading} fullWidth maxWidth="sm">
-                <DialogTitle>Xác thực </DialogTitle>
+                <DialogTitle>Đang lưu tùy chọn</DialogTitle>
                 <DialogContent>
                     <LinearProgress color="success" />
                 </DialogContent>

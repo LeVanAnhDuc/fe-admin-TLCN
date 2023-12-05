@@ -110,6 +110,7 @@ const DetailProduct = () => {
     };
 
     // auto create sku by biến thể
+    const [SkuNoneUpdate, setSkuNoneUpdate] = useState<Array<ISku>>([]);
     const [Sku, setSku] = useState<Array<ISku>>([]);
     useEffect(() => {
         setSku([]);
@@ -117,10 +118,32 @@ const DetailProduct = () => {
         for (let i = 0; i < optionsSize?.values.length; i++) {
             for (let j = 0; j < optionsColor?.values.length; j++) {
                 combinedArray.push([optionsSize.values[i], optionsColor.values[j]]);
-                setSku((prev) => [...prev, { optionValues: [optionsSize.values[i], optionsColor.values[j]] }]);
+                setSku((prev) => [
+                    ...prev,
+                    { optionValues: [optionsColor.values[j], optionsSize.values[i]], price: 0 },
+                ]);
             }
         }
+        setLoadingSetSku((prev) => !prev);
     }, [isLoading]);
+
+    const [isLoadingSetSku, setLoadingSetSku] = useState<boolean>(false);
+    useEffect(() => {
+        const updatedSku = Sku.map((sku) => {
+            const matchingSkuNoneUpdate = SkuNoneUpdate.find((skuNoneUpdate) => {
+                // console.log(JSON.stringify(skuNoneUpdate.optionValues));
+
+                return JSON.stringify(skuNoneUpdate.optionValues) === JSON.stringify(sku.optionValues);
+            });
+
+            if (matchingSkuNoneUpdate) {
+                return { ...sku, price: matchingSkuNoneUpdate.price };
+            }
+
+            return sku;
+        });
+        setSku(updatedSku);
+    }, [isLoadingSetSku]);
 
     // handle change price in sku
     const handleChangePrice = (id: number, e: ChangeEvent<HTMLInputElement>) => {
@@ -144,7 +167,6 @@ const DetailProduct = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
-                console.log(response);
 
                 if (response.status === 200) {
                     await setCateCurrent(response.data.categoryName);
@@ -176,6 +198,7 @@ const DetailProduct = () => {
                     );
 
                     setSku(response.data.skus);
+                    setSkuNoneUpdate(response.data.skus);
                 } else {
                     toast.error(response.data.message);
                     navigate(config.Routes.listProduct);
@@ -443,7 +466,7 @@ const DetailProduct = () => {
                                         <StyledTableCell align="center">Stt</StyledTableCell>
                                         <StyledTableCell align="center">Kích thước</StyledTableCell>
                                         <StyledTableCell align="center">Màu</StyledTableCell>
-                                        <StyledTableCell align="center">Giá</StyledTableCell>
+                                        <StyledTableCell align="center">Giá (VNĐ)</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>

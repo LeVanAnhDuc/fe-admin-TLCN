@@ -19,17 +19,23 @@ import AddCircle from '@mui/icons-material/AddCircle';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 import config from '../../config';
 import IProduct from '../../interface/product';
 import {
-    getAllProductWithinPaginationSearch,
+    getAllProductSearchWithinPagination,
     toggleIsActiveProduct,
     toggleIsSellingProduct,
 } from '../../apis/productApi';
 import Search from '../../components/Search/Search';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import ModalQuantity from './ModalQuantity/ModalQuantity';
+import ICategory from '../../interface/category';
+import { getAllCategory } from '../../apis/categoryApii';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -54,16 +60,29 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const ListProduct = () => {
     const [isLoading, setLoading] = useState<boolean>(false);
+    // get list cate
+    const [listCate, setListCate] = useState<Array<ICategory>>([]);
+    const handleGetListCate = async () => {
+        const res = await getAllCategory();
+        if (res.status === 200) {
+            setListCate(res.data.content);
+        }
+    };
+    useEffect(() => {
+        handleGetListCate();
+    }, []);
     // change page
     const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
     const [page, setPage] = useState<number>(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
     const [search, setSearch] = useState<string>('');
+    const [cate, setCate] = useState<string>('');
+    const [sortBy, setSortBy] = useState<string>('');
     const itemsPerPage = 20;
 
     const getAllProducts = async (pageNo: number) => {
         try {
-            const response = await getAllProductWithinPaginationSearch(pageNo, itemsPerPage, search);
+            const response = await getAllProductSearchWithinPagination(pageNo, itemsPerPage, search, cate, sortBy);
 
             const { content, totalPages } = response.data;
 
@@ -79,14 +98,13 @@ const ListProduct = () => {
 
     useEffect(() => {
         getAllProducts(page);
-    }, [page, isLoading, search]);
+    }, [page, isLoading, search, cate, sortBy]);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
 
     // handle delete
-
     const handleDeleteProduct = async (idProduct: number) => {
         const userConfirmed = window.confirm('Bạn có chắc chắn muốn xóa không?');
 
@@ -131,6 +149,15 @@ const ListProduct = () => {
     };
     const handleClose = () => setOpen(false);
 
+    // change cate
+    const handleChangeCate = (event: SelectChangeEvent) => {
+        setCate(event.target.value as string);
+    };
+    // change sortBy
+    const handleChangeSortBy = (event: SelectChangeEvent) => {
+        setSortBy(event.target.value as string);
+    };
+
     return (
         <div>
             <ModalQuantity open={open} handleClose={handleClose} IDProduct={IDProduct} setLoading={setLoading} />
@@ -141,8 +168,45 @@ const ListProduct = () => {
                     <Button variant="contained">Thêm mới</Button>
                 </Link>
             </div>
-            <div className="flex justify-center m-auto my-4 md:w-7/12">
+            <div className="flex justify-center my-4 gap-5">
                 <Search setSearch={setSearch} placeHolder="Tìm theo theo tên sản phẩm" />
+                <FormControl sx={{ width: 600 }}>
+                    <InputLabel>Lọc danh mục</InputLabel>
+                    <Select value={cate} label="Lọc danh mục" onChange={handleChangeCate}>
+                        <MenuItem value={''}>Tất cả</MenuItem>
+                        {listCate.map((item, index) => (
+                            <MenuItem key={index} value={item.name}>
+                                {item.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ width: 600 }}>
+                    <InputLabel>Sắp xếp</InputLabel>
+                    <Select value={sortBy} label="Sắp xếp" onChange={handleChangeSortBy}>
+                        <MenuItem value={''}>Không lọc</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.priceAsc}>Giá: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.priceDesc}>Giá: Cap đến Thấp</MenuItem>
+
+                        <MenuItem value={config.SearchFilterProduct.idAsc}>Ngày tạo: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.idDesc}>Ngày tạo: Cap đến Thấp</MenuItem>
+
+                        <MenuItem value={config.SearchFilterProduct.soldAsc}>Số lượng đã bán: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.soldDesc}>Số lượng đã bán: Cap đến Thấp</MenuItem>
+
+                        <MenuItem value={config.SearchFilterProduct.availableAsc}>Số lượng còn: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.availableDesc}>Số lượng còn: Cap đến Thấp</MenuItem>
+
+                        <MenuItem value={config.SearchFilterProduct.reviewAsc}>Số đánh giá: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.reviewDesc}>Số đánh giá: Cap đến Thấp</MenuItem>
+
+                        <MenuItem value={config.SearchFilterProduct.favoriteAsc}>Số yêu thích: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.favoriteDesc}>Số yêu thích: Cap đến Thấp</MenuItem>
+
+                        <MenuItem value={config.SearchFilterProduct.ratingAsc}>Số sao: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.ratingDesc}>Số sao: Cap đến Thấp</MenuItem>
+                    </Select>
+                </FormControl>
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>

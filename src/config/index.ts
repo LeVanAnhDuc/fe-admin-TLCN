@@ -3,6 +3,7 @@ import StatusOrder from './statusOrder';
 import TypeOption from './typeOption';
 import SearchFilterOrder from './searchFilterOrder';
 import Gender from './gender';
+import SearchFilterProduct from './searchFilterProduct';
 
 const config = {
     Routes,
@@ -10,6 +11,7 @@ const config = {
     TypeOption,
     SearchFilterOrder,
     Gender,
+    SearchFilterProduct,
 };
 
 export default config;

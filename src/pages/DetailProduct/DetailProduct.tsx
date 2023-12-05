@@ -131,8 +131,6 @@ const DetailProduct = () => {
     useEffect(() => {
         const updatedSku = Sku.map((sku) => {
             const matchingSkuNoneUpdate = SkuNoneUpdate.find((skuNoneUpdate) => {
-                // console.log(JSON.stringify(skuNoneUpdate.optionValues));
-
                 return JSON.stringify(skuNoneUpdate.optionValues) === JSON.stringify(sku.optionValues);
             });
 

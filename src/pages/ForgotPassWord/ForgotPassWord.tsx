@@ -62,7 +62,6 @@ const ForgotPassWord = () => {
                 try {
                     setIsLoadng(true);
                     const response = await forgotPassWord(data.email, data.pass);
-                    console.log(response);
 
                     setIsLoadng(false);
                     if (response.status === 200) {

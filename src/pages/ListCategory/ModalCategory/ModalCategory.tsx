@@ -77,7 +77,7 @@ const ModalCategory = (propsCh: IPropsAddress) => {
                     <div className="text-lg mb-4">Thêm Danh mục mới</div>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <InputText
-                            labelInput="Tên loại"
+                            labelInput="Tên danh mục"
                             errorInput={errors.name ? true : false}
                             errorFormMessage={errors.name?.message}
                             register={{

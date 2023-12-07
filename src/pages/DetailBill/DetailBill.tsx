@@ -80,7 +80,7 @@ const DetailBill = () => {
                 {/* start account setting */}
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <InputText labelInput="Tên nhận" value={`${address?.fullName}`} readOnly />
+                        <InputText labelInput="Tên người nhận" value={`${address?.fullName}`} readOnly />
 
                         <InputText
                             labelInput="Hình thức thanh toán"

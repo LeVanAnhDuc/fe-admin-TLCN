@@ -74,7 +74,7 @@ const Profile = () => {
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     {/* start input FullName */}
                     <InputText
-                        labelInput="Name"
+                        labelInput="Họ và tên"
                         errorInput={errors.name ? true : false}
                         isRequired
                         errorFormMessage={errors.name?.message}
@@ -88,7 +88,7 @@ const Profile = () => {
                     {/* end input FullName */}
                     {/* start input Username */}
                     <InputText
-                        labelInput="User Name"
+                        labelInput="Tên tài khoản"
                         errorInput={errors.username ? true : false}
                         isRequired
                         errorFormMessage={errors.username?.message}
@@ -141,7 +141,7 @@ const Profile = () => {
                     {/* end input gender */}
                     {/* start input phone */}
                     <InputText
-                        labelInput="Phone must contain 10 digits"
+                        labelInput="Số điện thoại phải hơn 10 kí tự"
                         typeInput="number"
                         errorInput={errors.phoneNumber ? true : false}
                         isRequired

@@ -227,9 +227,9 @@ const AddProduct = () => {
                     {/* start input id and Name */}
                     <div className="grid grid-cols-2 gap-5">
                         <FormControl fullWidth>
-                            <InputLabel required>CategoryName</InputLabel>
+                            <InputLabel required>Chọn danh mục sản phẩm</InputLabel>
                             <Select
-                                label="CategoryName"
+                                label="Chọn danh mục sản phẩm"
                                 {...register('category.name', {
                                     required: 'categoryName is required',
                                 })}

@@ -91,7 +91,7 @@ const DetailCustomer = () => {
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <InputText
-                            labelInput="Username"
+                            labelInput="Tên tài khoản"
                             errorInput={errors.username ? true : false}
                             errorFormMessage={errors.username?.message}
                             register={{

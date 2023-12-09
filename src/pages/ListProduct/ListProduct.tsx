@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Table from '@mui/material/Table';
@@ -59,6 +59,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ListProduct = () => {
+    const navigate = useNavigate();
     const [isLoading, setLoading] = useState<boolean>(false);
     // get list cate
     const [listCate, setListCate] = useState<Array<ICategory>>([]);
@@ -221,12 +222,20 @@ const ListProduct = () => {
                                 <StyledTableCell align="left" sx={{ minWidth: '90px' }}>
                                     Giá
                                 </StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}></StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
+                                    Thao tác
+                                </StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {data.map((item, index) => (
-                                <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <StyledTableRow
+                                    key={index}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
+                                    onClick={() => {
+                                        navigate(config.Routes.detailProduct + '#' + item.id);
+                                    }}
+                                >
                                     <StyledTableCell align="center" component="th" scope="row">
                                         {item.id}
                                     </StyledTableCell>

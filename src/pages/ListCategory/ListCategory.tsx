@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Table from '@mui/material/Table';
@@ -45,6 +45,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ListCategory = () => {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     // change page
     const [data, setData] = useState<Array<ICategory>>([]); // Dữ liệu từ API
@@ -126,12 +127,20 @@ const ListCategory = () => {
                                 <StyledTableCell align="left">Tên loại</StyledTableCell>
                                 <StyledTableCell align="center">Mô tả</StyledTableCell>
                                 <StyledTableCell align="center">Tổng sản phẩm</StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}></StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
+                                    Thao tác
+                                </StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {data.map((item, index) => (
-                                <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <StyledTableRow
+                                    key={index}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
+                                    onClick={() => {
+                                        navigate(config.Routes.detailCategory + '#' + item.id);
+                                    }}
+                                >
                                     <StyledTableCell align="center" component="th" scope="row">
                                         {item.id}
                                     </StyledTableCell>

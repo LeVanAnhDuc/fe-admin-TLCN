@@ -235,16 +235,17 @@ const DetailProduct = () => {
             // no value
             id: 0,
         };
-
         setIsLoadingDialog(true);
-        const response = await updateProduct(+idProduct, object);
-
-        setIsLoadingDialog(false);
-        if (response.status === 200) {
-            handleUpload(response.data.id);
-            toast.success('Sửa thành công');
-        } else {
-            toast.error(response.data.message || response.data);
+        try {
+            const response = await updateProduct(+idProduct, object);
+            if (response.status === 200) {
+                handleUpload(response.data.id);
+            } else {
+                toast.error(response.data.message || response.data);
+                setIsLoadingDialog(false);
+            }
+        } catch (error) {
+            setIsLoadingDialog(false);
         }
     };
 
@@ -278,12 +279,10 @@ const DetailProduct = () => {
             }
 
             // Đặt đường dẫn API lưu danh sách ảnh của bạn
-            setIsLoadingDialog(true);
             const response = await uploadProductImages(+idProduct, formData);
-            setIsLoadingDialog(false);
 
             if (response.status === 200) {
-                toast.success('Cập nhật ảnh thành công');
+                toast.success('Sửa thành công');
             } else {
                 toast.error(response.data.message || response.data);
             }
@@ -291,13 +290,14 @@ const DetailProduct = () => {
         } catch (error) {
             toast.error(`${error}`);
         }
+        setIsLoadingDialog(false);
     };
     const [isLoadingDialog, setIsLoadingDialog] = useState(false);
 
     return (
         <>
             <Dialog onClose={() => setIsLoadingDialog(false)} open={isLoadingDialog} fullWidth maxWidth="sm">
-                <DialogTitle>Xác thực </DialogTitle>
+                <DialogTitle>Đang lưu sản phẩm</DialogTitle>
                 <DialogContent>
                     <LinearProgress color="success" />
                 </DialogContent>
@@ -360,7 +360,7 @@ const DetailProduct = () => {
                         />
 
                         <InputText
-                            labelInput="Giá bán VNĐ"
+                            labelInput="Giá bán(VNĐ)"
                             typeInput="number"
                             errorInput={errors.price ? true : false}
                             isRequired
@@ -496,10 +496,16 @@ const DetailProduct = () => {
                         </TableContainer>
                     </Paper>
                     {/* end table */}
-
-                    <Button fullWidth type="submit" variant="contained" color="primary" size="large">
-                        Lưu
-                    </Button>
+                    <div className="grid grid-cols-2 gap-5">
+                        <Link to={config.Routes.listProduct}>
+                            <Button fullWidth variant="outlined" color="primary" size="large">
+                                Hủy
+                            </Button>
+                        </Link>
+                        <Button fullWidth type="submit" variant="contained" color="primary" size="large">
+                            Lưu
+                        </Button>
+                    </div>
                 </form>
                 {/* end product setting */}
             </div>

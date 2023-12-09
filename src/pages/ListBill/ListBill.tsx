@@ -14,7 +14,7 @@ import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
 
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import config from '../../config';
 import IOrder from '../../interface/order';
 import { deleteOrderByAdmin, getAllOrderWithinPaginationSearch } from '../../apis/orderApi';
@@ -49,6 +49,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const ListBill = () => {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // change page
@@ -147,14 +148,14 @@ const ListBill = () => {
                     <InputLabel>Sắp xếp</InputLabel>
                     <Select value={sortBy} label="Sắp xếp" onChange={handleChangeSortBy}>
                         <MenuItem value={''}>Không lọc</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.dateAsc}>Thời gian: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.dateDesc}>Thời gian: Cap đến Thấp</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.idAsc}>Mã hóa đơn: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.idDesc}>Mã hóa đơn: Cap đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.dateAsc}>Thời gian: Cũ nhất đến Mới nhất</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.dateDesc}>Thời gian: Mới nhất đến Cũ nhất</MenuItem>
+                        {/* <MenuItem value={config.SearchFilterOrder.idAsc}>Mã hóa đơn: Thấp đến Cao</MenuItem>
+                            <MenuItem value={config.SearchFilterOrder.idDesc}>Mã hóa đơn: Cao đến Thấp</MenuItem> */}
                         {/* <MenuItem value={config.SearchFilterOrder.statusAsc}>Trạng thái: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.statusDesc}>Trạng thái: Cap đến Thấp</MenuItem> */}
+                        <MenuItem value={config.SearchFilterOrder.statusDesc}>Trạng thái: Cao đến Thấp</MenuItem> */}
                         <MenuItem value={config.SearchFilterOrder.totalAsc}>Tổng tiền: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.totalDesc}>Tổng tiền: Cap đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.totalDesc}>Tổng tiền: Cao đến Thấp</MenuItem>
                     </Select>
                 </FormControl>
             </div>
@@ -172,12 +173,20 @@ const ListBill = () => {
                                 <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
                                     Trạng thái
                                 </StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}></StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
+                                    Thao tác
+                                </StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {data.map((item, index) => (
-                                <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <StyledTableRow
+                                    key={index}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
+                                    onClick={() => {
+                                        navigate(config.Routes.detailBill + '#' + item.id);
+                                    }}
+                                >
                                     <StyledTableCell align="center" component="th" scope="row">
                                         {item.id}
                                     </StyledTableCell>

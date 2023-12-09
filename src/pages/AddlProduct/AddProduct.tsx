@@ -269,7 +269,7 @@ const AddProduct = () => {
                             }}
                         />
                         <InputText
-                            labelInput="Giá bán"
+                            labelInput="Giá bán (VNĐ)"
                             typeInput="number"
                             errorInput={errors.price ? true : false}
                             isRequired

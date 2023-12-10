@@ -212,10 +212,10 @@ const AddProduct = () => {
                 </DialogContent>
             </Dialog>
             <div className="flex justify-between pb-3">
-                <div className="text-lg font-semibold flex items-center ">Thông tin sản phẩm</div>
                 <Link to={config.Routes.listProduct}>
                     <Button variant="outlined">
                         <KeyboardArrowLeft />
+                        <span className="normal-case">Quay lại</span>
                     </Button>
                 </Link>
             </div>

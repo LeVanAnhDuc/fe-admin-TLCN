@@ -99,7 +99,7 @@ const DetailCategory = () => {
                 <Link to={config.Routes.listCategory}>
                     <Button variant="contained">
                         <KeyboardArrowLeft />
-                        <span className="normal-case">Danh sách loại hàng</span>
+                        <span className="normal-case">Quay lại</span>
                     </Button>
                 </Link>
             </div>

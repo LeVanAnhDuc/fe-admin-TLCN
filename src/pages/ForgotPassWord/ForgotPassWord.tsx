@@ -93,7 +93,7 @@ const ForgotPassWord = () => {
             toast.success(response.data.message);
         }
         if (response.data) {
-            toast.success(response.data);
+            toast.warning(response.data);
         }
     };
     return (

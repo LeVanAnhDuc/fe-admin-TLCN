@@ -115,7 +115,7 @@ const ListCategory = () => {
 
     useEffect(() => {
         getAllProducts(page);
-    }, [page, open, isLoading, search]);
+    }, [page, open, isLoading, search, sortBy]);
     return (
         <>
             <ModalCategory open={open} handleClose={handleClose} />

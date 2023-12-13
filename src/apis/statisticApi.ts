@@ -80,3 +80,13 @@ export const getTotalPriceSoldByYear = async (year: number) => {
         throw error;
     }
 };
+
+export const getNumberTotalPriceSoldAndTotalProductSoldByYear = async () => {
+    try {
+        const response = await axios.get(`statistic/revenue-count`);
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

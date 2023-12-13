@@ -90,7 +90,7 @@ const ForgotPassWord = () => {
 
         if (response.status === 200) {
             setInputOTP(true);
-            toast.error(response.data.message);
+            toast.success(response.data.message);
         }
         if (response.data) {
             toast.warning(response.data);

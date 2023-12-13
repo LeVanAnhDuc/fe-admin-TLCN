@@ -172,8 +172,8 @@ const ListProduct = () => {
             <div className="flex justify-center my-4 gap-5">
                 <Search setSearch={setSearch} placeHolder="Tìm theo theo tên sản phẩm" />
                 <FormControl sx={{ width: 600 }}>
-                    <InputLabel>Lọc danh mục</InputLabel>
-                    <Select value={cate} label="Lọc danh mục" onChange={handleChangeCate}>
+                    <InputLabel>Lọc theo danh mục</InputLabel>
+                    <Select value={cate} label="Lọc theo danh mục" onChange={handleChangeCate}>
                         <MenuItem value={''}>Tất cả</MenuItem>
                         {listCate.map((item, index) => (
                             <MenuItem key={index} value={item.name}>
@@ -185,27 +185,27 @@ const ListProduct = () => {
                 <FormControl sx={{ width: 600 }}>
                     <InputLabel>Sắp xếp</InputLabel>
                     <Select value={sortBy} label="Sắp xếp" onChange={handleChangeSortBy}>
-                        <MenuItem value={''}>Không lọc</MenuItem>
-                        <MenuItem value={config.SearchFilterProduct.priceAsc}>Giá: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterProduct.priceDesc}>Giá: Cap đến Thấp</MenuItem>
+                        <MenuItem value={''}>Không sắp xếp</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.priceAsc}>Giá tăng dần</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.priceDesc}>Giá giảm dần</MenuItem>
 
-                        <MenuItem value={config.SearchFilterProduct.idAsc}>Ngày tạo: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterProduct.idDesc}>Ngày tạo: Cap đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.idAsc}>Ngày tạo cũ nhất</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.idDesc}>Ngày tạo mới nhất</MenuItem>
 
-                        <MenuItem value={config.SearchFilterProduct.soldAsc}>Số lượng đã bán: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterProduct.soldDesc}>Số lượng đã bán: Cap đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.soldAsc}>Số lượng đã bán tăng dần</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.soldDesc}>Số lượng đã bán giảm dần</MenuItem>
 
-                        <MenuItem value={config.SearchFilterProduct.availableAsc}>Số lượng còn: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterProduct.availableDesc}>Số lượng còn: Cap đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.availableAsc}>Số lượng có sẵn tăng dần</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.availableDesc}>Số lượng có sẵn giảm dần</MenuItem>
 
-                        <MenuItem value={config.SearchFilterProduct.reviewAsc}>Số đánh giá: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterProduct.reviewDesc}>Số đánh giá: Cap đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.reviewAsc}>Số lượt đánh giá tăng dần</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.reviewDesc}>Số lượt đánh giá giảm dần</MenuItem>
 
-                        <MenuItem value={config.SearchFilterProduct.favoriteAsc}>Số yêu thích: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterProduct.favoriteDesc}>Số yêu thích: Cap đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.favoriteAsc}>Số yêu thích tăng dần</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.favoriteDesc}>Số yêu thích giảm dần</MenuItem>
 
-                        <MenuItem value={config.SearchFilterProduct.ratingAsc}>Số sao: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterProduct.ratingDesc}>Số sao: Cap đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.ratingAsc}>Số sao tăng dần</MenuItem>
+                        <MenuItem value={config.SearchFilterProduct.ratingDesc}>Số sao giảm dần</MenuItem>
                     </Select>
                 </FormControl>
             </div>

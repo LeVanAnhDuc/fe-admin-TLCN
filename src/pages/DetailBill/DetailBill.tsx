@@ -70,9 +70,9 @@ const DetailBill = () => {
         <>
             <div className="flex flex-wrap justify-between pb-3 gap-5">
                 <Link to={config.Routes.listBill}>
-                    <Button variant="contained">
+                    <Button variant="outlined">
                         <KeyboardArrowLeft />
-                        <span className="normal-case">Danh sách hóa đơn</span>
+                        <span className="normal-case">Quay lại</span>
                     </Button>
                 </Link>
             </div>
@@ -133,7 +133,7 @@ const DetailBill = () => {
                             readOnly
                         />
                         <InputText
-                            labelInput="Tổng tiền"
+                            labelInput="Tổng tiền (VNĐ)"
                             register={{
                                 ...register('total', {
                                     required: 'total is required',

@@ -303,10 +303,10 @@ const DetailProduct = () => {
                 </DialogContent>
             </Dialog>
             <div className="flex justify-between pb-3">
-                <div className="text-lg font-semibold flex items-center ">Thông tin sản phẩm</div>
                 <Link to={config.Routes.listProduct}>
                     <Button variant="outlined">
                         <KeyboardArrowLeft />
+                        <span className="normal-case">Quay lại</span>
                     </Button>
                 </Link>
             </div>
@@ -360,7 +360,7 @@ const DetailProduct = () => {
                         />
 
                         <InputText
-                            labelInput="Giá bán(VNĐ)"
+                            labelInput="Giá bán (VNĐ)"
                             typeInput="number"
                             errorInput={errors.price ? true : false}
                             isRequired
@@ -381,9 +381,8 @@ const DetailProduct = () => {
                             }}
                             readOnly
                         />
-
                         <InputText
-                            labelInput="Giá khuyến mại VNĐ"
+                            labelInput="Giá khuyến mại (VNĐ)"
                             register={{
                                 ...register('promotionalPrice'),
                             }}
@@ -402,7 +401,7 @@ const DetailProduct = () => {
                         />
 
                         <InputText
-                            labelInput="Ngày chỉnh sửa cuối"
+                            labelInput="Lần chỉnh sửa cuối"
                             register={{
                                 ...register('lastModifiedDate'),
                             }}
@@ -410,6 +409,20 @@ const DetailProduct = () => {
                         />
                     </div>
                     {/* end input createdDate and lastModifiedDate*/}
+                    
+                    {/* start input createdDate and lastModifiedDate */}
+                    <div className="grid grid-cols-2 gap-5">
+                        <InputText
+                            labelInput="Đã bán"
+                            register={{
+                                ...register('sold'),
+                            }}
+                            readOnly
+                        />
+                    </div>
+                    {/* end input createdDate and lastModifiedDate*/}                
+
+                    
                     <div className="mb-5 font-semibold text-xl">Danh sách ảnh</div>
                     {/* start list image */}
                     <div className="relative">

@@ -79,7 +79,7 @@ const DetailCustomer = () => {
                 <Link to={config.Routes.listCustomer}>
                     <Button variant="contained">
                         <KeyboardArrowLeft />
-                        <span className="normal-case">Danh sách KH</span>
+                        <span className="normal-case">Quay lại</span>
                     </Button>
                 </Link>
             </div>

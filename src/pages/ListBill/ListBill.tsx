@@ -133,8 +133,8 @@ const ListBill = () => {
             <div className="flex justify-center my-4  gap-5">
                 <Search setSearch={setSearch} placeHolder="Tìm theo tên người mua nhận hàng hoặc tên sản phẩm" />
                 <FormControl sx={{ width: 400 }}>
-                    <InputLabel>Lọc</InputLabel>
-                    <Select value={status} label="Lọc" onChange={handleChangeStatus}>
+                    <InputLabel>Lọc theo trạng thái</InputLabel>
+                    <Select value={status} label="Lọc theo trạng thái" onChange={handleChangeStatus}>
                         <MenuItem value={''}>Tất cả</MenuItem>
                         <MenuItem value={config.StatusOrder.ORDERED}>{config.StatusOrder.ORDERED}</MenuItem>
                         <MenuItem value={config.StatusOrder.PROCESSING}>{config.StatusOrder.PROCESSING}</MenuItem>

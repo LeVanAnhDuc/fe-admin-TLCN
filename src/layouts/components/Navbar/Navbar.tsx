@@ -62,7 +62,7 @@ const LIST_MENU_NAVBAR = [
                 to: config.Routes.listCustomer,
             },
             {
-                title: 'Hóa đơn',
+                title: 'Đơn hàng',
                 icon: <Receipt />,
                 to: config.Routes.listBill,
             },

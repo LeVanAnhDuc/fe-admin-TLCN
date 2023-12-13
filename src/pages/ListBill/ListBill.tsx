@@ -9,6 +9,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
@@ -22,10 +26,6 @@ import { toast } from 'react-toastify';
 import SelectStatus from './SelectStatus/SelectStatus';
 import Search from '../../components/Search/Search';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -183,18 +183,40 @@ const ListBill = () => {
                                 <StyledTableRow
                                     key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
-                                    onClick={() => {
-                                        navigate(config.Routes.detailBill + '#' + item.id);
-                                    }}
                                 >
-                                    <StyledTableCell align="center" component="th" scope="row">
+                                    <StyledTableCell
+                                        align="center"
+                                        component="th"
+                                        scope="row"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailBill + '#' + item.id);
+                                        }}
+                                    >
                                         {item.id}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{item.user.username}</StyledTableCell>
-                                    <StyledTableCell align="center">
+                                    <StyledTableCell
+                                        align="center"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailBill + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.user.username}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailBill + '#' + item.id);
+                                        }}
+                                    >
                                         {item.total.toLocaleString('vi-VN')}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center" sx={{ minWidth: '10rem' }}>
+                                    <StyledTableCell
+                                        align="center"
+                                        sx={{ minWidth: '10rem' }}
+                                        onClick={() => {
+                                            navigate(config.Routes.detailBill + '#' + item.id);
+                                        }}
+                                    >
                                         {item.createdDate}
                                     </StyledTableCell>
 

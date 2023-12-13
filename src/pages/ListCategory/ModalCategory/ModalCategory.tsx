@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 import ICategory, { IUpdateCategory } from '../../../interface/category';
 import InputText from '../../../components/InputText/InputText';
-import { createNewCategory, getAllCategory } from '../../../apis/categoryApii';
+import { createNewCategory, getAllCategory } from '../../../apis/categoryApi';
 import { useEffect, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';

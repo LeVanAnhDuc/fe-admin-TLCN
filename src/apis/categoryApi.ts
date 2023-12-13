@@ -2,12 +2,17 @@
 import { IUpdateCategory } from '../interface/category.js';
 import axios from './axiosConfig.js';
 
-export const getAllCategoryWithinPaginationSearch = async (pageNo: number, pageSize: number, key?: string) => {
+export const getAllCategoryWithinPaginationSearch = async (
+    pageNo: number,
+    pageSize: number,
+    sort: string = 'id:desc',
+    key?: string,
+) => {
     try {
         const params: Record<string, string | number | undefined> = {
             pageNo: pageNo,
             pageSize: pageSize,
-            sort: 'id:desc',
+            sort: sort,
         };
         // Thêm key vào đối tượng nếu key không rỗng
         if (key !== undefined && key !== null && key !== '') {

@@ -9,7 +9,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import InputText from '../../components/InputText/InputText';
 import config from '../../config';
 import ICategory, { IUpdateCategory } from '../../interface/category';
-import { getAllCategory, getCategoryByIDOrSlug, updateCategory } from '../../apis/categoryApii';
+import { getAllCategory, getCategoryByIDOrSlug, updateCategory } from '../../apis/categoryApi';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';

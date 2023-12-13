@@ -28,7 +28,7 @@ import OptionColor from './OptionColor/OptionColor';
 import OptionSize from './OptionSize/OptionSize';
 import { ISku } from '../../interface/productCart';
 import ICategory from '../../interface/category';
-import { getAllCategory } from '../../apis/categoryApii';
+import { getAllCategory } from '../../apis/categoryApi';
 import { createNewProduct } from '../../apis/productApi';
 import { toast } from 'react-toastify';
 import { uploadProductImages } from '../../apis/uploadImageApi';

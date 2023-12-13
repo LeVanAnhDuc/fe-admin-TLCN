@@ -35,7 +35,7 @@ import Search from '../../components/Search/Search';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import ModalQuantity from './ModalQuantity/ModalQuantity';
 import ICategory from '../../interface/category';
-import { getAllCategory } from '../../apis/categoryApii';
+import { getAllCategory } from '../../apis/categoryApi';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -232,11 +232,15 @@ const ListProduct = () => {
                                 <StyledTableRow
                                     key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
-                                    onClick={() => {
-                                        navigate(config.Routes.detailProduct + '#' + item.id);
-                                    }}
                                 >
-                                    <StyledTableCell align="center" component="th" scope="row">
+                                    <StyledTableCell
+                                        align="center"
+                                        component="th"
+                                        scope="row"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailProduct + '#' + item.id);
+                                        }}
+                                    >
                                         {item.id}
                                     </StyledTableCell>
                                     <StyledTableCell
@@ -246,6 +250,9 @@ const ListProduct = () => {
                                         sx={{
                                             display: 'flex',
                                             justifyContent: 'center',
+                                        }}
+                                        onClick={() => {
+                                            navigate(config.Routes.detailProduct + '#' + item.id);
                                         }}
                                     >
                                         <Avatar variant="rounded" src={item.listImages[0]} alt="Sản phẩm" />
@@ -258,12 +265,36 @@ const ListProduct = () => {
                                             textOverflow: 'ellipsis',
                                             whiteSpace: 'nowrap',
                                         }}
+                                        onClick={() => {
+                                            navigate(config.Routes.detailProduct + '#' + item.id);
+                                        }}
                                     >
                                         {item.name}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{item.sold}</StyledTableCell>
-                                    <StyledTableCell align="center">{item.quantityAvailable}</StyledTableCell>
-                                    <StyledTableCell align="left">{item.price.toLocaleString('vi-VN')}</StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailProduct + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.sold}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailProduct + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.quantityAvailable}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="left"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailProduct + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.price.toLocaleString('vi-VN')}
+                                    </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailProduct + '#' + item.id}>
                                             <IconButton>

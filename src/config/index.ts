@@ -4,6 +4,7 @@ import TypeOption from './typeOption';
 import SearchFilterOrder from './searchFilterOrder';
 import Gender from './gender';
 import SearchFilterProduct from './searchFilterProduct';
+import SearchFilterCategory from './searchFilterCategory';
 
 const config = {
     Routes,
@@ -12,6 +13,7 @@ const config = {
     SearchFilterOrder,
     Gender,
     SearchFilterProduct,
+    SearchFilterCategory,
 };
 
 export default config;

@@ -128,9 +128,6 @@ const ListCustomer = () => {
                                 <StyledTableRow
                                     key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
-                                    onClick={() => {
-                                        navigate(config.Routes.detailCustomer + '#' + item.id);
-                                    }}
                                 >
                                     <StyledTableCell
                                         align="center"
@@ -139,14 +136,52 @@ const ListCustomer = () => {
                                             display: 'flex',
                                             justifyContent: 'center',
                                         }}
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCustomer + '#' + item.id);
+                                        }}
                                     >
                                         <Avatar src={item.avatarUrl} alt="Avatar" />
                                     </StyledTableCell>
-                                    <StyledTableCell align="left">{item.username}</StyledTableCell>
-                                    <StyledTableCell align="left">{item.name}</StyledTableCell>
-                                    <StyledTableCell align="center">{item.gender}</StyledTableCell>
-                                    <StyledTableCell align="left">{item.email}</StyledTableCell>
-                                    <StyledTableCell align="center">{item.phoneNumber}</StyledTableCell>
+                                    <StyledTableCell
+                                        align="left"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCustomer + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.username}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="left"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCustomer + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.name}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCustomer + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.gender}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="left"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCustomer + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.email}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCustomer + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.phoneNumber}
+                                    </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCustomer + '#' + item.id}>
                                             <IconButton>

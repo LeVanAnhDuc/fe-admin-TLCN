@@ -12,13 +12,17 @@ import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
 import { styled } from '@mui/material/styles';
 
 import config from '../../config';
 import ICategory from '../../interface/category';
-import { deteleASingleCategory, getAllCategoryWithinPaginationSearch } from '../../apis/categoryApii';
+import { deteleASingleCategory, getAllCategoryWithinPaginationSearch } from '../../apis/categoryApi';
 import Search from '../../components/Search/Search';
 import ModalCategory from './ModalCategory/ModalCategory';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
@@ -52,6 +56,7 @@ const ListCategory = () => {
     const [page, setPage] = useState<number>(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
     const [search, setSearch] = useState<string>('');
+    const [sortBy, setSortBy] = useState<string>('');
     const itemsPerPage = 20;
     // panigation
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
@@ -60,7 +65,7 @@ const ListCategory = () => {
     // get all category
     const getAllProducts = async (pageNo: number) => {
         try {
-            const response = await getAllCategoryWithinPaginationSearch(pageNo, itemsPerPage, search);
+            const response = await getAllCategoryWithinPaginationSearch(pageNo, itemsPerPage, sortBy, search);
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
 
@@ -97,6 +102,11 @@ const ListCategory = () => {
         }
     };
 
+    // change status
+    const handleChangesetSortBy = (event: SelectChangeEvent) => {
+        setSortBy(event.target.value as string);
+    };
+
     // modal
     const [open, setOpen] = useState(false);
 
@@ -115,8 +125,22 @@ const ListCategory = () => {
                     Thêm mới
                 </Button>
             </div>
-            <div className="flex justify-center m-auto my-4 md:w-7/12">
+            <div className="flex justify-center my-4 gap-5">
                 <Search setSearch={setSearch} placeHolder="Tìm theo theo tên danh mục" />
+                <FormControl sx={{ width: 400 }}>
+                    <InputLabel>Lọc</InputLabel>
+                    <Select value={sortBy} label="Lọc" onChange={handleChangesetSortBy}>
+                        <MenuItem value={''}>Không lọc</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.idAsc}>Ngày tạo: Thấp đến Cao</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.idDesc}>Ngày tạo: Cao đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.prod_countAsc}>
+                            Số lượng sản phẩm: Thấp đến Cao
+                        </MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.prod_countDesc}>
+                            Số lượng sản phẩm: Cao đến Thấp
+                        </MenuItem>
+                    </Select>
+                </FormControl>
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>
@@ -137,18 +161,41 @@ const ListCategory = () => {
                                 <StyledTableRow
                                     key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
-                                    onClick={() => {
-                                        navigate(config.Routes.detailCategory + '#' + item.id);
-                                    }}
                                 >
-                                    <StyledTableCell align="center" component="th" scope="row">
+                                    <StyledTableCell
+                                        align="center"
+                                        component="th"
+                                        scope="row"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCategory + '#' + item.id);
+                                        }}
+                                    >
                                         {item.id}
                                     </StyledTableCell>
-                                    <StyledTableCell align="left">
+                                    <StyledTableCell
+                                        align="left"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCategory + '#' + item.id);
+                                        }}
+                                    >
                                         <div className="">{item.name}</div>
                                     </StyledTableCell>
-                                    <StyledTableCell align="left">{item.description}</StyledTableCell>
-                                    <StyledTableCell align="center">{item.productNumber}</StyledTableCell>
+                                    <StyledTableCell
+                                        align="left"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCategory + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.description}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCategory + '#' + item.id);
+                                        }}
+                                    >
+                                        {item.productNumber}
+                                    </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCategory + '#' + item.id}>
                                             <IconButton>

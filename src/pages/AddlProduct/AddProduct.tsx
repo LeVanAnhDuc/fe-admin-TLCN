@@ -316,6 +316,7 @@ const AddProduct = () => {
                     <div className="mb-5 font-semibold text-xl">Mô tả sản phẩm</div>
                     <TextareaAutosize
                         minRows={9}
+                        className='whitespace-pre-line'
                         style={{ border: '1px solid #000', width: '100%', padding: '8px 12px' }}
                         {...register(`description`, {
                             required: 'description is required',

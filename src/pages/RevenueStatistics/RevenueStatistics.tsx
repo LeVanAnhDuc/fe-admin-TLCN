@@ -53,7 +53,7 @@ const RevenueStatistics = () => {
             </div>
             <div className="bg-chart mt-5 p-5 rounded">
                 <LinePriceSold />
-            </div>
+            </div>   
         </div>
     );
 };

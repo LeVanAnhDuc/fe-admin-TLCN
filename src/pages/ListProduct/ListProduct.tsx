@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -81,6 +81,15 @@ const ListProduct = () => {
     const [sortBy, setSortBy] = useState<string>('');
     const itemsPerPage = 20;
 
+    const topOfPageRef = useRef(null);
+
+    useEffect(() => {
+        if (topOfPageRef.current) {
+            topOfPageRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [page]);
+
+
     const getAllProducts = async (pageNo: number) => {
         try {
             const response = await getAllProductSearchWithinPagination(pageNo, itemsPerPage, search, cate, sortBy);
@@ -102,7 +111,9 @@ const ListProduct = () => {
     }, [page, isLoading, search, cate, sortBy]);
 
     const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         setPage(newPage);
+        
     };
 
     // handle delete
@@ -161,6 +172,7 @@ const ListProduct = () => {
 
     return (
         <div>
+            <div ref={topOfPageRef}></div>
             <ModalQuantity open={open} handleClose={handleClose} IDProduct={IDProduct} setLoading={setLoading} />
 
             <div className="flex justify-between">
@@ -214,17 +226,13 @@ const ListProduct = () => {
                     <Table stickyHeader aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell align="center">ID</StyledTableCell>
-                                <StyledTableCell align="center">Hình ảnh</StyledTableCell>
-                                <StyledTableCell align="left">Tên sản phẩm</StyledTableCell>
-                                <StyledTableCell align="center">Đã bán</StyledTableCell>
-                                <StyledTableCell align="center">Có sẵn</StyledTableCell>
-                                <StyledTableCell align="left" sx={{ minWidth: '90px' }}>
-                                    Giá
-                                </StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
-                                    Thao tác
-                                </StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>ID</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}></StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Tên sản phẩm</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Đã bán</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Có sẵn</StyledTableCell>
+                                <StyledTableCell align="left" sx={{ minWidth: '90px', fontSize: 16, fontWeight: 'bold'}}>Giá bán</StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px', fontSize: 16, fontWeight: 'bold'}}>Thao tác</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -234,17 +242,17 @@ const ListProduct = () => {
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
                                 >
                                     <StyledTableCell
-                                        align="center"
+                                        align="left"
                                         component="th"
                                         scope="row"
                                         onClick={() => {
                                             navigate(config.Routes.detailProduct + '#' + item.id);
                                         }}
                                     >
-                                        {item.id}
+                                       <div className='pl-3'>#{item.id}</div>
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        align="center"
+                                        align="left"
                                         component="th"
                                         scope="row"
                                         sx={{
@@ -269,23 +277,7 @@ const ListProduct = () => {
                                             navigate(config.Routes.detailProduct + '#' + item.id);
                                         }}
                                     >
-                                        {item.name}
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailProduct + '#' + item.id);
-                                        }}
-                                    >
-                                        {item.sold}
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailProduct + '#' + item.id);
-                                        }}
-                                    >
-                                        {item.quantityAvailable}
+                                        <div className='pl-4'>{item.name}</div>
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="left"
@@ -293,7 +285,23 @@ const ListProduct = () => {
                                             navigate(config.Routes.detailProduct + '#' + item.id);
                                         }}
                                     >
-                                        {item.price.toLocaleString('vi-VN')}
+                                       <div className='pl-4'>{item.sold}</div>
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="left"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailProduct + '#' + item.id);
+                                        }}
+                                    >
+                                        <div className='pl-4'>{item.quantityAvailable}</div>
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="left"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailProduct + '#' + item.id);
+                                        }}
+                                    >
+                                        <div className='pl-3.5 text-black-800'>{item.price.toLocaleString('vi-VN')}đ</div>
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailProduct + '#' + item.id}>
@@ -303,9 +311,9 @@ const ListProduct = () => {
                                                 </MouseOverPopover>
                                             </IconButton>
                                         </Link>
-                                        <IconButton onClick={() => handleDeleteProduct(item.id)}>
-                                            <MouseOverPopover content="Xóa sản phẩm">
-                                                <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                        <IconButton onClick={() => handleAddQuantityProduct(item.id)}>
+                                            <MouseOverPopover content="Nhập thêm hàng">
+                                                <AddCircle sx={{ color: '#E74646', fontSize: 26 }} />
                                             </MouseOverPopover>
                                         </IconButton>
                                         <IconButton onClick={() => handleIsSellingProduct(item.id)}>
@@ -319,11 +327,12 @@ const ListProduct = () => {
                                                 </MouseOverPopover>
                                             )}
                                         </IconButton>
-                                        <IconButton onClick={() => handleAddQuantityProduct(item.id)}>
-                                            <MouseOverPopover content="Nhập thêm hàng">
-                                                <AddCircle sx={{ color: '#E74646', fontSize: 26 }} />
+                                        <IconButton onClick={() => handleDeleteProduct(item.id)}>
+                                            <MouseOverPopover content="Xóa sản phẩm">
+                                                <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
                                             </MouseOverPopover>
                                         </IconButton>
+                                       
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))}

@@ -29,6 +29,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Perform your logout logic here
         setLoggedIn(false);
         localStorage.setItem('isLogin', JSON.stringify(false));
+        localStorage.removeItem('tokenType');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userNameUser');
     };
 
     return <AuthContext.Provider value={{ isLoggedIn, login, logout }}>{children}</AuthContext.Provider>;

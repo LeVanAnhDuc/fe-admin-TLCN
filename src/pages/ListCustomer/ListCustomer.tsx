@@ -54,7 +54,7 @@ const ListCustomer = () => {
     const [search, setSearch] = useState<string>('');
     const itemsPerPage = 20;
 
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
     // get all Customers

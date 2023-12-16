@@ -118,7 +118,7 @@ const ListBill = () => {
         setSortBy(event.target.value as string);
     };
 
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
 

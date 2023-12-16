@@ -59,7 +59,7 @@ const ListCategory = () => {
     const [sortBy, setSortBy] = useState<string>('');
     const itemsPerPage = 20;
     // panigation
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
     // get all category

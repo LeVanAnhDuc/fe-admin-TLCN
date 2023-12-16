@@ -101,7 +101,7 @@ const ListProduct = () => {
         getAllProducts(page);
     }, [page, isLoading, search, cate, sortBy]);
 
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
 

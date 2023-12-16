@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState,ReactNode  } from 'react';
+import React, { useRef, useEffect, useState, ReactNode } from 'react';
 
 interface ScrollAnimationElementProps {
     children: ReactNode;
-  }
+}
 
 function ScrollAnimationElement({ children }: ScrollAnimationElementProps) {
     const elementRef = useRef<HTMLElement | null>(null);
@@ -10,7 +10,7 @@ function ScrollAnimationElement({ children }: ScrollAnimationElementProps) {
 
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const handleScroll = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+        const handleScroll = (entries: IntersectionObserverEntry[], _: IntersectionObserver) => {
             entries.forEach((entry) => {
                 const target = entry.target;
 

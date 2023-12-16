@@ -148,14 +148,14 @@ const ListBill = () => {
                     <InputLabel>Sắp xếp</InputLabel>
                     <Select value={sortBy} label="Sắp xếp" onChange={handleChangeSortBy}>
                         <MenuItem value={''}>Không lọc</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.dateAsc}>Thời gian: Cũ nhất đến Mới nhất</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.dateDesc}>Thời gian: Mới nhất đến Cũ nhất</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.dateAsc}>Thời gian đặt hàng cũ nhất</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.dateDesc}>Thời gian đặt hàng mới nhất</MenuItem>
                         {/* <MenuItem value={config.SearchFilterOrder.idAsc}>Mã hóa đơn: Thấp đến Cao</MenuItem>
                             <MenuItem value={config.SearchFilterOrder.idDesc}>Mã hóa đơn: Cao đến Thấp</MenuItem> */}
                         {/* <MenuItem value={config.SearchFilterOrder.statusAsc}>Trạng thái: Thấp đến Cao</MenuItem>
                         <MenuItem value={config.SearchFilterOrder.statusDesc}>Trạng thái: Cao đến Thấp</MenuItem> */}
-                        <MenuItem value={config.SearchFilterOrder.totalAsc}>Tổng tiền: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.totalDesc}>Tổng tiền: Cao đến Thấp</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.totalAsc}>Tổng tiền tăng dần</MenuItem>
+                        <MenuItem value={config.SearchFilterOrder.totalDesc}>Tổng tiền giảm dần</MenuItem>
                     </Select>
                 </FormControl>
             </div>
@@ -164,18 +164,13 @@ const ListBill = () => {
                     <Table stickyHeader aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell align="center">ID</StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '100px' }}>
-                                    Người đặt hàng
-                                </StyledTableCell>
-                                <StyledTableCell align="center">Thành tiền</StyledTableCell>
-                                <StyledTableCell align="center">Thời gian đặt</StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
-                                    Trạng thái
-                                </StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
-                                    Thao tác
-                                </StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>ID</StyledTableCell>
+                                <StyledTableCell align="left" sx={{ minWidth: '100px', fontSize: 16, fontWeight: 'bold'}}>Người đặt hàng</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Thành tiền</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Thời gian đặt</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Địa chỉ nhận hàng</StyledTableCell>
+                                <StyledTableCell align="left" sx={{ minWidth: '120px', fontSize: 16, fontWeight: 'bold' }}>Trạng thái</StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px', fontSize: 16, fontWeight: 'bold' }}>Thao tác</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -185,48 +180,60 @@ const ListBill = () => {
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
                                 >
                                     <StyledTableCell
-                                        align="center"
+                                        align="left"
                                         component="th"
                                         scope="row"
                                         onClick={() => {
                                             navigate(config.Routes.detailBill + '#' + item.id);
                                         }}
                                     >
-                                        {item.id}
+                                        <div className='pl-3.5'>#{item.id}</div>
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        align="center"
+                                        align="left"
                                         onClick={() => {
                                             navigate(config.Routes.detailBill + '#' + item.id);
                                         }}
                                     >
-                                        {item.user.username}
+                                       <div className='pl-3.5'>{item.user.username}</div>
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        align="center"
+                                        align="left"
                                         onClick={() => {
                                             navigate(config.Routes.detailBill + '#' + item.id);
                                         }}
                                     >
-                                        {item.total.toLocaleString('vi-VN')}
+                                        <div className='pl-3.5'>{item.total.toLocaleString('vi-VN')}đ</div>
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        align="center"
+                                        align="left"
                                         sx={{ minWidth: '10rem' }}
                                         onClick={() => {
                                             navigate(config.Routes.detailBill + '#' + item.id);
                                         }}
                                     >
-                                        {item.createdDate}
+                                       <div className='pl-3.5'>{item.createdDate}</div>
+                                    </StyledTableCell>
+
+                                    <StyledTableCell
+                                        align="left"
+                                        sx={{ minWidth: '10rem' }}
+                                        onClick={() => {
+                                            navigate(config.Routes.detailBill + '#' + item.id);
+                                        }}
+                                    >
+                                       <div className='pl-3.5'>{item.address.ward}, {item.address.district}, {item.address.city}</div>
                                     </StyledTableCell>
 
                                     {/* start select status */}
-                                    <StyledTableCell align="center">
-                                        <SelectStatus
-                                            status={item.status}
-                                            idOrder={item.id}
-                                            setIsLoading={setIsLoading}
-                                        />
+                                    <StyledTableCell align="left" >
+                                        <div className='ml-3.5'>
+                                            <SelectStatus
+                                                status={item.status}
+                                                idOrder={item.id}
+                                                setIsLoading={setIsLoading}
+                                            />
+                                        </div>
                                     </StyledTableCell>
                                     {/*end select status */}
 

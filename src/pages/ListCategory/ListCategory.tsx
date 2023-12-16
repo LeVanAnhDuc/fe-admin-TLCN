@@ -128,16 +128,16 @@ const ListCategory = () => {
             <div className="flex justify-center my-4 gap-5">
                 <Search setSearch={setSearch} placeHolder="Tìm theo theo tên danh mục" />
                 <FormControl sx={{ width: 400 }}>
-                    <InputLabel>Lọc</InputLabel>
-                    <Select value={sortBy} label="Lọc" onChange={handleChangesetSortBy}>
-                        <MenuItem value={''}>Không lọc</MenuItem>
-                        <MenuItem value={config.SearchFilterCategory.idAsc}>Ngày tạo: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterCategory.idDesc}>Ngày tạo: Cao đến Thấp</MenuItem>
+                    <InputLabel>Sắp xếp</InputLabel>
+                    <Select value={sortBy} label="Sắp xếp" onChange={handleChangesetSortBy}>
+                        <MenuItem value={''}>Không sắp xếp</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.idAsc}>Ngày tạo cũ nhất</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.idDesc}>Ngày tạo mới nhất</MenuItem>
                         <MenuItem value={config.SearchFilterCategory.prod_countAsc}>
-                            Số lượng sản phẩm: Thấp đến Cao
+                            Tổng sản phẩm tăng dần
                         </MenuItem>
                         <MenuItem value={config.SearchFilterCategory.prod_countDesc}>
-                            Số lượng sản phẩm: Cao đến Thấp
+                            Tổng sản phẩm giảm dần
                         </MenuItem>
                     </Select>
                 </FormControl>
@@ -145,13 +145,13 @@ const ListCategory = () => {
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>
                     <Table stickyHeader aria-label="simple table">
-                        <TableHead>
+                        <TableHead sx={{ backgroundColor: '#d6d5d7' }}>
                             <TableRow>
-                                <StyledTableCell align="center">ID</StyledTableCell>
-                                <StyledTableCell align="left">Tên loại</StyledTableCell>
-                                <StyledTableCell align="center">Mô tả</StyledTableCell>
-                                <StyledTableCell align="center">Tổng sản phẩm</StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
+                                <StyledTableCell align="center" sx={{fontSize: 16, fontWeight: 'bold'}}>ID</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Tên danh mục</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Mô tả</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Tổng sản phẩm</StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px', fontSize: 16, fontWeight: 'bold'}}>
                                     Thao tác
                                 </StyledTableCell>
                             </TableRow>
@@ -170,7 +170,7 @@ const ListCategory = () => {
                                             navigate(config.Routes.detailCategory + '#' + item.id);
                                         }}
                                     >
-                                        {item.id}
+                                        #{item.id}
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="left"
@@ -178,7 +178,7 @@ const ListCategory = () => {
                                             navigate(config.Routes.detailCategory + '#' + item.id);
                                         }}
                                     >
-                                        <div className="">{item.name}</div>
+                                        <div className="pl-3">{item.name}</div>
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="left"
@@ -186,15 +186,15 @@ const ListCategory = () => {
                                             navigate(config.Routes.detailCategory + '#' + item.id);
                                         }}
                                     >
-                                        {item.description}
+                                       <div className='pl-3'> {item.description}</div>
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        align="center"
+                                        align="left"
                                         onClick={() => {
                                             navigate(config.Routes.detailCategory + '#' + item.id);
                                         }}
                                     >
-                                        {item.productNumber}
+                                        <div className='pl-4'>{item.productNumber}</div>
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCategory + '#' + item.id}>
@@ -205,7 +205,7 @@ const ListCategory = () => {
                                             </IconButton>
                                         </Link>
                                         <IconButton onClick={() => handleDeleteItem(item.id)}>
-                                            <MouseOverPopover content="Xóa loại">
+                                            <MouseOverPopover content="Xóa xanh mục">
                                                 <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
                                             </MouseOverPopover>
                                         </IconButton>

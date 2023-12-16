@@ -23,6 +23,8 @@ export const getAllProductSearchWithinPagination = async (
         // Thêm sort vào đối tượng nếu sort không rỗng
         if (sort !== '') {
             params['sort'] = sort;
+        } else {
+            params['sort'] = 'id:desc'
         }
 
         // Thêm cate vào đối tượng nếu cate không rỗng

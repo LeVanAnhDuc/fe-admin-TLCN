@@ -102,7 +102,7 @@ const ListCustomer = () => {
             <div className="flex justify-center m-auto my-4 md:w-7/12">
                 <Search
                     setSearch={setSearch}
-                    placeHolder="Tìm theo theo Tên tài khoản, tên, số điện thoại của người dùng"
+                    placeHolder="Tìm theo theo Tên tài khoản, họ tên, số điện thoại của người dùng"
                 />
             </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -111,14 +111,12 @@ const ListCustomer = () => {
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell></StyledTableCell>
-                                <StyledTableCell align="left">Tên tài khoản</StyledTableCell>
-                                <StyledTableCell align="left" sx={{ minWidth: '100px' }}>
-                                    Tên
-                                </StyledTableCell>
-                                <StyledTableCell align="center">Giới tính</StyledTableCell>
-                                <StyledTableCell align="left">Email</StyledTableCell>
-                                <StyledTableCell align="center">SĐT</StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px' }}>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Tên tài khoản</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold' }}>Họ & Tên</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Giới tính</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Email</StyledTableCell>
+                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>SĐT</StyledTableCell>
+                                <StyledTableCell align="center" sx={{ minWidth: '120px', fontSize: 16, fontWeight: 'bold'}}>
                                     Thao tác
                                 </StyledTableCell>
                             </TableRow>
@@ -130,7 +128,7 @@ const ListCustomer = () => {
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
                                 >
                                     <StyledTableCell
-                                        align="center"
+                                        align="left"
                                         component="th"
                                         sx={{
                                             display: 'flex',
@@ -148,7 +146,7 @@ const ListCustomer = () => {
                                             navigate(config.Routes.detailCustomer + '#' + item.id);
                                         }}
                                     >
-                                        {item.username}
+                                        <div className='pl-3.5'>{item.username}</div>
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="left"
@@ -156,15 +154,10 @@ const ListCustomer = () => {
                                             navigate(config.Routes.detailCustomer + '#' + item.id);
                                         }}
                                     >
-                                        {item.name}
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCustomer + '#' + item.id);
-                                        }}
-                                    >
-                                        {item.gender}
+                                        <div className={`pl-3.5 ${item.name ? '' : 'text-gray-400'}`}>
+                                            {item.name || 'N/A'}
+                                        </div>
+
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="left"
@@ -172,15 +165,27 @@ const ListCustomer = () => {
                                             navigate(config.Routes.detailCustomer + '#' + item.id);
                                         }}
                                     >
-                                        {item.email}
+                                        <div className={`pl-3.5 ${item.gender ? '' : 'text-gray-400'}`}>
+                                            {item.gender || 'N/A'}
+                                        </div>
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        align="center"
+                                        align="left"
                                         onClick={() => {
                                             navigate(config.Routes.detailCustomer + '#' + item.id);
                                         }}
                                     >
-                                        {item.phoneNumber}
+                                         <div className='pl-3.5'>{item.email}</div>
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="left"
+                                        onClick={() => {
+                                            navigate(config.Routes.detailCustomer + '#' + item.id);
+                                        }}
+                                    >
+                                        <div className={`pl-3.5 ${item.phoneNumber ? '' : 'text-gray-400'}`}>
+                                            {item.phoneNumber || 'N/A'}
+                                        </div>
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCustomer + '#' + item.id}>

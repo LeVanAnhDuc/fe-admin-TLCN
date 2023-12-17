@@ -235,6 +235,7 @@ const DetailProduct = () => {
             // no value
             id: 0,
         };
+
         setIsLoadingDialog(true);
         try {
             const response = await updateProduct(+idProduct, object);
@@ -263,11 +264,12 @@ const DetailProduct = () => {
             setDisplayedImages(imageUrls);
         }
     };
-    useEffect(() => {
-        selectedImages;
-    }, []);
+    // useEffect(() => {
+    //     selectedImages;
+    // }, []);
     const handleUpload = async (idProduct: number) => {
         if (!selectedImages || selectedImages.length === 0) {
+            setIsLoadingDialog(false);
             return;
         }
 
@@ -409,7 +411,7 @@ const DetailProduct = () => {
                         />
                     </div>
                     {/* end input createdDate and lastModifiedDate*/}
-                    
+
                     {/* start input createdDate and lastModifiedDate */}
                     <div className="grid grid-cols-2 gap-5">
                         <InputText
@@ -420,9 +422,8 @@ const DetailProduct = () => {
                             readOnly
                         />
                     </div>
-                    {/* end input createdDate and lastModifiedDate*/}                
+                    {/* end input createdDate and lastModifiedDate*/}
 
-                    
                     <div className="mb-5 font-semibold text-xl">Danh sách ảnh</div>
                     {/* start list image */}
                     <div className="relative">
@@ -457,7 +458,7 @@ const DetailProduct = () => {
                     <div className="mb-5 font-semibold text-xl">Mô tả sản phẩm</div>
                     <TextareaAutosize
                         minRows={9}
-                        className='whitespace-pre-line'
+                        className="whitespace-pre-line"
                         style={{ border: '1px solid #000', width: '100%', padding: '8px 12px' }}
                         {...register(`description`, {
                             required: 'description is required',

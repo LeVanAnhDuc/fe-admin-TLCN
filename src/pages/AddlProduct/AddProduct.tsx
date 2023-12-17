@@ -179,6 +179,7 @@ const AddProduct = () => {
     const handleUpload = async (idProduct: number) => {
         if (!selectedImages || selectedImages.length === 0) {
             setIsLoadingDialog(false);
+            toast.success('Thêm sản phẩm thành công');
             return;
         }
 

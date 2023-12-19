@@ -112,24 +112,17 @@ const DetailProduct = () => {
     // auto create sku by biến thể
     const [SkuNoneUpdate, setSkuNoneUpdate] = useState<Array<ISku>>([]);
     const [Sku, setSku] = useState<Array<ISku>>([]);
+
     useEffect(() => {
-        setSku([]);
         const combinedArray = [];
+
         for (let i = 0; i < optionsSize?.values.length; i++) {
             for (let j = 0; j < optionsColor?.values.length; j++) {
-                combinedArray.push([optionsSize.values[i], optionsColor.values[j]]);
-                setSku((prev) => [
-                    ...prev,
-                    { optionValues: [optionsColor.values[j], optionsSize.values[i]], price: 0 },
-                ]);
+                combinedArray.push({ optionValues: [optionsSize.values[i], optionsColor.values[j]], price: 0 });
             }
         }
-        setLoadingSetSku((prev) => !prev);
-    }, [isLoading]);
 
-    const [isLoadingSetSku, setLoadingSetSku] = useState<boolean>(false);
-    useEffect(() => {
-        const updatedSku = Sku.map((sku) => {
+        const updatedSku = combinedArray.map((sku) => {
             const matchingSkuNoneUpdate = SkuNoneUpdate.find((skuNoneUpdate) => {
                 return JSON.stringify(skuNoneUpdate.optionValues) === JSON.stringify(sku.optionValues);
             });
@@ -137,11 +130,10 @@ const DetailProduct = () => {
             if (matchingSkuNoneUpdate) {
                 return { ...sku, price: matchingSkuNoneUpdate.price };
             }
-
             return sku;
         });
         setSku(updatedSku);
-    }, [isLoadingSetSku]);
+    }, [isLoading]);
 
     // handle change price in sku
     const handleChangePrice = (id: number, e: ChangeEvent<HTMLInputElement>) => {
@@ -221,6 +213,7 @@ const DetailProduct = () => {
             toast.error('Số tiền không được nhỏ hơn 1');
             return;
         }
+
         const object: IProduct = {
             name: data.name,
             description: data.description,
@@ -264,9 +257,7 @@ const DetailProduct = () => {
             setDisplayedImages(imageUrls);
         }
     };
-    // useEffect(() => {
-    //     selectedImages;
-    // }, []);
+
     const handleUpload = async (idProduct: number) => {
         if (!selectedImages || selectedImages.length === 0) {
             setIsLoadingDialog(false);

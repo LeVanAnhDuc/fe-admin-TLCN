@@ -8,7 +8,7 @@ import ListBill from '../pages/ListBill/ListBill';
 import ListCategory from '../pages/ListCategory/ListCategory';
 import ListCustomer from '../pages/ListCustomer/ListCustomer';
 import ListProduct from '../pages/ListProduct/ListProduct';
-import LogIn from '../pages/LogIn/LogIn';
+import LogIn from '../pages/LogIn';
 
 import Error404 from '../pages/Error404';
 import AddProduct from '../pages/AddlProduct/AddProduct';

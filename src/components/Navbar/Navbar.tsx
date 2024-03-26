@@ -17,10 +17,10 @@ import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings';
 import Logout from '@mui/icons-material/Logout';
 import KeyboardDoubleArrowLeft from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRight from '@mui/icons-material/KeyboardDoubleArrowRight';
-import config from '../../../config';
+import config from '../../config';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../hook/AuthContext';
+import { useAuth } from '../../hook/AuthContext';
 
 const LIST_MENU_NAVBAR = [
     {
@@ -90,14 +90,14 @@ const Navbar = () => {
         setToggleNavbar((prev) => !prev);
     }, []);
 
-    // logout
+    // setLogout
     const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { setLogout } = useAuth();
     const handleLogout = () => {
         localStorage.removeItem('tokenType');
         localStorage.removeItem('accessToken');
         navigate(config.Routes.logIn);
-        logout();
+        setLogout();
     };
 
     const userName = localStorage.getItem('userNameUser');

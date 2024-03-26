@@ -20,6 +20,7 @@ type TRouters = {
     component: React.ComponentType;
     layout?: React.ComponentType | null;
 };
+
 const publishRoute: Array<TRouters> = [
     { path: config.Routes.home, component: Home },
     { path: config.Routes.revenue, component: RevenueStatistics },
@@ -44,12 +45,9 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.error, component: Error404, layout: null },
 ];
 
-// required sign in
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const privateRoute: any[] = [
+const privateRoute: Array<TRouters> = [
     { path: config.Routes.logIn, component: LogIn, layout: null },
     { path: config.Routes.forgotPass, component: ForgotPassWord, layout: null },
-
     { path: config.Routes.error, component: Error404, layout: null },
 ];
 

@@ -1,142 +1,173 @@
-import config from '../../config';
-import InputText from '../../components/InputText/InputText';
-import { checkExpiredToken, loginApiAdmin } from '../../apis/authApi';
+import TextField from '@mui/material/TextField';
 
-import { useForm, SubmitHandler } from 'react-hook-form';
-
-import Button from '@mui/material/Button';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
 import { useAuth } from '../../hook/AuthContext';
+import config from '../../config';
+import { checkExpiredToken, loginApiAdmin } from '../../apis/authApi';
+import SnackBarLoading from '../../components/SnackBarLoading';
+import AnimationTran from '../../components/AnimationTran';
+import InputPassword from '../../components/InputPassword';
+import Button from '../../components/Button';
+import AnimationScale from '../../components/AnimationScale';
+import Logo from '../../components/Logo';
 
 type FormData = {
-    email: string;
+    emailOrUserName: string;
     passWord: string;
 };
 
 const LogIn = () => {
     const navigate = useNavigate();
-    // useContext
-    const { login } = useAuth();
+    const { setLogin, setLogout } = useAuth();
+
+    const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
+
+    const schema = yup.object().shape({
+        emailOrUserName: yup
+            .string()
+            .required('Tên tài khoản đang trống')
+            .test('is-emailOrUserName', 'Tên đăng nhập chưa đúng định dạng', function (value) {
+                if (!value) return true;
+
+                const regexUserName = /^(?:(?:\w{4,})|(?:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}))$/;
+
+                return regexUserName.test(value);
+            }),
+        passWord: yup
+            .string()
+            .required('Mật khẩu đang trống')
+            .test('is-passWord', 'Mật khẩu chưa đúng định dạng', function (value) {
+                if (!value) return true;
+
+                const regexUserName = /^[a-zA-Z0-9]+$/;
+
+                return regexUserName.test(value);
+            })
+            .min(8, 'Mật khẩu lớn hơn 8 kí tư'),
+    });
 
     const {
-        register,
+        control,
         handleSubmit,
         formState: { errors },
     } = useForm<FormData>({
-        defaultValues: {
-            email: '',
-            passWord: '',
-        },
+        resolver: yupResolver(schema),
     });
-    // check token
-    const { logout } = useAuth();
 
-    const handleCheckToken = async (token: string) => {
-        const response = await checkExpiredToken(token);
-        if (response.status === 200) {
-            navigate(config.Routes.home);
-        } else {
-            navigate(config.Routes.logIn);
-            logout();
-        }
-    };
-    // handle successful login
-    useEffect(() => {
-        const accessToken = localStorage.getItem('accessToken');
-        if (accessToken) {
-            handleCheckToken(accessToken);
-        }
-    }, []);
     const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-        const regexEmailOrUserName = /^(?=.*[A-Za-z0-9])[A-Za-z0-9@._-]{4,}$/;
-        const regexPass = /^[a-zA-Z0-9]{8,}$/;
-        if (!regexEmailOrUserName.test(data.email)) {
-            toast.error('Email chưa đúng định dạng');
-        } else if (!regexPass.test(data.passWord)) {
-            toast.error('Mật khẩu phải trên 8 kí tự và không chứa kí tự đặc biệt');
-        } else {
-            const response = await loginApiAdmin(data.email, data.passWord);
-            console.log(response);
+        try {
+            setIsLoadingLogin(true);
+            const response = await loginApiAdmin(data.emailOrUserName, data.passWord);
+            setIsLoadingLogin(false);
 
             if (response.status === 200) {
                 if (response?.data?.jwt) {
-                    toast.success('Đăng nhập thành công');
-                    // set local
-                    login(response.data.user.username);
-
-                    // chuyen next page home
+                    const data = response?.data;
+                    setLogin(data.user.username, data.jwt.tokenType, data.jwt.accessToken);
                     navigate(config.Routes.home);
                 }
             } else {
                 toast.error(response.data.message || response.data);
             }
-            // error
+        } catch (error) {
+            toast.error('Đăng nhập thất bại');
         }
     };
+
+    useEffect(() => {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            const handleCheckToken = async (token: string) => {
+                const response = await checkExpiredToken(token);
+                if (response.status === 200) {
+                    navigate(config.Routes.home);
+                } else {
+                    navigate(config.Routes.logIn);
+                    setLogout();
+                }
+            };
+
+            handleCheckToken(accessToken);
+        }
+    }, []);
+
     return (
-        <div className="m-auto bg-slate-100 h-screen">
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        <strong>Đăng nhập</strong>
-                    </h2>
-                </div>
-
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="mt-2">
-                            <InputText
-                                labelInput="Email hoặc username"
-                                errorInput={errors.email ? true : false}
-                                isRequired
-                                errorFormMessage={errors.email?.message}
-                                register={{
-                                    ...register('email', {
-                                        required: 'email is required',
-                                    }),
-                                }}
-                                autoComplete="username"
-                            />
-                        </div>
-
-                        <div className="mt-2">
-                            <InputText
-                                labelInput="Password"
-                                errorInput={errors.passWord ? true : false}
-                                isRequired
-                                typeInput="password"
-                                errorFormMessage={errors.passWord?.message}
-                                register={{
-                                    ...register('passWord', {
-                                        required: 'passWord is required',
-                                    }),
-                                }}
-                                autoComplete="password"
-                            />
-                        </div>
-                        <Link
-                            to={config.Routes.forgotPass}
-                            className="text-sm font-semibold  text-gray-600 hover:text-black float-right"
-                        >
-                            Quên mật khẩu
-                        </Link>
-
-                        <Button
-                            style={{ background: 'black' }}
-                            type="submit"
-                            variant="contained"
-                            fullWidth
-                            color="primary"
-                            size="large"
-                        >
+        <>
+            <SnackBarLoading open={isLoadingLogin} content={'Xác nhận đăng nhập'} />
+            <div className="min-h-screen bg-gradient-to-r from-primary-400 via-primary-600 to-primary-500 flex place-content-center dark:from-primary-700 dark:via-primary-900 dark:to-primary-800">
+                <div className="w-10/12 xl:w-8/12 flex gap-3 bg-gray-100 my-20 py-8 px-6 rounded-xl shadow dark:bg-dark-600">
+                    <section className="w-full flex flex-col justify-center gap-6 shadow py-7 px-5 bg-gray-50 rounded-lg dark:bg-dark-400">
+                        <AnimationTran tranX={100} className="text-2xl font-bold">
                             Đăng nhập
-                        </Button>
-                    </form>
+                        </AnimationTran>
+                        <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+                            <AnimationTran tranX={100} delay={0.1}>
+                                <>
+                                    <Controller
+                                        name="emailOrUserName"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <TextField
+                                                {...field}
+                                                error={errors.emailOrUserName ? true : false}
+                                                fullWidth
+                                                label={'Nhập email hoặc tên tài khoản'}
+                                                autoComplete="username"
+                                            />
+                                        )}
+                                    />
+                                    <p className="text-red-600 text-sm py-1 h-6 dark:text-red-500">
+                                        {errors.emailOrUserName?.message}
+                                    </p>
+                                </>
+                            </AnimationTran>
+                            <AnimationTran tranX={100} delay={0.2}>
+                                <>
+                                    <Controller
+                                        name="passWord"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <InputPassword
+                                                field={{ ...field }}
+                                                error={errors.passWord ? true : false}
+                                                label={'Nhập mật khẩu'}
+                                            />
+                                        )}
+                                    />
+                                    <p className="text-red-600 text-sm py-1 h-6 dark:text-red-500">
+                                        {errors.passWord?.message}
+                                    </p>
+                                </>
+                            </AnimationTran>
+                            <AnimationTran tranX={100} delay={0.3} className="w-full flex justify-end">
+                                <Button variant="text" size="small">
+                                    <Link to={config.Routes.forgotPass} className="text-sm font-semibold">
+                                        Quên mật khẩu
+                                    </Link>
+                                </Button>
+                            </AnimationTran>
+                            <AnimationTran tranX={100} delay={0.4}>
+                                <Button type="submit" variant="fill" fullWidth loading={isLoadingLogin}>
+                                    Đăng nhập
+                                </Button>
+                            </AnimationTran>
+                        </form>
+                    </section>
+                    <section className="w-full h-full flex-col lg:flex hidden">
+                        <AnimationScale className="m-auto">
+                            <Logo />
+                        </AnimationScale>
+                        <div className="bg-login-banner bg-contain bg-no-repeat bg-center w-full h-full "></div>
+                    </section>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

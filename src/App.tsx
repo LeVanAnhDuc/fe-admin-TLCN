@@ -11,7 +11,7 @@ function App() {
     const { isLoggedIn } = useAuth();
     return (
         <>
-            {(isLoggedIn && (
+            {isLoggedIn ? (
                 <Router>
                     <ScrollAutoTop />
                     <div className="App">
@@ -35,7 +35,7 @@ function App() {
                         </Routes>
                     </div>
                 </Router>
-            )) || (
+            ) : (
                 <Router>
                     <ScrollAutoTop />
                     <div className="App">

@@ -1,4 +1,4 @@
-import Image from '../../../components/Image';
+import Image from '../Image';
 import logo from '../../../assets/img/BG.png';
 
 import Avatar from '@mui/material/Avatar';

@@ -42,9 +42,7 @@ module.exports = {
             },
             backgroundImage: {
                 'login-banner': "url('./src/assets/img/login/banner.png')",
-                'register-banner': "url('./src/assets/img/register/banner.png')",
                 'forgotPassword-banner': "url('./src/assets/img/forgotPassword/banner.png')",
-                'home-banner': "url('./src/assets/img/home/banner.png')",
             },
             animation: {
                 'spin-slow': 'spin 8s linear infinite',

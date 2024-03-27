@@ -81,18 +81,18 @@ const LogIn = () => {
     };
 
     useEffect(() => {
+        const handleCheckToken = async (token: string) => {
+            const response = await checkExpiredToken(token);
+            if (response.status === 200) {
+                navigate(config.Routes.home);
+            } else {
+                navigate(config.Routes.logIn);
+                setLogout();
+            }
+        };
+
         const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
-            const handleCheckToken = async (token: string) => {
-                const response = await checkExpiredToken(token);
-                if (response.status === 200) {
-                    navigate(config.Routes.home);
-                } else {
-                    navigate(config.Routes.logIn);
-                    setLogout();
-                }
-            };
-
             handleCheckToken(accessToken);
         }
     }, []);

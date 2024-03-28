@@ -3,8 +3,8 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { getTotalProductSoldByYear } from '../../../apis/statisticApi';
-import { IStaticMonth } from '../../../interface/statistic';
+import { getTotalProductSoldByYear } from '../../apis/statisticApi';
+import { IStaticMonth } from '../../interface/statistic';
 const xLabels = [
     'Tháng 1',
     'Tháng 2',
@@ -36,13 +36,13 @@ export default function LineProductSold() {
             toast.error(`${error}`);
         }
     };
+
     useEffect(() => {
         handleGetDataStatistic();
     }, []);
 
-    // Kiểm tra nếu data không tồn tại hoặc có giá trị undefined
     if (!data) {
-        return null; // Hoặc hiển thị thông báo, hoặc render một thứ gì đó khác tùy thuộc vào yêu cầu của bạn
+        return null;
     }
     return (
         <>
@@ -64,6 +64,7 @@ export default function LineProductSold() {
                             data?.nov,
                             data?.dec,
                         ],
+                        area: true,
                         label: 'Tổng sản phẩm bán được',
                     },
                 ]}

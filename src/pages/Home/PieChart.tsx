@@ -25,9 +25,8 @@ export default function BasicPie() {
         handleGetDataStatistic();
     }, []);
 
-    // Kiểm tra nếu data không tồn tại hoặc có giá trị undefined
     if (!data) {
-        return null; // Hoặc hiển thị thông báo, hoặc render một thứ gì đó khác tùy thuộc vào yêu cầu của bạn
+        return null;
     }
     return (
         <>
@@ -42,6 +41,11 @@ export default function BasicPie() {
                             { id: 4, value: data.deliveried, label: 'Đã giao' },
                             { id: 5, value: data.canceled, label: 'Đã hủy' },
                         ],
+                        cornerRadius: 5,
+                        innerRadius: 30,
+                        outerRadius: 100,
+                        highlightScope: { faded: 'global', highlighted: 'item' },
+                        faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
                     },
                 ]}
                 slotProps={{

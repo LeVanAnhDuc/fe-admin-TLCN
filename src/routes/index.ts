@@ -12,7 +12,7 @@ import LogIn from '../pages/LogIn';
 
 import Error404 from '../pages/Error404';
 import AddProduct from '../pages/AddlProduct/AddProduct';
-import RevenueStatistics from '../pages/RevenueStatistics/RevenueStatistics';
+import RevenueStatistics from '../pages/RevenueStatistics';
 import Profile from '../pages/Profile/Profile';
 import ForgotPassWord from '../pages/ForgotPassWord/ForgotPassWord';
 type TRouters = {

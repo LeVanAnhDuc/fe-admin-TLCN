@@ -11,8 +11,9 @@ import BarChart from './BarChart';
 import BasicPie from './PieChart';
 import { getCountStatistic } from '../../apis/statisticApi';
 import { IStatisticCount } from '../../interface/statistic';
-import CardStatictis from './CardStatictis';
 import config from '../../config';
+import CardStatictis from '../../components/CardStatictis';
+import AnimationScale from '../../components/AnimationScale';
 
 const Home = () => {
     const [statictis, setData] = useState<IStatisticCount>();
@@ -32,7 +33,7 @@ const Home = () => {
         handleGetDataStatistic();
     }, []);
     return (
-        <div className="w-full">
+        <div className="space-y-5">
             <div className="size-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 <CardStatictis
                     icon={VolunteerActivismTwoTone}
@@ -66,16 +67,16 @@ const Home = () => {
                     delay={0.3}
                 />
             </div>
-            <div className="bg-chart mt-5 p-5 rounded bg-white">
+            <AnimationScale scale={0.8} className="p-5 rounded bg-white">
                 <LineChart />
-            </div>
-            <div className="py-5 grid grid-cols-1 2xl:grid-cols-5 gap-5">
-                <div className="bg-chart p-5 col-span-1 2xl:col-span-3 rounded bg-white">
+            </AnimationScale>
+            <div className="grid grid-cols-1 xl:grid-cols-5 gap-5">
+                <AnimationScale scale={0.8} className="p-5 col-span-1 xl:col-span-3 rounded bg-white">
                     <BarChart />
-                </div>
-                <div className="bg-chart p-5 flex flex-col col-span-1 2xl:col-span-2 rounded bg-white">
+                </AnimationScale>
+                <AnimationScale scale={0.8} className="p-5 flex flex-col col-span-1 xl:col-span-2 rounded bg-white">
                     <BasicPie />
-                </div>
+                </AnimationScale>
             </div>
         </div>
     );

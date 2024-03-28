@@ -3,10 +3,9 @@ import { SvgIconComponent } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 import AnimationTran from '../../components/AnimationTran';
-import config from '../../config';
 interface IProps {
     icon: SvgIconComponent;
-    data?: number;
+    data?: string | number;
     content: string;
     className?: string;
     delay?: number;
@@ -15,15 +14,7 @@ interface IProps {
 }
 
 const CardStatictis = (props: IProps) => {
-    const {
-        content,
-        data,
-        className = 'bg-orange-200',
-        icon: Icon,
-        delay = 0,
-        link = config.Routes.home,
-        status = '',
-    } = props;
+    const { content, data, className = 'bg-orange-200', icon: Icon, delay = 0, link = '', status = '' } = props;
     return (
         <AnimationTran tranY={-50} delay={delay}>
             <Link

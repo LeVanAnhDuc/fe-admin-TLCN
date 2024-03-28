@@ -64,6 +64,7 @@ export default function BasicLineChart() {
                             data?.nov,
                             data?.dec,
                         ],
+                        area: true,
                         label: 'Số người dùng mới',
                     },
                 ]}

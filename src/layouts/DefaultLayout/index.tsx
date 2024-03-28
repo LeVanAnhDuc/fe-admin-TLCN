@@ -10,7 +10,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
         <div>
             <div className="flex relative bg-gray-100">
                 <Navbar />
-                <div className="w-full p-5 overflow-y-auto scroll-smooth ">{children}</div>
+                <div className="w-full p-5 overflow-y-auto scroll-smooth">{children}</div>
             </div>
         </div>
     );

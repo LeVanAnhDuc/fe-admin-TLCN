@@ -2,8 +2,8 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { getTotalPriceSoldByYear } from '../../../apis/statisticApi';
-import { IStaticMonth } from '../../../interface/statistic';
+import { getTotalPriceSoldByYear } from '../../apis/statisticApi';
+import { IStaticMonth } from '../../interface/statistic';
 const xLabels = [
     'Tháng 1',
     'Tháng 2',
@@ -19,7 +19,7 @@ const xLabels = [
     'Tháng 12',
 ];
 
-export default function LinePriceSold() {
+export default function BarPriceSold() {
     const [data, setData] = useState<IStaticMonth>({
         apr: 0,
         aug: 0,
@@ -75,8 +75,8 @@ export default function LinePriceSold() {
                         label: `Tổng doanh thu (VNĐ)`,
                     },
                 ]}
-                height={600}
-                margin={{ top: 50, right: 0, bottom: 30, left: 120 }}
+                height={400}
+                margin={{ top: 50, right: 30, bottom: 30, left: 120 }}
             />
             <div className="w-full text-center font-semibold text-lg">
                 Biểu Đồ Phân Tích Doanh Thu Trong Năm {currentYear}

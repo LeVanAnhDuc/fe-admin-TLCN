@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} \*/
 // eslint-disable-next-line no-undef
 module.exports = {
+    darkMode: 'class',
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
         screens: {
@@ -10,10 +11,6 @@ module.exports = {
             lg: '1024px',
             xl: '1280px',
             '2xl': '1536px',
-        },
-        fontFamily: {
-            sans: ['Graphik', 'sans-serif'],
-            serif: ['Merriweather', 'serif'],
         },
         extend: {
             colors: {
@@ -46,6 +43,10 @@ module.exports = {
             },
             animation: {
                 'spin-slow': 'spin 8s linear infinite',
+            },
+            boxShadow: {
+                'button-sidebar-t': '10px 10px 0 10px rgba(0, 0, 0)',
+                'button-sidebar-b': '10px -10px 0 10px rgba(0, 0, 0)',
             },
         },
     },

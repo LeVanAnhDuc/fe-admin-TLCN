@@ -1,20 +1,32 @@
-import { BarChart } from '@mui/x-charts/BarChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { IStaticMonth } from '../../../interface/statistic';
-import { getOrderCompleteStatisticByYear } from '../../../apis/statisticApi';
+import { getRegisterCompleteStatisticByYear } from '../../apis/statisticApi';
+import { IStaticMonth } from '../../interface/statistic';
+const xLabels = [
+    'Tháng 1',
+    'Tháng 2',
+    'Tháng 3',
+    'Tháng 4',
+    'Tháng 5',
+    'Tháng 6',
+    'Tháng 7',
+    'Tháng 8',
+    'Tháng 9',
+    'Tháng 10',
+    'Tháng 11',
+    'Tháng 12',
+];
 
-const xLabels = ['T 1', 'T 2', 'T 3', 'T 4', 'T 5', 'T 6', 'T 7', 'T 8', 'T 9', 'T 10', 'T 11', 'T 12'];
-
-export default function BasicBars() {
+export default function BasicLineChart() {
     const [data, setData] = useState<IStaticMonth>();
     const currentYear = new Date().getFullYear();
 
     const handleGetDataStatistic = async () => {
         try {
-            const response = await getOrderCompleteStatisticByYear();
+            const response = await getRegisterCompleteStatisticByYear();
 
             if (response.status === 200) {
                 setData(response.data);
@@ -29,14 +41,13 @@ export default function BasicBars() {
         handleGetDataStatistic();
     }, []);
 
-    // Kiểm tra nếu data không tồn tại hoặc có giá trị undefined
     if (!data) {
-        return null; // Hoặc hiển thị thông báo, hoặc render một thứ gì đó khác tùy thuộc vào yêu cầu của bạn
+        return null;
     }
     return (
         <>
-            <BarChart
-                xAxis={[{ scaleType: 'band', data: xLabels }]}
+            <LineChart
+                xAxis={[{ scaleType: 'point', data: xLabels }]}
                 series={[
                     {
                         data: [
@@ -53,13 +64,13 @@ export default function BasicBars() {
                             data?.nov,
                             data?.dec,
                         ],
-                        label: 'Số đơn hàng thành công',
+                        label: 'Số người dùng mới',
                     },
                 ]}
-                height={300}
+                height={400}
             />
             <div className="w-full text-center font-semibold text-lg">
-                Biểu Đồ Thống Kê Số Đơn Hàng Hoàn Thành Trong Năm {currentYear}
+                Biểu đồ thể hiện số lượng người dùng mới trong năm {currentYear}
             </div>
         </>
     );

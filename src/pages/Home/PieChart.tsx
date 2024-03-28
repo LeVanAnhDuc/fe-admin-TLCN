@@ -1,8 +1,8 @@
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { getOrderStatisticByYear } from '../../../apis/statisticApi';
-import { IStatisticStatusOrder } from '../../../interface/statistic';
+import { getOrderStatisticByYear } from '../../apis/statisticApi';
+import { IStatisticStatusOrder } from '../../interface/statistic';
 
 export default function BasicPie() {
     const [data, setData] = useState<IStatisticStatusOrder>();

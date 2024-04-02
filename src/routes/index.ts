@@ -4,7 +4,7 @@ import DetailCategory from '../pages/DetailCategory/DetailCategory';
 import DetailCustomer from '../pages/DetailCustomer/DetailCustomer';
 import DetailProduct from '../pages/DetailProduct/DetailProduct';
 import Home from '../pages/Home';
-import ListBill from '../pages/ListBill/ListBill';
+import ListBill from '../pages/ListBill';
 import ListCategory from '../pages/ListCategory/ListCategory';
 import ListCustomer from '../pages/ListCustomer/ListCustomer';
 import ListProduct from '../pages/ListProduct/ListProduct';

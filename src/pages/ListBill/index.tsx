@@ -97,6 +97,10 @@ const ListBill = () => {
         setPage(newPage);
     };
 
+    const handleNavigateDetailOrders = (orderDetail: IOrder) => {
+        navigate(`${config.Routes.detailOrder}/${orderDetail.id}`, { state: { orderDetail: orderDetail } });
+    };
+
     useEffect(() => {
         getAllOrder();
     }, [page, search, status, sortBy]);
@@ -110,7 +114,7 @@ const ListBill = () => {
             <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách đơn hàng</div>
             </div>
-            <div className="bg-white p-2 rounded-lg space-y-4">
+            <div className="bg-white p-4 rounded-lg space-y-4">
                 <SidebarFilterStatus status={status} setStatus={setStatus} />
                 <div className="flex justify-center gap-2">
                     <Search setSearch={setSearch} placeHolder="Tìm theo tên người mua nhận hàng hoặc tên sản phẩm" />
@@ -123,8 +127,6 @@ const ListBill = () => {
                             <MenuItem value={config.SearchFilterOrder.dateDesc}>Thời gian đặt hàng mới nhất</MenuItem>
                             <MenuItem value={config.SearchFilterOrder.idAsc}>Mã hóa đơn cũ nhất</MenuItem>
                             <MenuItem value={config.SearchFilterOrder.idDesc}>Mã hóa đơn mới nhất</MenuItem>
-                            {/* <MenuItem value={config.SearchFilterOrder.statusAsc}>Trạng thái: Thấp đến Cao</MenuItem>
-                        <MenuItem value={config.SearchFilterOrder.statusDesc}>Trạng thái: Cao đến Thấp</MenuItem> */}
                             <MenuItem value={config.SearchFilterOrder.totalAsc}>Tổng tiền tăng dần</MenuItem>
                             <MenuItem value={config.SearchFilterOrder.totalDesc}>Tổng tiền giảm dần</MenuItem>
                         </Select>
@@ -194,36 +196,28 @@ const ListBill = () => {
                                           <TableCell
                                               align="center"
                                               className="cursor-pointer"
-                                              onClick={() => {
-                                                  navigate(config.Routes.detailBill + '#' + item.id);
-                                              }}
+                                              onClick={() => handleNavigateDetailOrders(item)}
                                           >
                                               #{item.id}
                                           </TableCell>
                                           <TableCell
                                               align="left"
                                               className="cursor-pointer"
-                                              onClick={() => {
-                                                  navigate(config.Routes.detailBill + '#' + item.id);
-                                              }}
+                                              onClick={() => handleNavigateDetailOrders(item)}
                                           >
                                               {item.user.username}
                                           </TableCell>
                                           <TableCell
                                               align="left"
                                               className="cursor-pointer"
-                                              onClick={() => {
-                                                  navigate(config.Routes.detailBill + '#' + item.id);
-                                              }}
+                                              onClick={() => handleNavigateDetailOrders(item)}
                                           >
                                               {item.total.toLocaleString('vi-VN')}đ
                                           </TableCell>
                                           <TableCell
                                               align="left"
                                               className="truncate cursor-pointer"
-                                              onClick={() => {
-                                                  navigate(config.Routes.detailBill + '#' + item.id);
-                                              }}
+                                              onClick={() => handleNavigateDetailOrders(item)}
                                           >
                                               {item.createdDate}
                                           </TableCell>
@@ -231,9 +225,7 @@ const ListBill = () => {
                                           <TableCell
                                               align="left"
                                               className="truncate cursor-pointer"
-                                              onClick={() => {
-                                                  navigate(config.Routes.detailBill + '#' + item.id);
-                                              }}
+                                              onClick={() => handleNavigateDetailOrders(item)}
                                           >
                                               {item.address.ward}, {item.address.district}, {item.address.city}
                                           </TableCell>

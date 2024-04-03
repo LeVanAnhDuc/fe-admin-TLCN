@@ -3,6 +3,12 @@ const Routes = {
     revenue: '/thong-ke-doanh-thu',
     logIn: '/',
     forgotPass: '/quen-mat-khau/OTP',
+    profileSetting: '/thong-tin-ca-nhan',
+    error: '*',
+    listBill: '/danh-sach-hoa-don',
+    detailOrder: '/chi-tiet-hoa-don',
+    detailOrderID: '/chi-tiet-hoa-don/:idProduct',
+
     listCategory: '/danh-sach-loai',
     detailCategory: '/chi-tiet-loai',
     listProduct: '/danh-sach-san-pham',
@@ -10,11 +16,6 @@ const Routes = {
     detailProduct: '/chi-tiet-san-pham',
     listCustomer: '/danh-sach-khach-hang',
     detailCustomer: '/chi-tiet-khach-hang',
-    listBill: '/danh-sach-hoa-don',
-    detailBill: '/chi-tiet-hoa-don',
-
-    profileSetting: '/thong-tin-ca-nhan',
-    error: '*',
 };
 
 export default Routes;

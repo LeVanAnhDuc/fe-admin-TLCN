@@ -1,5 +1,5 @@
 import config from '../config/index';
-import DetailBill from '../pages/DetailBill/DetailBill';
+import DetailOrder from '../pages/DetailOrder';
 import DetailCategory from '../pages/DetailCategory/DetailCategory';
 import DetailCustomer from '../pages/DetailCustomer/DetailCustomer';
 import DetailProduct from '../pages/DetailProduct/DetailProduct';
@@ -25,7 +25,7 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.home, component: Home },
     { path: config.Routes.revenue, component: RevenueStatistics },
 
-    { path: config.Routes.detailBill, component: DetailBill },
+    { path: config.Routes.detailOrderID, component: DetailOrder },
     { path: config.Routes.detailCategory, component: DetailCategory },
     { path: config.Routes.detailCustomer, component: DetailCustomer },
 

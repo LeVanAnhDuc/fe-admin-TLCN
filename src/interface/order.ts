@@ -12,14 +12,14 @@ export default interface IOrder {
     address: IAddress;
     createdDate: string;
     id: number;
-    isPaidBefore: boolean;
+    isPaidBefore: boolean | string;
     lastModifiedBy: string;
     lastModifiedDate: string;
     note: string;
     orderItems: IProductCart;
     paymentType: string;
     status: string;
-    total: number;
+    total: number | string;
     totalItems: number;
     user: Pick<IUser, 'id' | 'name' | 'username'>;
 }

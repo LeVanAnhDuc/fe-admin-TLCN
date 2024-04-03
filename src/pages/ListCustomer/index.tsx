@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -12,33 +9,25 @@ import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
 import LockOpenTwoTone from '@mui/icons-material/LockOpenTwoTone';
 import LockTwoTone from '@mui/icons-material/LockTwoTone';
-import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
 import { styled } from '@mui/material/styles';
+import Avatar from '@mui/material/Avatar';
+
+import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import config from '../../config';
 import Search from '../../components/Search/Search';
 import { changeLockUnlockUserAccountByIDUser, getAllUserWithinPaginationSearch } from '../../apis/userApi';
-import { toast } from 'react-toastify';
 import IUser from '../../interface/user';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
-import { Avatar } from '@mui/material';
+import Error404 from '../Error404';
+import Skeleton from '../../components/Skeleton';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: '#B3A492',
-        color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-        padding: 3,
-    },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,
     },
-    // hide last border
     '&:last-child td, &:last-child th': {
         border: 0,
     },
@@ -46,27 +35,27 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const ListCustomer = () => {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    // change page
-    const [data, setData] = useState<Array<IUser>>([]); // Dữ liệu từ API
-    const [page, setPage] = useState(1); // Trang hiện tại
-    const [totalPages, setTotalPages] = useState(11); // Tổng số trang
-    const [search, setSearch] = useState<string>('');
     const itemsPerPage = 20;
 
-    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
-        setPage(newPage);
-    };
-    // get all Customers
-    const getAllCustomers = async (pageNo: number) => {
+    const [loadingAPI, setLoadingAPI] = useState<boolean>(false);
+    const [errorAPI, setErrorAPI] = useState<boolean>(false);
+    const [customers, setCustomers] = useState<Array<IUser>>([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [search, setSearch] = useState<string>('');
+
+    const getCustomers = async () => {
         try {
-            const response = await getAllUserWithinPaginationSearch(pageNo, itemsPerPage, search);
+            setLoadingAPI(true);
+            const response = await getAllUserWithinPaginationSearch(page, itemsPerPage, search);
+            setLoadingAPI(false);
 
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
 
-                setData(content);
+                setCustomers(content);
                 setTotalPages(totalPages);
+
                 if (totalPages > 0 && content.length <= 0) {
                     setPage((prev) => prev - 1);
                 }
@@ -74,141 +63,140 @@ const ListCustomer = () => {
                 toast.error(response.data.message || response.data);
             }
         } catch (error) {
-            toast.error('Đang bảo trì quay lại sau');
+            setErrorAPI(true);
         }
     };
     const handleLockAccount = async (idUser: number) => {
-        const response = await changeLockUnlockUserAccountByIDUser(idUser);
-        if (response.status === 200) {
-            setIsLoading((prev) => !prev);
-            if (response.data.locked) {
-                toast.success('Tài khoản đã bị khóa');
+        try {
+            const response = await changeLockUnlockUserAccountByIDUser(idUser);
+            if (response.status === 200) {
+                getCustomers();
+                if (response.data.locked) {
+                    toast.success('Tài khoản đã bị khóa');
+                } else {
+                    toast.success('Tài khoản đã mở khóa');
+                }
             } else {
-                toast.success('Tài khoản đã mở khóa');
+                toast.error(response.data.message || response.data);
             }
-        } else {
-            toast.error(response.data.message || response.data);
+        } catch (error) {
+            setErrorAPI(true);
         }
     };
 
+    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleNavigateDetailUser = (userDetail: IUser) => {
+        navigate(`${config.Routes.detailCustomer}/${userDetail.id}`, { state: { userDetail: userDetail } });
+    };
+
     useEffect(() => {
-        getAllCustomers(page);
-    }, [page, isLoading, search]);
+        getCustomers();
+    }, [page, search]);
+
+    if (errorAPI) {
+        return <Error404 />;
+    }
+
     return (
-        <div>
+        <section className="space-y-5">
             <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Quản lý người dùng</div>
             </div>
-            <div className="flex justify-center m-auto my-4 md:w-7/12">
+            <div className="flex justify-start bg-white p-3 rounded-lg shadow">
                 <Search
                     setSearch={setSearch}
                     placeHolder="Tìm theo theo Tên tài khoản, họ tên, số điện thoại của người dùng"
                 />
             </div>
-            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <Paper>
                 <TableContainer>
-                    <Table stickyHeader aria-label="simple table">
-                        <TableHead>
+                    <Table>
+                        <TableHead className="!bg-primary-200 ">
                             <TableRow>
-                                <StyledTableCell></StyledTableCell>
-                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Tên tài khoản</StyledTableCell>
-                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold' }}>Họ & Tên</StyledTableCell>
-                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Giới tính</StyledTableCell>
-                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Email</StyledTableCell>
-                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>SĐT</StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px', fontSize: 16, fontWeight: 'bold'}}>
+                                <TableCell></TableCell>
+                                <TableCell className="!font-bold">Tên tài khoản</TableCell>
+                                <TableCell className="!font-bold">Họ & Tên</TableCell>
+                                <TableCell className="!font-bold">Giới tính</TableCell>
+                                <TableCell className="!font-bold">Email</TableCell>
+                                <TableCell className="!font-bold">SĐT</TableCell>
+                                <TableCell align="center" className="!font-bold">
                                     Thao tác
-                                </StyledTableCell>
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.map((item, index) => (
-                                <StyledTableRow
-                                    key={index}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
-                                >
-                                    <StyledTableCell
-                                        align="left"
-                                        component="th"
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                        }}
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCustomer + '#' + item.id);
-                                        }}
-                                    >
-                                        <Avatar src={item.avatarUrl} alt="Avatar" />
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="left"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCustomer + '#' + item.id);
-                                        }}
-                                    >
-                                        <div className='pl-3.5'>{item.username}</div>
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="left"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCustomer + '#' + item.id);
-                                        }}
-                                    >
-                                        <div className={`pl-3.5 ${item.name ? '' : 'text-gray-400'}`}>
-                                            {item.name || 'N/A'}
-                                        </div>
-
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="left"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCustomer + '#' + item.id);
-                                        }}
-                                    >
-                                        <div className={`pl-3.5 ${item.gender ? '' : 'text-gray-400'}`}>
-                                            {item.gender || 'N/A'}
-                                        </div>
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="left"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCustomer + '#' + item.id);
-                                        }}
-                                    >
-                                         <div className='pl-3.5'>{item.email}</div>
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="left"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCustomer + '#' + item.id);
-                                        }}
-                                    >
-                                        <div className={`pl-3.5 ${item.phoneNumber ? '' : 'text-gray-400'}`}>
-                                            {item.phoneNumber || 'N/A'}
-                                        </div>
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        <Link to={config.Routes.detailCustomer + '#' + item.id}>
-                                            <IconButton>
-                                                <MouseOverPopover content="Xem thông tin chi tiết">
-                                                    <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
-                                                </MouseOverPopover>
-                                            </IconButton>
-                                        </Link>
-                                        <IconButton onClick={() => handleLockAccount(item.id)}>
-                                            {item.locked ? (
-                                                <MouseOverPopover content="Mở khóa tài khoản">
-                                                    <LockTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
-                                                </MouseOverPopover>
-                                            ) : (
-                                                <MouseOverPopover content="Khóa tài khoản">
-                                                    <LockOpenTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
-                                                </MouseOverPopover>
-                                            )}
-                                        </IconButton>
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            ))}
+                            {loadingAPI
+                                ? Array(10)
+                                      .fill(null)
+                                      .map((_, index) => (
+                                          <TableRowCustom key={index}>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                          </TableRowCustom>
+                                      ))
+                                : customers.map((item) => (
+                                      <TableRowCustom key={item.id}>
+                                          <TableCell onClick={() => handleNavigateDetailUser(item)}>
+                                              <Avatar src={item.avatarUrl} alt="Avatar" className="size-full" />
+                                          </TableCell>
+                                          <TableCell onClick={() => handleNavigateDetailUser(item)}>
+                                              {item.username}
+                                          </TableCell>
+                                          <TableCell onClick={() => handleNavigateDetailUser(item)}>
+                                              <div className={`${item.name ? '' : 'text-gray-400'}`}>
+                                                  {item.name || 'N/A'}
+                                              </div>
+                                          </TableCell>
+                                          <TableCell onClick={() => handleNavigateDetailUser(item)}>
+                                              <div className={`${item.gender ? '' : 'text-gray-400'}`}>
+                                                  {item.gender || 'N/A'}
+                                              </div>
+                                          </TableCell>
+                                          <TableCell align="left" onClick={() => handleNavigateDetailUser(item)}>
+                                              {item.email}
+                                          </TableCell>
+                                          <TableCell align="left" onClick={() => handleNavigateDetailUser(item)}>
+                                              <div className={`${item.phoneNumber ? '' : 'text-gray-400'}`}>
+                                                  {item.phoneNumber || 'N/A'}
+                                              </div>
+                                          </TableCell>
+                                          <TableCell align="center">
+                                              <IconButton onClick={() => handleLockAccount(item.id)}>
+                                                  <MouseOverPopover
+                                                      content={item.locked ? 'Mở khóa tài khoản' : 'Khóa tài khoản'}
+                                                  >
+                                                      {item.locked ? (
+                                                          <LockTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                                      ) : (
+                                                          <LockOpenTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                                      )}
+                                                  </MouseOverPopover>
+                                              </IconButton>
+                                          </TableCell>
+                                      </TableRowCustom>
+                                  ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -223,7 +211,7 @@ const ListCustomer = () => {
                     boundaryCount={1}
                 />
             </div>
-        </div>
+        </section>
     );
 };
 

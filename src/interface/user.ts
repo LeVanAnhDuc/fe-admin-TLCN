@@ -4,10 +4,10 @@ export default interface IUser {
     email: string;
     gender: string;
     id: number;
-    isEnabled: boolean;
+    isEnabled: boolean | string;
     lastModifiedBy: string;
     lastModifiedDate: string;
-    locked: boolean;
+    locked: boolean | string;
     name: string;
     password: string;
     phoneNumber: string;

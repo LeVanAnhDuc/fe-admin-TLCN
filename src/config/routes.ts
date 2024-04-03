@@ -11,6 +11,7 @@ const Routes = {
 
     listCustomer: '/danh-sach-khach-hang',
     detailCustomer: '/chi-tiet-khach-hang',
+    detailCustomerID: '/chi-tiet-khach-hang/:idUser',
 
     listCategory: '/danh-sach-loai',
     detailCategory: '/chi-tiet-loai',

@@ -1,7 +1,7 @@
 import config from '../config/index';
 import DetailOrder from '../pages/DetailOrder';
 import DetailCategory from '../pages/DetailCategory/DetailCategory';
-import DetailCustomer from '../pages/DetailCustomer/DetailCustomer';
+import DetailCustomer from '../pages/DetailCustomer';
 import DetailProduct from '../pages/DetailProduct/DetailProduct';
 import Home from '../pages/Home';
 import ListOrder from '../pages/ListOrder';
@@ -27,7 +27,7 @@ const publishRoute: Array<TRouters> = [
 
     { path: config.Routes.detailOrderID, component: DetailOrder },
     { path: config.Routes.detailCategory, component: DetailCategory },
-    { path: config.Routes.detailCustomer, component: DetailCustomer },
+    { path: config.Routes.detailCustomerID, component: DetailCustomer },
 
     { path: config.Routes.detailProduct, component: DetailProduct },
     { path: config.Routes.addProduct, component: AddProduct },

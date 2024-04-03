@@ -19,5 +19,5 @@ export interface ICategoryName {
 export interface IUpdateCategory {
     name: string;
     description: string;
-    parentName: string | null;
+    parentName?: string | null;
 }

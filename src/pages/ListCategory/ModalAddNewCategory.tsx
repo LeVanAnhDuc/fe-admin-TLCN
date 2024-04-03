@@ -1,127 +1,160 @@
-import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Button from '@mui/material/Button';
-
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { toast } from 'react-toastify';
-
-import ICategory, { IUpdateCategory } from '../../interface/category';
-import InputText from '../../components/InputText/InputText';
-import { createNewCategory, getAllCategory } from '../../apis/categoryApi';
-import { useEffect, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '70%',
-    bgcolor: 'white',
-    border: '1px solid #000',
-    borderRadius: '10px',
-    boxShadow: 24,
-    p: 4,
-};
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { useEffect, useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+import ICategory, { IUpdateCategory } from '../../interface/category';
+import { createNewCategory, getAllCategory } from '../../apis/categoryApi';
+import Button from '../../components/Button';
 
 interface IPropsAddress {
     open: boolean;
     handleClose: () => void;
+    setCallAPICategories: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ModalAddNewCategory = (propsCh: IPropsAddress) => {
-    const { open, handleClose } = propsCh;
-    const [listCate, setListCate] = useState<Array<ICategory>>([]);
-    const handleGetListCate = async () => {
-        const res = await getAllCategory();
-        if (res.status === 200) {
-            setListCate(res.data.content);
-        }
-    };
-    useEffect(() => {
-        handleGetListCate();
-    }, []);
+const ModalAddNewCategory = (props: IPropsAddress) => {
+    const { open, handleClose, setCallAPICategories } = props;
 
-    // form
+    const [categories, setCategories] = useState<Array<ICategory>>([]);
+
+    const schema = yup.object().shape({
+        name: yup.string().required('Tên danh mục đang trống'),
+        description: yup.string().required('Mô tả danh mục đang trống'),
+        gender: yup.string(),
+    });
+
     const {
-        register,
+        control,
         handleSubmit,
         setValue,
         formState: { errors },
-    } = useForm<IUpdateCategory>({});
+    } = useForm<IUpdateCategory>({
+        resolver: yupResolver(schema),
+    });
+
     const onSubmit: SubmitHandler<IUpdateCategory> = async (data) => {
         const objectUpdate: IUpdateCategory = {
             name: data.name,
             description: data.description,
             parentName: data.parentName || null,
         };
-        const response = await createNewCategory(objectUpdate);
-        if (response.status === 201) {
-            toast.success('Thêm thành công');
-            setValue('description', '');
-            setValue('name', '');
-            setValue('parentName', '');
-        } else {
-            toast.error(response.data.message || response.data);
+        try {
+            const response = await createNewCategory(objectUpdate);
+            if (response.status === 201) {
+                toast.success('Thêm thành công');
+                setValue('description', '');
+                setValue('name', '');
+                setValue('parentName', '');
+                setCallAPICategories((prev) => !prev);
+            } else {
+                toast.error(response.data.message || response.data);
+            }
+        } catch (error) {
+            toast.error(`${error}`);
+        } finally {
+            handleClose();
         }
-
-        handleClose();
     };
+
+    useEffect(() => {
+        const handleGetListCate = async () => {
+            const res = await getAllCategory();
+            if (res.status === 200) {
+                setCategories(res.data.content);
+            }
+        };
+
+        handleGetListCate();
+    }, []);
+
     return (
-        <div>
-            <Modal open={open} onClose={handleClose}>
-                <Box sx={style}>
-                    <div className="text-lg mb-4">Thêm Danh mục mới</div>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                        <InputText
-                            labelInput="Tên danh mục"
-                            errorInput={errors.name ? true : false}
-                            errorFormMessage={errors.name?.message}
-                            register={{
-                                ...register('name', {
-                                    required: 'name is required',
-                                }),
-                            }}
+        <Modal open={open} onClose={handleClose}>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 bg-gray-100 border border-black rounded-lg shadow-lg p-6 space-y-3">
+                <div className="text-lg font-semibold flex items-center">Thêm Danh mục mới</div>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 bg-white p-4 rounded-lg shadow">
+                    <div>
+                        <Controller
+                            name="name"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    error={errors.name ? true : false}
+                                    fullWidth
+                                    label="Tên danh mục"
+                                />
+                            )}
                         />
+                        <p className="text-red-600 text-sm py-1 h-6 dark:text-red-500">{errors.name?.message}</p>
+                    </div>
 
-                        <InputText
-                            labelInput="Mô tả"
-                            errorInput={errors.description ? true : false}
-                            isRequired
-                            errorFormMessage={errors.description?.message}
-                            register={{
-                                ...register('description', {
-                                    required: 'description is required',
-                                }),
-                            }}
+                    <div>
+                        <Controller
+                            name="description"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    error={errors.description ? true : false}
+                                    fullWidth
+                                    multiline
+                                    rows={4}
+                                    label="Mô tả"
+                                />
+                            )}
                         />
-                        <FormControl fullWidth>
-                            <InputLabel>Danh mục cha</InputLabel>
-                            <Select label="parentName" {...register('parentName')} defaultValue={''}>
-                                <MenuItem value={''}>Không có danh mục cha</MenuItem>
-                                {listCate.map((item, index) => (
-                                    <MenuItem key={index} value={item.name}>
-                                        {item.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <p className="text-red-600 text-sm py-1 h-6 dark:text-red-500">{errors.description?.message}</p>
+                    </div>
 
-                        <div className="float-right">
-                            <Button sx={{ width: 140 }} onClick={handleClose}>
-                                Trở lại
-                            </Button>
-                            <Button sx={{ width: 140 }} variant="contained" type="submit">
-                                Thêm
-                            </Button>
-                        </div>
-                    </form>
-                </Box>
-            </Modal>
-        </div>
+                    <div>
+                        <Controller
+                            name="parentName"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <FormControl fullWidth>
+                                    <InputLabel>Thuộc danh mục</InputLabel>
+                                    <Select
+                                        {...field}
+                                        fullWidth
+                                        error={errors.parentName ? true : false}
+                                        label="Thuộc danh mục"
+                                    >
+                                        <MenuItem value={''}>Không thuộc danh mục nào</MenuItem>
+                                        {categories.map((item, index) => (
+                                            <MenuItem key={index} value={item.name}>
+                                                {item.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        />
+                        <p className="text-red-600 text-sm py-1 h-6 dark:text-red-500">{errors.parentName?.message}</p>
+                    </div>
+
+                    <div className="flex justify-end">
+                        <Button className="min-w-40" onClick={handleClose}>
+                            Trở lại
+                        </Button>
+                        <Button className="min-w-40" variant="fill" type="submit">
+                            Thêm
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </Modal>
     );
 };
 

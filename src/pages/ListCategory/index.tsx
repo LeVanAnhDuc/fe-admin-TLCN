@@ -1,23 +1,21 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
-import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
-import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
 import { styled } from '@mui/material/styles';
 
 import config from '../../config';
@@ -26,23 +24,15 @@ import { deteleASingleCategory, getAllCategoryWithinPaginationSearch } from '../
 import Search from '../../components/Search/Search';
 import ModalAddNewCategory from './ModalAddNewCategory';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
+import Skeleton from '../../components/Skeleton';
+import Error404 from '../Error404';
+import PopConfirm from '../../components/PopComfirm';
+import Button from '../../components/Button';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: '#B3A492',
-        color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-        padding: 3,
-    },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,
     },
-    // hide last border
     '&:last-child td, &:last-child th': {
         border: 0,
     },
@@ -50,26 +40,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const ListCategory = () => {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    // change page
-    const [data, setData] = useState<Array<ICategory>>([]); // Dữ liệu từ API
-    const [page, setPage] = useState<number>(1); // Trang hiện tại
-    const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
+    const itemsPerPage = 20;
+
+    const [loadingAPI, setLoadingAPI] = useState<boolean>(false);
+    const [errorAPI, setErrorAPI] = useState<boolean>(false);
+    const [categories, setCategories] = useState<Array<ICategory>>([]);
+    const [page, setPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(0);
     const [search, setSearch] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('');
-    const itemsPerPage = 20;
-    // panigation
-    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
-        setPage(newPage);
-    };
-    // get all category
-    const getAllProducts = async (pageNo: number) => {
+    const [openModal, setOpenModal] = useState<boolean>(false);
+    const [callAPICategories, setCallAPICategories] = useState<boolean>(false);
+
+    const getCategories = async () => {
         try {
-            const response = await getAllCategoryWithinPaginationSearch(pageNo, itemsPerPage, sortBy, search);
+            setLoadingAPI(true);
+            const response = await getAllCategoryWithinPaginationSearch(page, itemsPerPage, sortBy, search);
+            setLoadingAPI(false);
+
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
 
-                setData(content);
+                setCategories(content);
                 setTotalPages(totalPages);
                 if (totalPages > 0 && content.length <= 0) {
                     setPage((prev) => prev - 1);
@@ -78,56 +70,61 @@ const ListCategory = () => {
                 toast.error(response.data.message || response.data);
             }
         } catch (error) {
-            toast.error('Đang bảo trì quay lại sau');
+            setErrorAPI(true);
         }
     };
 
-    // delete item
     const handleDeleteItem = async (idItem: number) => {
-        const userConfirmed = window.confirm('Bạn có chắc chắn muốn xóa không?');
-        if (userConfirmed) {
-            try {
-                const response = await deteleASingleCategory(idItem);
-                if (response.status === 200) {
-                    toast.success(response.data);
-                } else {
-                    toast.error(response.data.message || response.data);
-                }
-                setIsLoading((prev) => !prev);
-            } catch (error) {
-                toast.error(`Lỗi xóa: ${error} `);
+        try {
+            const response = await deteleASingleCategory(idItem);
+            if (response.status === 200) {
+                toast.success(response.data);
+                getCategories();
+            } else {
+                toast.error(response.data.message || response.data);
             }
-        } else {
-            toast.info('Hủy xóa');
+        } catch (error) {
+            toast.error(`Lỗi xóa: ${error} `);
         }
     };
 
-    // change status
     const handleChangesetSortBy = (event: SelectChangeEvent) => {
         setSortBy(event.target.value as string);
     };
 
-    // modal
-    const [open, setOpen] = useState(false);
+    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
+        setPage(newPage);
+    };
 
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleOpenModal = useCallback(() => setOpenModal(true), []);
+    const handleCloseModal = useCallback(() => setOpenModal(false), []);
 
     useEffect(() => {
-        getAllProducts(page);
-    }, [page, open, isLoading, search, sortBy]);
+        getCategories();
+    }, [page, search, sortBy, callAPICategories]);
+
+    if (errorAPI) {
+        return <Error404 />;
+    }
+
     return (
-        <>
-            <ModalAddNewCategory open={open} handleClose={handleClose} />
-            <div className="flex justify-between">
-                <div className="text-lg font-semibold flex items-center">Danh sách danh mục sản phẩm</div>
-                <Button variant="contained" onClick={handleOpen}>
+        <section className="space-y-5">
+            <ModalAddNewCategory
+                open={openModal}
+                handleClose={handleCloseModal}
+                setCallAPICategories={setCallAPICategories}
+            />
+
+            <div className="flex justify-between items-center">
+                <div className="text-lg font-semibold flex items-center">Danh sách danh mục</div>
+                <Button variant="fill" onClick={handleOpenModal}>
                     Thêm mới
                 </Button>
             </div>
-            <div className="flex justify-center my-4 gap-5">
+
+            <div className="flex flex-col sm:flex-row justify-center gap-3 bg-white p-3 rounded-lg shadow">
                 <Search setSearch={setSearch} placeHolder="Tìm theo theo tên danh mục" />
-                <FormControl sx={{ width: 400 }}>
+                <FormControl fullWidth className="sm:!w-96">
                     <InputLabel>Sắp xếp</InputLabel>
                     <Select value={sortBy} label="Sắp xếp" onChange={handleChangesetSortBy}>
                         <MenuItem value={''}>Không sắp xếp</MenuItem>
@@ -138,87 +135,96 @@ const ListCategory = () => {
                     </Select>
                 </FormControl>
             </div>
-            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+
+            <Paper>
                 <TableContainer>
-                    <Table stickyHeader aria-label="simple table">
-                        <TableHead sx={{ backgroundColor: '#d6d5d7' }}>
+                    <Table>
+                        <TableHead className="!bg-primary-200 ">
                             <TableRow>
-                                <StyledTableCell align="center" sx={{ fontSize: 16, fontWeight: 'bold' }}>
+                                <TableCell align="center" className="!font-bold">
                                     ID
-                                </StyledTableCell>
-                                <StyledTableCell align="left" sx={{ fontSize: 16, fontWeight: 'bold' }}>
-                                    Tên danh mục
-                                </StyledTableCell>
-                                <StyledTableCell align="left" sx={{ fontSize: 16, fontWeight: 'bold' }}>
-                                    Mô tả
-                                </StyledTableCell>
-                                <StyledTableCell align="left" sx={{ fontSize: 16, fontWeight: 'bold' }}>
-                                    Tổng sản phẩm
-                                </StyledTableCell>
-                                <StyledTableCell
-                                    align="center"
-                                    sx={{ minWidth: '120px', fontSize: 16, fontWeight: 'bold' }}
-                                >
+                                </TableCell>
+                                <TableCell className="!font-bold">Tên danh mục</TableCell>
+                                <TableCell className="!font-bold">Mô tả</TableCell>
+                                <TableCell className="!font-bold">Tổng sản phẩm</TableCell>
+                                <TableCell align="center" className="!font-bold">
                                     Thao tác
-                                </StyledTableCell>
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.map((item, index) => (
-                                <StyledTableRow
-                                    key={index}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
-                                >
-                                    <StyledTableCell
-                                        align="center"
-                                        component="th"
-                                        scope="row"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCategory + '#' + item.id);
-                                        }}
-                                    >
-                                        #{item.id}
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="left"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCategory + '#' + item.id);
-                                        }}
-                                    >
-                                        <div className="pl-3">{item.name}</div>
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="left"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCategory + '#' + item.id);
-                                        }}
-                                    >
-                                        <div className="pl-3"> {item.description}</div>
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="left"
-                                        onClick={() => {
-                                            navigate(config.Routes.detailCategory + '#' + item.id);
-                                        }}
-                                    >
-                                        <div className="pl-4">{item.productNumber}</div>
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        <Link to={config.Routes.detailCategory + '#' + item.id}>
-                                            <IconButton>
-                                                <MouseOverPopover content="Xem thông tin chi tiết">
-                                                    <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
-                                                </MouseOverPopover>
-                                            </IconButton>
-                                        </Link>
-                                        <IconButton onClick={() => handleDeleteItem(item.id)}>
-                                            <MouseOverPopover content="Xóa xanh mục">
-                                                <DeleteTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
-                                            </MouseOverPopover>
-                                        </IconButton>
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            ))}
+                            {loadingAPI
+                                ? Array(10)
+                                      .fill(null)
+                                      .map((_, index) => (
+                                          <TableRowCustom key={index}>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                              <TableCell>
+                                                  <Skeleton className="h-12" />
+                                              </TableCell>
+                                          </TableRowCustom>
+                                      ))
+                                : categories.map((item) => (
+                                      <TableRowCustom key={item.id} className="hover:!bg-primary-50">
+                                          <TableCell
+                                              align="center"
+                                              className="cursor-pointer"
+                                              onClick={() => {
+                                                  navigate(config.Routes.detailCategory + '#' + item.id);
+                                              }}
+                                          >
+                                              #{item.id}
+                                          </TableCell>
+                                          <TableCell
+                                              className="cursor-pointer"
+                                              onClick={() => {
+                                                  navigate(config.Routes.detailCategory + '#' + item.id);
+                                              }}
+                                          >
+                                              {item.name}
+                                          </TableCell>
+                                          <TableCell
+                                              className="cursor-pointer max-w-[30rem] truncate"
+                                              onClick={() => {
+                                                  navigate(config.Routes.detailCategory + '#' + item.id);
+                                              }}
+                                          >
+                                              {item.description}
+                                          </TableCell>
+                                          <TableCell
+                                              className="cursor-pointer"
+                                              onClick={() => {
+                                                  navigate(config.Routes.detailCategory + '#' + item.id);
+                                              }}
+                                          >
+                                              {item.productNumber}
+                                          </TableCell>
+                                          <TableCell align="center">
+                                              <PopConfirm
+                                                  content="Nếu xóa dữ liệu sẽ mất đi và không thể hoàn lại"
+                                                  title="Xóa danh mục"
+                                                  onConfirm={() => handleDeleteItem(item.id)}
+                                              >
+                                                  <MouseOverPopover content="Xóa danh mục">
+                                                      <IconButton>
+                                                          <DeleteTwoTone className="!text-red-500" />
+                                                      </IconButton>
+                                                  </MouseOverPopover>
+                                              </PopConfirm>
+                                          </TableCell>
+                                      </TableRowCustom>
+                                  ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -233,7 +239,7 @@ const ListCategory = () => {
                     boundaryCount={1}
                 />
             </div>
-        </>
+        </section>
     );
 };
 

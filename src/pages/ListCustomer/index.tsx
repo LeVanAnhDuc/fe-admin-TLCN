@@ -157,27 +157,47 @@ const ListCustomer = () => {
                                           </TableRowCustom>
                                       ))
                                 : customers.map((item) => (
-                                      <TableRowCustom key={item.id}>
-                                          <TableCell onClick={() => handleNavigateDetailUser(item)}>
+                                      <TableRowCustom key={item.id} className="hover:!bg-primary-50">
+                                          <TableCell
+                                              className="cursor-pointer"
+                                              onClick={() => handleNavigateDetailUser(item)}
+                                          >
                                               <Avatar src={item.avatarUrl} alt="Avatar" className="size-full" />
                                           </TableCell>
-                                          <TableCell onClick={() => handleNavigateDetailUser(item)}>
+                                          <TableCell
+                                              className="cursor-pointer"
+                                              onClick={() => handleNavigateDetailUser(item)}
+                                          >
                                               {item.username}
                                           </TableCell>
-                                          <TableCell onClick={() => handleNavigateDetailUser(item)}>
+                                          <TableCell
+                                              className="cursor-pointer"
+                                              onClick={() => handleNavigateDetailUser(item)}
+                                          >
                                               <div className={`${item.name ? '' : 'text-gray-400'}`}>
                                                   {item.name || 'N/A'}
                                               </div>
                                           </TableCell>
-                                          <TableCell onClick={() => handleNavigateDetailUser(item)}>
+                                          <TableCell
+                                              className="cursor-pointer"
+                                              onClick={() => handleNavigateDetailUser(item)}
+                                          >
                                               <div className={`${item.gender ? '' : 'text-gray-400'}`}>
                                                   {item.gender || 'N/A'}
                                               </div>
                                           </TableCell>
-                                          <TableCell align="left" onClick={() => handleNavigateDetailUser(item)}>
+                                          <TableCell
+                                              align="left"
+                                              className="cursor-pointer"
+                                              onClick={() => handleNavigateDetailUser(item)}
+                                          >
                                               {item.email}
                                           </TableCell>
-                                          <TableCell align="left" onClick={() => handleNavigateDetailUser(item)}>
+                                          <TableCell
+                                              align="left"
+                                              className="cursor-pointer"
+                                              onClick={() => handleNavigateDetailUser(item)}
+                                          >
                                               <div className={`${item.phoneNumber ? '' : 'text-gray-400'}`}>
                                                   {item.phoneNumber || 'N/A'}
                                               </div>

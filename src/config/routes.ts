@@ -9,13 +9,14 @@ const Routes = {
     detailOrder: '/chi-tiet-hoa-don',
     detailOrderID: '/chi-tiet-hoa-don/:idProduct',
 
+    listCustomer: '/danh-sach-khach-hang',
+    detailCustomer: '/chi-tiet-khach-hang',
+
     listCategory: '/danh-sach-loai',
     detailCategory: '/chi-tiet-loai',
     listProduct: '/danh-sach-san-pham',
     addProduct: '/them-san-pham',
     detailProduct: '/chi-tiet-san-pham',
-    listCustomer: '/danh-sach-khach-hang',
-    detailCustomer: '/chi-tiet-khach-hang',
 };
 
 export default Routes;

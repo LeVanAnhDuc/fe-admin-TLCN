@@ -38,7 +38,7 @@ const TableRowCustom = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const ListBill = () => {
+const ListOrder = () => {
     const navigate = useNavigate();
     const itemsPerPage = 20;
 
@@ -271,4 +271,4 @@ const ListBill = () => {
     );
 };
 
-export default ListBill;
+export default ListOrder;

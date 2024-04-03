@@ -4,9 +4,9 @@ import DetailCategory from '../pages/DetailCategory/DetailCategory';
 import DetailCustomer from '../pages/DetailCustomer/DetailCustomer';
 import DetailProduct from '../pages/DetailProduct/DetailProduct';
 import Home from '../pages/Home';
-import ListBill from '../pages/ListBill';
+import ListOrder from '../pages/ListOrder';
 import ListCategory from '../pages/ListCategory/ListCategory';
-import ListCustomer from '../pages/ListCustomer/ListCustomer';
+import ListCustomer from '../pages/ListCustomer';
 import ListProduct from '../pages/ListProduct/ListProduct';
 import LogIn from '../pages/LogIn';
 
@@ -32,7 +32,7 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.detailProduct, component: DetailProduct },
     { path: config.Routes.addProduct, component: AddProduct },
 
-    { path: config.Routes.listBill, component: ListBill },
+    { path: config.Routes.listBill, component: ListOrder },
     { path: config.Routes.listCategory, component: ListCategory },
     { path: config.Routes.listCustomer, component: ListCustomer },
     { path: config.Routes.listProduct, component: ListProduct },

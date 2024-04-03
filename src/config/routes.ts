@@ -15,6 +15,8 @@ const Routes = {
 
     listCategory: '/danh-sach-loai',
     detailCategory: '/chi-tiet-loai',
+    detailCategoryID: '/chi-tiet-loai/:idCategory',
+
     listProduct: '/danh-sach-san-pham',
     addProduct: '/them-san-pham',
     detailProduct: '/chi-tiet-san-pham',

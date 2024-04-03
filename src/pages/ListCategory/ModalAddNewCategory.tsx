@@ -5,9 +5,9 @@ import Button from '@mui/material/Button';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-import ICategory, { IUpdateCategory } from '../../../interface/category';
-import InputText from '../../../components/InputText/InputText';
-import { createNewCategory, getAllCategory } from '../../../apis/categoryApi';
+import ICategory, { IUpdateCategory } from '../../interface/category';
+import InputText from '../../components/InputText/InputText';
+import { createNewCategory, getAllCategory } from '../../apis/categoryApi';
 import { useEffect, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -32,7 +32,7 @@ interface IPropsAddress {
     handleClose: () => void;
 }
 
-const ModalCategory = (propsCh: IPropsAddress) => {
+const ModalAddNewCategory = (propsCh: IPropsAddress) => {
     const { open, handleClose } = propsCh;
     const [listCate, setListCate] = useState<Array<ICategory>>([]);
     const handleGetListCate = async () => {
@@ -125,4 +125,4 @@ const ModalCategory = (propsCh: IPropsAddress) => {
     );
 };
 
-export default ModalCategory;
+export default ModalAddNewCategory;

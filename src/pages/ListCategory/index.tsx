@@ -24,7 +24,7 @@ import config from '../../config';
 import ICategory from '../../interface/category';
 import { deteleASingleCategory, getAllCategoryWithinPaginationSearch } from '../../apis/categoryApi';
 import Search from '../../components/Search/Search';
-import ModalCategory from './ModalCategory/ModalCategory';
+import ModalAddNewCategory from './ModalAddNewCategory';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -118,7 +118,7 @@ const ListCategory = () => {
     }, [page, open, isLoading, search, sortBy]);
     return (
         <>
-            <ModalCategory open={open} handleClose={handleClose} />
+            <ModalAddNewCategory open={open} handleClose={handleClose} />
             <div className="flex justify-between">
                 <div className="text-lg font-semibold flex items-center">Danh sách danh mục sản phẩm</div>
                 <Button variant="contained" onClick={handleOpen}>
@@ -133,12 +133,8 @@ const ListCategory = () => {
                         <MenuItem value={''}>Không sắp xếp</MenuItem>
                         <MenuItem value={config.SearchFilterCategory.idAsc}>Ngày tạo cũ nhất</MenuItem>
                         <MenuItem value={config.SearchFilterCategory.idDesc}>Ngày tạo mới nhất</MenuItem>
-                        <MenuItem value={config.SearchFilterCategory.prod_countAsc}>
-                            Tổng sản phẩm tăng dần
-                        </MenuItem>
-                        <MenuItem value={config.SearchFilterCategory.prod_countDesc}>
-                            Tổng sản phẩm giảm dần
-                        </MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.prod_countAsc}>Tổng sản phẩm tăng dần</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.prod_countDesc}>Tổng sản phẩm giảm dần</MenuItem>
                     </Select>
                 </FormControl>
             </div>
@@ -147,11 +143,22 @@ const ListCategory = () => {
                     <Table stickyHeader aria-label="simple table">
                         <TableHead sx={{ backgroundColor: '#d6d5d7' }}>
                             <TableRow>
-                                <StyledTableCell align="center" sx={{fontSize: 16, fontWeight: 'bold'}}>ID</StyledTableCell>
-                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Tên danh mục</StyledTableCell>
-                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Mô tả</StyledTableCell>
-                                <StyledTableCell align="left" sx={{fontSize: 16, fontWeight: 'bold'}}>Tổng sản phẩm</StyledTableCell>
-                                <StyledTableCell align="center" sx={{ minWidth: '120px', fontSize: 16, fontWeight: 'bold'}}>
+                                <StyledTableCell align="center" sx={{ fontSize: 16, fontWeight: 'bold' }}>
+                                    ID
+                                </StyledTableCell>
+                                <StyledTableCell align="left" sx={{ fontSize: 16, fontWeight: 'bold' }}>
+                                    Tên danh mục
+                                </StyledTableCell>
+                                <StyledTableCell align="left" sx={{ fontSize: 16, fontWeight: 'bold' }}>
+                                    Mô tả
+                                </StyledTableCell>
+                                <StyledTableCell align="left" sx={{ fontSize: 16, fontWeight: 'bold' }}>
+                                    Tổng sản phẩm
+                                </StyledTableCell>
+                                <StyledTableCell
+                                    align="center"
+                                    sx={{ minWidth: '120px', fontSize: 16, fontWeight: 'bold' }}
+                                >
                                     Thao tác
                                 </StyledTableCell>
                             </TableRow>
@@ -186,7 +193,7 @@ const ListCategory = () => {
                                             navigate(config.Routes.detailCategory + '#' + item.id);
                                         }}
                                     >
-                                       <div className='pl-3'> {item.description}</div>
+                                        <div className="pl-3"> {item.description}</div>
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="left"
@@ -194,7 +201,7 @@ const ListCategory = () => {
                                             navigate(config.Routes.detailCategory + '#' + item.id);
                                         }}
                                     >
-                                        <div className='pl-4'>{item.productNumber}</div>
+                                        <div className="pl-4">{item.productNumber}</div>
                                     </StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link to={config.Routes.detailCategory + '#' + item.id}>

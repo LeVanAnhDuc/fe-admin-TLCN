@@ -1,11 +1,11 @@
 import config from '../config/index';
 import DetailOrder from '../pages/DetailOrder';
-import DetailCategory from '../pages/DetailCategory/DetailCategory';
+import DetailCategory from '../pages/DetailCategory';
 import DetailCustomer from '../pages/DetailCustomer';
 import DetailProduct from '../pages/DetailProduct/DetailProduct';
 import Home from '../pages/Home';
 import ListOrder from '../pages/ListOrder';
-import ListCategory from '../pages/ListCategory/ListCategory';
+import ListCategory from '../pages/ListCategory';
 import ListCustomer from '../pages/ListCustomer';
 import ListProduct from '../pages/ListProduct/ListProduct';
 import LogIn from '../pages/LogIn';
@@ -26,7 +26,7 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.revenue, component: RevenueStatistics },
 
     { path: config.Routes.detailOrderID, component: DetailOrder },
-    { path: config.Routes.detailCategory, component: DetailCategory },
+    { path: config.Routes.detailCategoryID, component: DetailCategory },
     { path: config.Routes.detailCustomerID, component: DetailCustomer },
 
     { path: config.Routes.detailProduct, component: DetailProduct },

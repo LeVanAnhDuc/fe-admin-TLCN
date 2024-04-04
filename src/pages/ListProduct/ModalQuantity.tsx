@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { ChangeEvent, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
-import { updateQuantityProduct } from '../../../apis/productApi';
+import { updateQuantityProduct } from '../../apis/productApi';
 
 const style = {
     position: 'absolute',

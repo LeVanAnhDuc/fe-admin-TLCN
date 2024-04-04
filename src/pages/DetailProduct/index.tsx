@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Button from '@mui/material/Button';
@@ -72,9 +72,7 @@ const VisuallyHiddenInput = styled('input')({
 
 const DetailProduct = () => {
     const navigate = useNavigate();
-    // handle get id
-    const location = useLocation();
-    const idProduct = location.hash.substring(1);
+    const { idProduct } = useParams();
 
     const {
         register,

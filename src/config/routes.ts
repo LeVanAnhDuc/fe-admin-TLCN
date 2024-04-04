@@ -7,7 +7,7 @@ const Routes = {
     error: '*',
     listBill: '/danh-sach-hoa-don',
     detailOrder: '/chi-tiet-hoa-don',
-    detailOrderID: '/chi-tiet-hoa-don/:idProduct',
+    detailOrderID: '/chi-tiet-hoa-don/:idOrder',
 
     listCustomer: '/danh-sach-khach-hang',
     detailCustomer: '/chi-tiet-khach-hang',
@@ -18,8 +18,9 @@ const Routes = {
     detailCategoryID: '/chi-tiet-loai/:idCategory',
 
     listProduct: '/danh-sach-san-pham',
-    addProduct: '/them-san-pham',
     detailProduct: '/chi-tiet-san-pham',
+    detailProductID: '/chi-tiet-san-pham/:idProduct',
+    addProduct: '/them-san-pham',
 };
 
 export default Routes;

@@ -15,7 +15,7 @@ import Image from '../../components/Image';
 
 const DetailOrder = () => {
     const navigate = useNavigate();
-    const { idProduct } = useParams();
+    const { idOrder } = useParams();
     const location = useLocation();
 
     const [products, setProducts] = useState<Array<IProductCart>>([]);
@@ -68,7 +68,7 @@ const DetailOrder = () => {
                     >
                         Danh sách đơn hàng
                     </Link>
-                    <div>{idProduct}</div>
+                    <div>{idOrder}</div>
                 </Breadcrumbs>
                 <Link to={config.Routes.listBill}>
                     <Button variant="fill">

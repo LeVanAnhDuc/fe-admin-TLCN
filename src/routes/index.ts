@@ -29,7 +29,7 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.detailCategoryID, component: DetailCategory },
     { path: config.Routes.detailCustomerID, component: DetailCustomer },
 
-    { path: config.Routes.detailProduct, component: DetailProduct },
+    { path: config.Routes.detailProductID, component: DetailProduct },
     { path: config.Routes.addProduct, component: AddProduct },
 
     { path: config.Routes.listBill, component: ListOrder },

@@ -21,7 +21,7 @@ export default function MouseOverPopover(props: Iprops) {
     const open = Boolean(anchorEl);
 
     return (
-        <div>
+        <>
             <Typography
                 aria-owns={open ? 'mouse-over-popover' : undefined}
                 aria-haspopup="true"
@@ -50,6 +50,6 @@ export default function MouseOverPopover(props: Iprops) {
             >
                 <Typography sx={{ p: 1 }}>{content}</Typography>
             </Popover>
-        </div>
+        </>
     );
 }

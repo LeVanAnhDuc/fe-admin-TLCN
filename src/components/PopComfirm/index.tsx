@@ -32,7 +32,7 @@ const PopConfirm = (props: Iprops) => {
     };
 
     return (
-        <div className="relative">
+        <>
             <div className="cursor-pointer" onClick={handleOpenConfirm}>
                 {children}
             </div>
@@ -68,7 +68,7 @@ const PopConfirm = (props: Iprops) => {
                     </div>
                 </div>
             </Popover>
-        </div>
+        </>
     );
 };
 

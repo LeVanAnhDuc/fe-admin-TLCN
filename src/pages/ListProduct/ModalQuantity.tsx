@@ -1,79 +1,77 @@
-import { Button } from '@mui/material';
-import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+
 import { ChangeEvent, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
-import { updateQuantityProduct } from '../../apis/productApi';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '70%',
-    bgcolor: 'white',
-    border: '1px solid #000',
-    borderRadius: '10px',
-    boxShadow: 24,
-    p: 4,
-};
+import { updateQuantityProduct } from '../../apis/productApi';
+import Button from '../../components/Button';
 
 interface IProps {
     open: boolean;
     handleClose: () => void;
     IDProduct: number;
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    getAllProducts: () => Promise<void>;
 }
 
 export default function ModalQuantity(props: IProps) {
-    const { open, handleClose, IDProduct, setLoading } = props;
-    const [value, setValue] = useState<number>(0);
+    const { open, handleClose, IDProduct, getAllProducts } = props;
+
+    const [quantityAddProduct, setQuantityAddProduct] = useState<number>(0);
+
     const handleChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
-            setValue(+e.target.value);
+            setQuantityAddProduct(+e.target.value);
         },
-        [value],
+        [quantityAddProduct],
     );
 
     const handleAddQuantityProduct = async () => {
-        if (+value < 0) {
-            toast.error('Không được âm');
+        if (quantityAddProduct <= 0) {
+            toast.info('Số lượng không hợp lệ');
             return;
         }
-        const response = await updateQuantityProduct(IDProduct, value);
-        if (response.status === 200) {
-            toast.success('Cập nhật thành công');
-            setLoading((prev) => !prev);
-            setValue(0);
+
+        try {
+            const response = await updateQuantityProduct(IDProduct, quantityAddProduct);
+
+            if (response.status === 200) {
+                toast.success('Cập nhật thành công');
+                getAllProducts();
+                setQuantityAddProduct(0);
+            } else {
+                toast.success(response.data.message || response.data);
+            }
+        } catch (error) {
+            toast.error(`${error}`);
+        } finally {
             handleClose();
-        } else {
-            toast.success(response.data.message || response.data);
         }
     };
 
     return (
         <div>
             <Modal open={open} onClose={handleClose}>
-                <Box sx={style}>
-                    <div className="py-5 font-semibold">Sản phẩm: {IDProduct}</div>
-                    <TextField
-                        type="number"
-                        fullWidth
-                        label="Số lượng thêm"
-                        variant="outlined"
-                        value={value}
-                        onChange={handleChange}
-                    />
-                    <div className="flex justify-end pt-5 gap-4">
-                        <Button onClick={handleClose} sx={{ width: 150 }}>
-                            Hủy
-                        </Button>
-                        <Button onClick={handleAddQuantityProduct} variant="contained" sx={{ width: 150 }}>
-                            Thêm
-                        </Button>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 bg-gray-100 border border-black rounded-lg shadow-lg p-6 space-y-3">
+                    <div className="font-semibold text-lg">Sản phẩm: {IDProduct}</div>
+                    <div className="bg-white rounded-lg p-4 space-y-5">
+                        <TextField
+                            type="number"
+                            fullWidth
+                            label="Số lượng thêm"
+                            value={quantityAddProduct}
+                            onChange={handleChange}
+                        />
+                        <div className="flex justify-end gap-4">
+                            <Button className="w-32" onClick={handleClose}>
+                                Hủy
+                            </Button>
+                            <Button className="w-32" onClick={handleAddQuantityProduct} variant="fill">
+                                Thêm
+                            </Button>
+                        </div>
                     </div>
-                </Box>
+                </div>
             </Modal>
         </div>
     );

@@ -29,7 +29,6 @@ const ModalAddNewCategory = (props: IPropsAddress) => {
     const schema = yup.object().shape({
         name: yup.string().required('Tên danh mục đang trống'),
         description: yup.string().required('Mô tả danh mục đang trống'),
-        gender: yup.string(),
     });
 
     const {
@@ -117,32 +116,24 @@ const ModalAddNewCategory = (props: IPropsAddress) => {
                         <p className="text-red-600 text-sm py-1 h-6 dark:text-red-500">{errors.description?.message}</p>
                     </div>
 
-                    <div>
-                        <Controller
-                            name="parentName"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <FormControl fullWidth>
-                                    <InputLabel>Thuộc danh mục</InputLabel>
-                                    <Select
-                                        {...field}
-                                        fullWidth
-                                        error={errors.parentName ? true : false}
-                                        label="Thuộc danh mục"
-                                    >
-                                        <MenuItem value={''}>Không thuộc danh mục nào</MenuItem>
-                                        {categories.map((item, index) => (
-                                            <MenuItem key={index} value={item.name}>
-                                                {item.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            )}
-                        />
-                        <p className="text-red-600 text-sm py-1 h-6 dark:text-red-500">{errors.parentName?.message}</p>
-                    </div>
+                    <Controller
+                        name="parentName"
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                            <FormControl fullWidth>
+                                <InputLabel>Thuộc danh mục</InputLabel>
+                                <Select {...field} fullWidth label="Thuộc danh mục">
+                                    <MenuItem value={''}>Không thuộc danh mục nào</MenuItem>
+                                    {categories.map((item, index) => (
+                                        <MenuItem key={index} value={item.name}>
+                                            {item.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
+                    />
 
                     <div className="flex justify-end">
                         <Button className="min-w-40" onClick={handleClose}>

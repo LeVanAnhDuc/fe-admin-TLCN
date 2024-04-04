@@ -99,6 +99,10 @@ const ListCategory = () => {
     const handleOpenModal = useCallback(() => setOpenModal(true), []);
     const handleCloseModal = useCallback(() => setOpenModal(false), []);
 
+    const handleNavigateDetailCategory = (categoryDetail: ICategory) => {
+        navigate(`${config.Routes.detailCategory}/${categoryDetail.id}`);
+    };
+
     useEffect(() => {
         getCategories();
     }, [page, search, sortBy, callAPICategories]);
@@ -180,33 +184,25 @@ const ListCategory = () => {
                                           <TableCell
                                               align="center"
                                               className="cursor-pointer"
-                                              onClick={() => {
-                                                  navigate(config.Routes.detailCategory + '#' + item.id);
-                                              }}
+                                              onClick={() => handleNavigateDetailCategory(item)}
                                           >
                                               #{item.id}
                                           </TableCell>
                                           <TableCell
                                               className="cursor-pointer"
-                                              onClick={() => {
-                                                  navigate(config.Routes.detailCategory + '#' + item.id);
-                                              }}
+                                              onClick={() => handleNavigateDetailCategory(item)}
                                           >
                                               {item.name}
                                           </TableCell>
                                           <TableCell
                                               className="cursor-pointer max-w-[30rem] truncate"
-                                              onClick={() => {
-                                                  navigate(config.Routes.detailCategory + '#' + item.id);
-                                              }}
+                                              onClick={() => handleNavigateDetailCategory(item)}
                                           >
                                               {item.description}
                                           </TableCell>
                                           <TableCell
                                               className="cursor-pointer"
-                                              onClick={() => {
-                                                  navigate(config.Routes.detailCategory + '#' + item.id);
-                                              }}
+                                              onClick={() => handleNavigateDetailCategory(item)}
                                           >
                                               {item.productNumber}
                                           </TableCell>

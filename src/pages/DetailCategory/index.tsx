@@ -1,202 +1,220 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-
-import Button from '@mui/material/Button';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-
-import InputText from '../../components/InputText/InputText';
-import config from '../../config';
-import ICategory, { IUpdateCategory } from '../../interface/category';
-import { getAllCategory, getCategoryByIDOrSlug, updateCategory } from '../../apis/categoryApi';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import TextField from '@mui/material/TextField';
+
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+import config from '../../config';
+import ICategory, { IUpdateCategory } from '../../interface/category';
+import { getAllCategory, getCategoryByIDOrSlug, updateCategory } from '../../apis/categoryApi';
+import Button from '../../components/Button';
+import { objectsAreEqual } from '../../utils/checkData';
 
 const DetailCategory = () => {
     const navigate = useNavigate();
-    // handle get id
-    const location = useLocation();
-    const idProduct = location.hash.substring(1);
-    // list cate
-    const [listCate, setListCate] = useState<Array<ICategory>>([]);
-    const handleGetListCate = async () => {
-        const res = await getAllCategory();
-        if (res.status === 200) {
-            setListCate(res.data.content);
-        }
-    };
-    useEffect(() => {
-        handleGetListCate();
-    }, []);
-    // cate origan
-    const [cateCurrent, setCateCurrent] = useState<string>('');
+    const { idCategory } = useParams();
 
-    // handle get data
-    const getCategory = async (id: number) => {
+    const [categories, setCategories] = useState<Array<ICategory>>([]);
+    const [category, setCategory] = useState<IUpdateCategory>({
+        name: '',
+        description: '',
+        parentName: '',
+    });
+
+    const schema = yup.object().shape({
+        name: yup.string().required('Tên danh mục đang trống'),
+        description: yup.string().required('Mô tả danh mục đang trống'),
+        lastModifiedDate: yup.string(),
+    });
+
+    const getCategoryAPI = async () => {
         try {
-            if (idProduct && !isNaN(+idProduct)) {
-                // tồn tai ma san pham và phải là số
-                const response = await getCategoryByIDOrSlug(id);
-
+            if (idCategory && !isNaN(+idCategory)) {
+                const response = await getCategoryByIDOrSlug(+idCategory);
                 if (response.status === 200) {
-                    await setValue('id', response.data.id);
-                    await setValue('name', response.data.name);
-                    await setValue('createdBy', response.data.createdBy);
-                    await setValue('createdDate', response.data.createdDate);
-                    await setValue('description', response.data.description);
-                    await setValue('lastModifiedBy', response.data.lastModifiedBy);
-                    await setValue('lastModifiedDate', response.data.lastModifiedDate);
-                    await setValue('name', response.data.name);
+                    setCategory({
+                        name: response.data.name,
+                        description: response.data.description,
+                        parentName: response.data.parentName,
+                    });
 
-                    setCateCurrent(response.data.parentName);
-
-                    await setValue('slug', response.data.slug);
-                } else {
-                    toast.error(response.data.message);
-                    navigate(config.Routes.listCategory);
+                    setValue('name', response.data.name);
+                    setValue('lastModifiedDate', response.data.lastModifiedDate);
+                    setValue('description', response.data.description);
+                    setValue('parentName', response.data.parentName);
                 }
             } else {
                 navigate(config.Routes.listCategory);
             }
-        } catch {
-            toast.error('Đang bảo trì');
+        } catch (error) {
+            toast.error(`${error}`);
         }
     };
-    useEffect(() => {
-        getCategory(+idProduct);
-    }, [idProduct]);
 
     const {
-        register,
+        control,
         handleSubmit,
         formState: { errors },
         setValue,
-    } = useForm<ICategory>({});
+    } = useForm<IUpdateCategory>({ resolver: yupResolver(schema) });
 
-    // submit form
-    const onSubmit: SubmitHandler<ICategory> = async (data) => {
+    const onSubmit: SubmitHandler<IUpdateCategory> = async (data) => {
         const objectUpdate: IUpdateCategory = {
             name: data.name,
             description: data.description,
-            parentName: cateCurrent,
+            parentName: data.parentName,
         };
 
-        //  call api doi update thong tin
-        const response = await updateCategory(+idProduct, objectUpdate);
-        if (response.status === 200) {
-            toast.success('Cập nhật thành công');
-        } else {
-            toast.error(response.data.message || response.data);
+        if (objectsAreEqual(objectUpdate, category)) {
+            toast.info('Thông tin chưa thay đổi');
+            return;
+        }
+
+        try {
+            if (idCategory) {
+                const response = await updateCategory(+idCategory, objectUpdate);
+
+                if (response.status === 200) {
+                    toast.success('Cập nhật thành công');
+                } else {
+                    toast.error(response.data.message || response.data);
+                }
+            }
+        } catch (error) {
+            toast.error(`${error}`);
         }
     };
 
+    useEffect(() => {
+        const handleGetListCate = async () => {
+            const res = await getAllCategory();
+            if (res.status === 200) {
+                setCategories(res.data.content);
+            }
+        };
+
+        handleGetListCate();
+        getCategoryAPI();
+    }, []);
+
     return (
-        <>
-            <div className="flex flex-wrap justify-between pb-3 gap-5">
+        <section className="space-y-5">
+            <div className="flex flex-wrap justify-between items-center gap-5">
+                <Breadcrumbs className="!font-medium">
+                    <Link
+                        to={config.Routes.listCategory}
+                        className="font-semibold decoration-primary-700 decoration-1 underline-offset-2 transition hover:underline hover:text-primary-700"
+                    >
+                        Danh sách đơn hàng
+                    </Link>
+                    <div>{idCategory}</div>
+                </Breadcrumbs>
                 <Link to={config.Routes.listCategory}>
-                    <Button variant="contained">
-                        <KeyboardArrowLeft />
+                    <Button variant="fill">
                         <span className="normal-case">Quay lại</span>
                     </Button>
                 </Link>
             </div>
-            <div className="my-5">
-                {/* start account setting */}
-                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                    {/* start input id and Name */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <InputText
-                            labelInput="Tên Danh mục"
-                            errorInput={errors.name ? true : false}
-                            isRequired
-                            register={{
-                                ...register('name', {
-                                    required: 'Name is required',
-                                }),
-                            }}
+            <form className="space-y-5 bg-white p-4 rounded-lg" onSubmit={handleSubmit(onSubmit)}>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <Controller
+                            name="name"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    error={errors.name ? true : false}
+                                    fullWidth
+                                    label="Tên danh mục"
+                                />
+                            )}
                         />
-                        <InputText
-                            labelInput="Mô tả"
-                            errorInput={errors.description ? true : false}
-                            isRequired
-                            register={{
-                                ...register('description', {
-                                    required: 'description is required',
-                                }),
-                            }}
-                        />
+                        <p
+                            className={`${
+                                errors.name ? 'block' : 'hidden'
+                            }text-red-600 text-sm py-1  dark:text-red-500`}
+                        >
+                            {errors.name?.message}
+                        </p>
                     </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <FormControl fullWidth>
-                            <InputLabel>Tên Danh mục cha</InputLabel>
-                            <Select
-                                label="Tên Danh mục cha"
-                                value={cateCurrent}
-                                onChange={(e) => {
-                                    setCateCurrent(e.target.value);
+
+                    <Controller
+                        name="parentName"
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                            <FormControl fullWidth>
+                                <InputLabel>Thuộc danh mục</InputLabel>
+                                <Select {...field} fullWidth label="Thuộc danh mục">
+                                    <MenuItem value={''}>Không thuộc danh mục nào</MenuItem>
+                                    {categories.map((item, index) => (
+                                        <MenuItem key={index} value={item.name}>
+                                            {item.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
+                    />
+                    <Controller
+                        name="lastModifiedDate"
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                variant="filled"
+                                fullWidth
+                                label="Ngày chỉnh sửa cuối"
+                                InputProps={{
+                                    readOnly: true,
                                 }}
-                            >
-                                <MenuItem value={''}>Không có danh mục cha</MenuItem>
-                                {listCate.map((item, index) => (
-                                    <MenuItem key={index} value={item.name}>
-                                        {item.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <InputText
-                            labelInput="Ngày chỉnh sửa cuối"
-                            register={{
-                                ...register('lastModifiedDate'),
-                            }}
-                            readOnly
-                        />
-                    </div>
-                    {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <InputText
-                            labelInput="Người tạo"
-                            register={{
-                                ...register('createdBy'),
-                            }}
-                            disabled
-                        />
-                        <InputText
-                            labelInput="Ngày tạo"
-                            register={{
-                                ...register('createdDate'),
-                            }}
-                            disabled
-                        />
-                    </div> */}
-                    {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <InputText
-                            labelInput="Người chỉnh sửa cuối"
-                            register={{
-                                ...register('lastModifiedBy'),
-                            }}
-                            disabled
-                        />
-                        <InputText
-                            labelInput="Slug"
-                            register={{
-                                ...register('slug'),
-                            }}
-                            readOnly
-                        />
-                    </div> */}
+                            />
+                        )}
+                    />
+                </div>
+                <div>
+                    <Controller
+                        name="description"
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                error={errors.description ? true : false}
+                                fullWidth
+                                multiline
+                                rows={6}
+                                label="Mô tả"
+                            />
+                        )}
+                    />
+                    <p
+                        className={`${
+                            errors.description ? 'block' : 'hidden'
+                        }text-red-600 text-sm py-1  dark:text-red-500`}
+                    >
+                        {errors.description?.message}
+                    </p>
+                </div>
 
-                    {/* end input lastModifiedBy and lastModifiedDate */}
-
-                    <Button fullWidth type="submit" variant="contained" size="large">
+                <div className="flex justify-end">
+                    <Button type="submit" variant="fill" className="min-w-40">
                         Cập nhật
                     </Button>
-                </form>
-            </div>
-            {/* end account setting */}
-        </>
+                </div>
+            </form>
+        </section>
     );
 };
 

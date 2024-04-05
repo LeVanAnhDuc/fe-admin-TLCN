@@ -1,7 +1,7 @@
-import InputText from '../../../components/InputText/InputText';
+import InputText from '../../components/InputText/InputText';
 import Button from '@mui/material/Button';
 import { ChangeEvent, useState } from 'react';
-import { IValue } from '../../../interface/productCart';
+import { IValue } from '../../interface/productCart';
 
 interface Iprops {
     type?: string;

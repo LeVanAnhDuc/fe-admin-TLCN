@@ -1,9 +1,9 @@
-import InputText from '../../../components/InputText/InputText';
+import InputText from '../../components/InputText/InputText';
 import Button from '@mui/material/Button';
 import { ChangeEvent, useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { IValue } from '../../../interface/product';
-import { uploadImage } from '../../../apis/uploadImageApi';
+import { IValue } from '../../interface/product';
+import { uploadImage } from '../../apis/uploadImageApi';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',

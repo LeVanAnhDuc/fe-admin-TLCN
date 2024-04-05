@@ -140,7 +140,7 @@ const ListProduct = () => {
     };
 
     const handleNavigateDetailProduct = (productDetail: IProduct) => {
-        navigate(`${config.Routes.detailProduct}/${productDetail.id}`);
+        navigate(`${config.Routes.detailProduct}/${productDetail.id}`, { state: { categories: categories } });
     };
 
     useEffect(() => {

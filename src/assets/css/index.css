@@ -43,3 +43,13 @@ html *::-webkit-scrollbar-track {
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
+/* Trình soạn thảo ReactQuill */
+.ql-editor {
+    min-height: 24rem;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    font-size: 1rem;
+    background: #fff;
+}

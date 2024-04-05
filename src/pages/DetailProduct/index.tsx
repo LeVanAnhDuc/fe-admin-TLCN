@@ -1,17 +1,9 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -19,23 +11,28 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import TextField from '@mui/material/TextField';
+
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import IProduct, { IOption, IValue } from '../../interface/product';
-import InputText from '../../components/InputText/InputText';
 import Image from '../../components/Image';
 import config from '../../config';
-import OptionColor from './OptionColor/OptionColor';
-import OptionSize from './OptionSize/OptionSize';
+import OptionColor from './OptionColor';
+import OptionSize from './OptionSize';
 import { ISku } from '../../interface/productCart';
 import ICategory from '../../interface/category';
-import { getAllCategory } from '../../apis/categoryApi';
 import { getSingleProduct, updateProduct } from '../../apis/productApi';
-import { toast } from 'react-toastify';
 import { uploadProductImages } from '../../apis/uploadImageApi';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import LinearProgress from '@mui/material/LinearProgress';
+import Button from '../../components/Button';
+import { convertNumberToVND } from '../../utils/convertData';
+import SnackBarLoading from '../../components/SnackBarLoading';
+import Error404 from '../Error404';
+import TextEditer from '../../components/TextEditer';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -73,25 +70,107 @@ const VisuallyHiddenInput = styled('input')({
 const DetailProduct = () => {
     const navigate = useNavigate();
     const { idProduct } = useParams();
+    const location = useLocation();
+
+    const categories: Array<ICategory> = location.state.categories;
+
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const [errorAPI, setErrorAPI] = useState<boolean>(false);
+    const [loadingAPIGetProduct, setLoadingAPIGetProduct] = useState<boolean>(false);
+    const [listImageCurrent, setListImageCurrent] = useState<Array<string>>([]);
+    const [imagesTypeFileList, setImagesTypeFileList] = useState<FileList | null>();
+    const [imagesDisplay, setImagesDisplay] = useState<string[]>([]);
+    const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+    const [description, setDescription] = useState<string>('');
+
+    const getProduct = async () => {
+        try {
+            if (idProduct && !isNaN(+idProduct)) {
+                setLoadingAPIGetProduct(true);
+                const response = await getSingleProduct(+idProduct);
+                setLoadingAPIGetProduct(false);
+
+                if (response.status === 200) {
+                    const product: IProduct = response.data;
+
+                    await setValue('categoryName', product.categoryName);
+                    await setValue('category', product.category);
+                    await setValue('name', product.name);
+                    await setValue('quantity', product.quantity);
+                    await setValue('price', convertNumberToVND(product.price));
+                    await setValue('promotionalPrice', convertNumberToVND(product.promotionalPrice));
+                    await setValue('sold', product.sold);
+                    await setValue('quantityAvailable', product.quantityAvailable);
+                    await setValue('createdDate', product.createdDate);
+                    await setValue('lastModifiedDate', product.lastModifiedDate);
+
+                    setDescription(product.description);
+                    setImagesDisplay(product.listImages);
+                    setListImageCurrent(product.listImages);
+
+                    await setOptionsSize(product.options.filter((item: IOption) => item.optionName === 'Size')[0]);
+                    await setOptionsColor(product.options.filter((item: IOption) => item.optionName === 'Màu')[0]);
+
+                    setSku(product.skus);
+                    setSkuNoneUpdate(product.skus);
+                } else {
+                    toast.error(response.data.message);
+                    navigate(config.Routes.listProduct);
+                }
+            } else {
+                navigate(config.Routes.listProduct);
+            }
+        } catch {
+            setErrorAPI(true);
+        }
+    };
+
+    const handleGetImageByClient = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setImagesTypeFileList(e.target.files);
+            const imageUrls = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+            setImagesDisplay(imageUrls);
+        }
+    };
+
+    const handleUpload = async (idProduct: number) => {
+        if (!imagesTypeFileList || imagesTypeFileList.length === 0) {
+            setIsLoadingUpdate(false);
+            toast.success('Sửa thành công');
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+
+            for (let i = 0; i < imagesTypeFileList.length; i++) {
+                formData.append('images', imagesTypeFileList[i]);
+            }
+
+            const response = await uploadProductImages(idProduct, formData);
+
+            if (response.status === 200) {
+                toast.success('Sửa thành công');
+            } else {
+                toast.error(response.data.message || response.data);
+            }
+
+            setImagesTypeFileList(null);
+        } catch (error) {
+            toast.error(`${error}`);
+        } finally {
+            setIsLoadingUpdate(false);
+        }
+    };
 
     const {
-        register,
+        control,
         handleSubmit,
         formState: { errors },
         setValue,
+        getValues,
     } = useForm<IProduct>({});
-
-    // get list cate
-    const [listCate, setListCate] = useState<Array<ICategory>>([]);
-    const handleGetListCate = async () => {
-        const res = await getAllCategory();
-        if (res.status === 200) {
-            setListCate(res.data.content);
-        }
-    };
-    useEffect(() => {
-        handleGetListCate();
-    }, []);
 
     // handle biến thể
     const [isLoading, setLoading] = useState<boolean>(false);
@@ -146,61 +225,7 @@ const DetailProduct = () => {
             return newArray;
         });
     };
-    // cate current
-    const [cateCurrent, setCateCurrent] = useState<string>('');
 
-    // handle get data
-    const getProduct = async (id: number) => {
-        try {
-            if (idProduct && !isNaN(+idProduct)) {
-                // tồn tai ma san pham và phải là số
-                const response = await getSingleProduct(id);
-
-                if (response.status === 200) {
-                    await setCateCurrent(response.data.categoryName);
-
-                    await setValue('category', response.data.category);
-                    await setValue('name', response.data.name);
-                    await setValue('quantity', response.data.quantity);
-                    await setValue('price', response.data.price);
-                    await setValue('promotionalPrice', response.data.promotionalPrice);
-
-                    await setValue('sold', response.data.sold);
-                    await setValue('quantityAvailable', response.data.quantityAvailable);
-
-                    await setValue('createdBy', response.data.createdBy);
-                    await setValue('createdDate', response.data.createdDate);
-                    await setValue('lastModifiedBy', response.data.lastModifiedBy);
-                    await setValue('lastModifiedDate', response.data.lastModifiedDate);
-
-                    await setValue('description', response.data.description);
-
-                    setDisplayedImages(response.data.listImages);
-                    setListImageCurrent(response.data.listImages);
-
-                    await setOptionsSize(
-                        response.data.options.filter((item: IOption) => item.optionName === 'Size')[0],
-                    );
-                    await setOptionsColor(
-                        response.data.options.filter((item: IOption) => item.optionName === 'Màu')[0],
-                    );
-
-                    setSku(response.data.skus);
-                    setSkuNoneUpdate(response.data.skus);
-                } else {
-                    toast.error(response.data.message);
-                    navigate(config.Routes.listProduct);
-                }
-            } else {
-                navigate(config.Routes.listProduct);
-            }
-        } catch {
-            toast.error('Đang bảo trì');
-        }
-    };
-    useEffect(() => {
-        getProduct(+idProduct);
-    }, [idProduct]);
     // submit form
     const onSubmit: SubmitHandler<IProduct> = async (data) => {
         if (data.quantity < 0) {
@@ -214,12 +239,12 @@ const DetailProduct = () => {
 
         const object: IProduct = {
             name: data.name,
-            description: data.description,
+            description: description,
             price: data.price,
             quantity: data.quantity,
             listImages: listImageCurrent,
             category: {
-                name: cateCurrent,
+                name: getValues('categoryName'),
             },
             options: [optionsSize, optionsColor],
             skus: Sku,
@@ -227,295 +252,338 @@ const DetailProduct = () => {
             id: 0,
         };
 
-        setIsLoadingDialog(true);
+        setIsLoadingUpdate(true);
         try {
             const response = await updateProduct(+idProduct, object);
             if (response.status === 200) {
                 handleUpload(response.data.id);
             } else {
                 toast.error(response.data.message || response.data);
-                setIsLoadingDialog(false);
+                setIsLoadingUpdate(false);
             }
         } catch (error) {
-            setIsLoadingDialog(false);
+            setIsLoadingUpdate(false);
         }
     };
 
-    // handle change image list product
-    const [listImageCurrent, setListImageCurrent] = useState<Array<string>>([]);
-    const [selectedImages, setSelectedImages] = useState<FileList | null>();
-    const [displayedImages, setDisplayedImages] = useState<string[]>([]);
+    useEffect(() => {
+        getProduct();
+    }, []);
 
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            setSelectedImages(e.target.files);
-
-            const imageUrls = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
-            // setDisplayedImages((prev) => [...prev, ...imageUrls]);
-            setDisplayedImages(imageUrls);
-        }
-    };
-
-    const handleUpload = async (idProduct: number) => {
-        if (!selectedImages || selectedImages.length === 0) {
-            setIsLoadingDialog(false);
-            toast.success('Sửa thành công');
-            return;
-        }
-
-        try {
-            const formData = new FormData();
-
-            for (let i = 0; i < selectedImages.length; i++) {
-                formData.append('images', selectedImages[i]);
-            }
-
-            // Đặt đường dẫn API lưu danh sách ảnh của bạn
-            const response = await uploadProductImages(+idProduct, formData);
-
-            if (response.status === 200) {
-                toast.success('Sửa thành công');
-            } else {
-                toast.error(response.data.message || response.data);
-            }
-            setSelectedImages(null);
-        } catch (error) {
-            toast.error(`${error}`);
-        }
-        setIsLoadingDialog(false);
-    };
-    const [isLoadingDialog, setIsLoadingDialog] = useState(false);
+    if (errorAPI) {
+        return <Error404 />;
+    }
 
     return (
-        <>
-            <Dialog onClose={() => setIsLoadingDialog(false)} open={isLoadingDialog} fullWidth maxWidth="sm">
-                <DialogTitle>Đang lưu sản phẩm</DialogTitle>
-                <DialogContent>
-                    <LinearProgress color="success" />
-                </DialogContent>
-            </Dialog>
-            <div className="flex justify-between pb-3">
+        <section className="space-y-5">
+            <SnackBarLoading open={isLoadingUpdate} content={'Đang cập nhật sản phẩm'} />
+
+            <div className="flex flex-wrap justify-between items-center gap-5">
+                <Breadcrumbs className="!font-medium">
+                    <Link
+                        to={config.Routes.listProduct}
+                        className="font-semibold decoration-primary-700 decoration-1 underline-offset-2 transition hover:underline hover:text-primary-700"
+                    >
+                        Danh sách sản phẩm
+                    </Link>
+                    <div>{idProduct}</div>
+                </Breadcrumbs>
                 <Link to={config.Routes.listProduct}>
-                    <Button variant="outlined">
-                        <KeyboardArrowLeft />
+                    <Button variant="fill">
                         <span className="normal-case">Quay lại</span>
                     </Button>
                 </Link>
             </div>
-            {/* start section 1 */}
-            <div className="my-10 ">
-                {/* start product setting */}
-                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                    <div className="mb-5 font-semibold text-xl">Mã sản phẩm : </div>
-                    {/* start input id and Name */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <FormControl fullWidth>
-                            <InputLabel required>Chọn danh mục sản phẩm</InputLabel>
-                            <Select
-                                label="Chọn danh mục sản phẩm"
-                                value={cateCurrent}
-                                onChange={(e) => {
-                                    setCateCurrent(e.target.value);
-                                }}
+
+            <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+                <div className="space-y-5 bg-white p-4 rounded-lg">
+                    <div className="font-semibold text-lg">Thông tin sản phẩm</div>
+
+                    <div>
+                        <Controller
+                            name="name"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    error={errors.name ? true : false}
+                                    fullWidth
+                                    label="Tên sản phẩm"
+                                />
+                            )}
+                        />
+                        <p
+                            className={`${
+                                errors.name ? 'block' : 'hidden'
+                            }text-red-600 text-sm py-1  dark:text-red-500`}
+                        >
+                            {errors.name?.message}
+                        </p>
+                    </div>
+                    <div className="grid  lg:grid-cols-5 gap-4">
+                        <div className="col-span-1 lg:col-span-2">
+                            <Controller
+                                name="categoryName"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <FormControl fullWidth>
+                                        <InputLabel required>Danh mục sản phẩm</InputLabel>
+                                        <Select
+                                            {...field}
+                                            label="Danh mục sản phẩm"
+                                            error={errors.categoryName ? true : false}
+                                        >
+                                            {categories.map((item, index) => (
+                                                <MenuItem key={index} value={item.name}>
+                                                    {item.name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                )}
+                            />
+                            <p
+                                className={`${
+                                    errors.categoryName ? 'block' : 'hidden'
+                                }text-red-600 text-sm py-1  dark:text-red-500`}
                             >
-                                {listCate.map((item, index) => (
-                                    <MenuItem key={index} value={item.name}>
-                                        {item.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <InputText
-                            labelInput="Tên sản phẩm"
-                            errorInput={errors.name ? true : false}
-                            isRequired
-                            register={{
-                                ...register('name', {
-                                    required: 'Name is required',
-                                }),
-                            }}
-                        />
-                    </div>
-                    {/* end input id and  Name*/}
-                    {/* start input quantity and price */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="Số lượng"
-                            typeInput="number"
-                            errorInput={errors.quantity ? true : false}
-                            isRequired
-                            register={{
-                                ...register('quantity', {
-                                    required: 'quantity is required',
-                                }),
-                            }}
-                        />
-
-                        <InputText
-                            labelInput="Giá bán (VNĐ)"
-                            typeInput="number"
-                            errorInput={errors.price ? true : false}
-                            isRequired
-                            register={{
-                                ...register('price', {
-                                    required: 'price is required',
-                                }),
-                            }}
-                        />
-                    </div>
-                    {/* end input quantity and price*/}
-                    {/* start input quantityAvailable and promotionalPrice */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="Số lượng có sẵn"
-                            register={{
-                                ...register('quantityAvailable'),
-                            }}
-                            readOnly
-                        />
-                        <InputText
-                            labelInput="Giá khuyến mại (VNĐ)"
-                            register={{
-                                ...register('promotionalPrice'),
-                            }}
-                            readOnly
-                        />
-                    </div>
-                    {/* end input quantityAvailable and promotionalPrice*/}
-                    {/* start input createdDate and lastModifiedDate */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="Ngày tạo"
-                            register={{
-                                ...register('createdDate'),
-                            }}
-                            readOnly
-                        />
-
-                        <InputText
-                            labelInput="Lần chỉnh sửa cuối"
-                            register={{
-                                ...register('lastModifiedDate'),
-                            }}
-                            readOnly
-                        />
-                    </div>
-                    {/* end input createdDate and lastModifiedDate*/}
-
-                    {/* start input createdDate and lastModifiedDate */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <InputText
-                            labelInput="Đã bán"
-                            register={{
-                                ...register('sold'),
-                            }}
-                            readOnly
-                        />
-                    </div>
-                    {/* end input createdDate and lastModifiedDate*/}
-
-                    <div className="mb-5 font-semibold text-xl">Danh sách ảnh</div>
-                    {/* start list image */}
-                    <div className="relative">
-                        <div className="flex flex-wrap gap-3 h-full pb-3">
-                            {displayedImages.map((imageUrl, index) => (
-                                <React.Fragment key={index}>
-                                    <input type="hidden" value={imageUrl} />
-                                    <Image src={imageUrl} alt={`Image ${index}`} className="w-20 h-20 " />
-                                </React.Fragment>
-                            ))}
+                                {errors.categoryName?.message}
+                            </p>
                         </div>
 
-                        <Button
-                            component="label"
-                            variant="outlined"
-                            fullWidth
-                            startIcon={<CloudUploadIcon />}
-                            sx={{
-                                backgroundColor: 'black',
-                                color: 'white',
-                                '&:hover': {
-                                    color: 'black',
-                                    backgroundColor: '#fff',
-                                },
-                            }}
-                        >
-                            Upload file
-                            <VisuallyHiddenInput type="file" multiple onChange={handleImageChange} />
-                        </Button>
+                        <div className="col-span-1 lg:col-span-3 grid md:grid-cols-3 gap-4">
+                            <Controller
+                                name="quantity"
+                                control={control}
+                                defaultValue={0}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        variant="filled"
+                                        error={errors.quantity ? true : false}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        label="Số lượng"
+                                    />
+                                )}
+                            />
+
+                            <Controller
+                                name="quantityAvailable"
+                                control={control}
+                                defaultValue={0}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        variant="filled"
+                                        error={errors.quantityAvailable ? true : false}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        label="Số lượng có sẵn"
+                                    />
+                                )}
+                            />
+
+                            <Controller
+                                name="sold"
+                                control={control}
+                                defaultValue={0}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        variant="filled"
+                                        error={errors.sold ? true : false}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        label="Sản phẩm đã bán"
+                                    />
+                                )}
+                            />
+                        </div>
                     </div>
-                    {/* end list image */}
-                    <div className="mb-5 font-semibold text-xl">Mô tả sản phẩm</div>
-                    <TextareaAutosize
-                        minRows={9}
-                        className="whitespace-pre-line"
-                        style={{ border: '1px solid #000', width: '100%', padding: '8px 12px' }}
-                        {...register(`description`, {
-                            required: 'description is required',
-                        })}
-                    />
-                    {/* start bien the */}
-                    <div className="font-semibold text-xl my-5">Thông tin biến thể</div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="col-span-1 grid md:grid-cols-2 gap-4">
+                            <div>
+                                <Controller
+                                    name="price"
+                                    control={control}
+                                    defaultValue={0}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            error={errors.price ? true : false}
+                                            fullWidth
+                                            required
+                                            type="number"
+                                            label="Giá bán (VNĐ)"
+                                        />
+                                    )}
+                                />
+                                <p
+                                    className={`${
+                                        errors.price ? 'block' : 'hidden'
+                                    }text-red-600 text-sm py-1  dark:text-red-500`}
+                                >
+                                    {errors.price?.message}
+                                </p>
+                            </div>
+                            <Controller
+                                name="promotionalPrice"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        variant="filled"
+                                        error={errors.promotionalPrice ? true : false}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        label="Giá khuyến mại (VNĐ)"
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="col-span-1 grid md:grid-cols-2 gap-4">
+                            <Controller
+                                name="createdDate"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        variant="filled"
+                                        error={errors.createdDate ? true : false}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        label="Ngày tạo"
+                                    />
+                                )}
+                            />
+                            <Controller
+                                name="lastModifiedDate"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        variant="filled"
+                                        error={errors.lastModifiedDate ? true : false}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        label="Lần cập nhật cuối"
+                                    />
+                                )}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-5 bg-white p-4 rounded-lg">
+                    <div className="font-semibold text-lg">Danh sách ảnh sản phẩm</div>
+                    <div className="flex flex-wrap items-center gap-3">
+                        {imagesDisplay.map((item, index) => (
+                            <React.Fragment key={index}>
+                                <Image
+                                    src={item}
+                                    alt={`Image ${index}`}
+                                    className="size-28 object-cover object-center rounded shadow"
+                                />
+                            </React.Fragment>
+                        ))}
+
+                        <div className="size-28 flex items-center">
+                            <div
+                                onClick={() => inputRef.current && inputRef.current.click()}
+                                className="flex items-center justify-center size-14 bg-gray-400/60 rounded-full shadow cursor-pointer border-gray-400/60 transition hover:border-2 hover:bg-gray-200"
+                            >
+                                <input
+                                    ref={inputRef}
+                                    className="absolute bottom-0 left-0 invisible size-full"
+                                    type="file"
+                                    multiple
+                                    onChange={handleGetImageByClient}
+                                />
+                                <CloudUploadIcon className="!text-2xl text-gray-800 !font-bold select-none" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-5 bg-white p-4 rounded-lg">
+                    <div className="font-semibold text-lg">Mô tả sản phẩm</div>
+                    <TextEditer value={description} setValue={setDescription} />
+                </div>
+
+                <div className="space-y-5 bg-white p-4 rounded-lg">
+                    <div className="font-semibold text-lg">Thông tin biến thể</div>
                     <OptionSize handleSetOptionsSize={handleSetOptionsSize} optionsSize={optionsSize} />
                     <OptionColor handleSetOptionsColor={handleSetOptionsColor} optionsColor={optionsColor} />
-                    {/* end bien the */}
+                </div>
 
-                    {/* start table */}
-                    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                        <TableContainer>
-                            <Table stickyHeader aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <StyledTableCell align="center">Stt</StyledTableCell>
-                                        <StyledTableCell align="center">Kích thước</StyledTableCell>
-                                        <StyledTableCell align="center">Màu</StyledTableCell>
-                                        <StyledTableCell align="center">Giá (VNĐ)</StyledTableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {Sku.map((item, index) => (
-                                        <StyledTableRow
-                                            key={index}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <StyledTableCell align="center" component="th" scope="row">
-                                                {index}
+                <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                    <TableContainer>
+                        <Table stickyHeader aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell align="center">Stt</StyledTableCell>
+                                    <StyledTableCell align="center">Kích thước</StyledTableCell>
+                                    <StyledTableCell align="center">Màu</StyledTableCell>
+                                    <StyledTableCell align="center">Giá (VNĐ)</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {Sku.map((item, index) => (
+                                    <StyledTableRow
+                                        key={index}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <StyledTableCell align="center" component="th" scope="row">
+                                            {index}
+                                        </StyledTableCell>
+                                        {item.optionValues.map((item2, index2) => (
+                                            <StyledTableCell key={index2} align="center">
+                                                {item2.valueName}
                                             </StyledTableCell>
-                                            {item.optionValues.map((item2, index2) => (
-                                                <StyledTableCell key={index2} align="center">
-                                                    {item2.valueName}
-                                                </StyledTableCell>
-                                            ))}
-                                            <StyledTableCell align="center">
-                                                <input
-                                                    className="bg-stone-200 w-32 text-center"
-                                                    type="number"
-                                                    value={item.price}
-                                                    onChange={(e) => handleChangePrice(index, e)}
-                                                />
-                                            </StyledTableCell>
-                                        </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Paper>
-                    {/* end table */}
-                    <div className="grid grid-cols-2 gap-5">
-                        <Link to={config.Routes.listProduct}>
-                            <Button fullWidth variant="outlined" color="primary" size="large">
-                                Hủy
-                            </Button>
-                        </Link>
-                        <Button fullWidth type="submit" variant="contained" color="primary" size="large">
-                            Lưu
-                        </Button>
-                    </div>
-                </form>
-                {/* end product setting */}
-            </div>
-            {/* end section 1 */}
-        </>
+                                        ))}
+                                        <StyledTableCell align="center">
+                                            <input
+                                                className="bg-stone-200 w-32 text-center"
+                                                type="number"
+                                                value={item.price}
+                                                onChange={(e) => handleChangePrice(index, e)}
+                                            />
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Paper>
+
+                <div className="flex justify-end">
+                    <Link to={config.Routes.listProduct}>
+                        <Button className="w-40">Hủy</Button>
+                    </Link>
+                    <Button className="w-40" type="submit" variant="fill">
+                        Lưu
+                    </Button>
+                </div>
+            </form>
+        </section>
     );
 };
 

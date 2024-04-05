@@ -1,6 +1,10 @@
-export const convertNumberToVND = (textToConvert?: number) => {
+export const convertNumberToVND = (textToConvert?: number | string) => {
     if (textToConvert) {
-        return textToConvert.toLocaleString('vi-VN');
+        if (typeof textToConvert === 'string') {
+            return parseInt(textToConvert).toLocaleString('vi-VN');
+        } else {
+            return textToConvert.toLocaleString('vi-VN');
+        }
     } else {
         return 0;
     }

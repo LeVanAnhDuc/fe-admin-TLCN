@@ -11,7 +11,7 @@ import ListProduct from '../pages/ListProduct';
 import LogIn from '../pages/LogIn';
 
 import Error404 from '../pages/Error404';
-import AddProduct from '../pages/AddlProduct/AddProduct';
+import AddProduct from '../pages/AddlProduct';
 import RevenueStatistics from '../pages/RevenueStatistics';
 import Profile from '../pages/Profile';
 import ForgotPassWord from '../pages/ForgotPassWord/ForgotPassWord';

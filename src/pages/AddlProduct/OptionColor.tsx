@@ -1,52 +1,44 @@
-import InputText from '../../components/InputText/InputText';
-import Button from '@mui/material/Button';
-import { ChangeEvent, useState } from 'react';
-import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
+import Add from '@mui/icons-material/Add';
+
+import { ChangeEvent, useRef, useState } from 'react';
+
 import { IValue } from '../../interface/product';
 import { uploadImage } from '../../apis/uploadImageApi';
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-});
+import config from '../../config';
+import SnackBarLoading from '../../components/SnackBarLoading';
+import PopConfirm from '../../components/PopComfirm';
+import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
+import Button from '../../components/Button';
+
 interface Iprops {
-    type?: string;
     handleSetOptionsColor?: (title: string, arrayValue: Array<IValue>) => void;
 }
 
 const OptionSize = (props: Iprops) => {
-    // prop
-    const { type, handleSetOptionsColor } = props;
+    const { handleSetOptionsColor } = props;
 
-    const [nameTitle, setNameTitle] = useState<string>(type || '');
-    // hiện thị ra màn hình
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const [loadingUpdateImage, setLoadingUpdateImage] = useState(false);
+    const [nameTitle, setNameTitle] = useState<string>(config.TypeOption.Color || '');
     const [valueName, setValueName] = useState<Array<IValue>>([]);
-    // dùng để lấy dữ liệu call api
     const [uploadedImages, setUploadedImages] = useState<Array<IValue>>([]);
-    // title
+
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
         setNameTitle(e.target.value);
     };
-    // list
+
     const handleAddValueName = () => {
         setValueName((prev) => [...prev, { valueName: '', imageUrl: '' }]);
         setUploadedImages((prev) => [...prev, { valueName: '', imageUrl: '' }]);
     };
+
     const handleDeleteValueName = (index: number) => {
-        setValueName((prev) => {
-            const updatedArray = prev.filter((_, i) => i !== index);
-            return updatedArray;
-        });
-        setUploadedImages((prev) => {
-            const updatedArray = prev.filter((_, i) => i !== index);
-            return updatedArray;
-        });
+        setValueName((prev) => prev.filter((_, i) => i !== index));
+        setUploadedImages((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleChangeValueName = (index: number, e: ChangeEvent<HTMLInputElement>) => {
@@ -72,17 +64,16 @@ const OptionSize = (props: Iprops) => {
     };
 
     const handleImageChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files && e.target.files[0];
+        const file = e.target.files?.[0];
 
         if (file) {
             setValueName((prev) => {
                 const updatedArray = [...prev];
                 const imageURL = URL.createObjectURL(file);
+
                 if (updatedArray[index]) {
-                    // Assuming only one file is accepted
                     updatedArray[index].imageUrl = imageURL;
                 } else {
-                    // If the item doesn't exist in the array, create a new one
                     updatedArray[index] = { valueName: '', imageUrl: imageURL };
                 }
                 return updatedArray;
@@ -90,10 +81,8 @@ const OptionSize = (props: Iprops) => {
             setUploadedImages((prev) => {
                 const updatedArray = [...prev];
                 if (updatedArray[index]) {
-                    // Assuming only one file is accepted
                     updatedArray[index].imageUrl = file;
                 } else {
-                    // If the item doesn't exist in the array, create a new one
                     updatedArray[index] = { valueName: '', imageUrl: file };
                 }
                 return updatedArray;
@@ -105,66 +94,102 @@ const OptionSize = (props: Iprops) => {
         const filteredValues = uploadedImages.filter((item) => item.imageUrl !== '');
         filteredValues.forEach(async (item, index) => {
             try {
-                if (!item.imageUrl) {
+                if (!item.imageUrl || (typeof item.imageUrl === 'string' && !item.imageUrl.startsWith('blob:'))) {
                     return;
                 }
                 const formData = new FormData();
                 formData.append('image', item.imageUrl);
-                const response = await uploadImage(formData);
 
-                // Thêm URL ảnh đã tải lên vào state uploadedImages
+                setLoadingUpdateImage(true);
+                const response = await uploadImage(formData);
+                setLoadingUpdateImage(false);
+
                 setUploadedImages((prev) => {
                     const updatedArray = [...prev];
                     if (updatedArray[index]) {
-                        // Assuming only one file is accepted
                         updatedArray[index].imageUrl = response.data;
                     } else {
-                        // If the item doesn't exist in the array, create a new one
                         updatedArray[index] = { valueName: '', imageUrl: response.data };
                     }
                     return updatedArray;
                 });
             } catch (error) {
-                console.error('Upload failed:', error);
+                console.error(error);
             }
         });
-        handleSetOptionsColor && handleSetOptionsColor(nameTitle, uploadedImages);
+        handleSetOptionsColor && handleSetOptionsColor(nameTitle, valueName);
     };
 
     return (
-        <div className="mt-5 bg-gray-100 p-4 rounded">
-            <InputText labelInput="Tên biến thể" value={nameTitle} onChange={handleChangeName} />
-            <div className="py-2 font-semibold">Tùy chọn</div>
-            {valueName.map((item, index) => (
-                <div className="flex justify-center items-center pb-2" key={index}>
-                    <InputText
-                        labelInput="Tên tùy chọn "
-                        value={valueName[index]?.valueName || ''} // Display the value from the array if it exists
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeValueName(index, e)}
-                    />
+        <div className="border-2 px-5 py-6 rounded-md shadow space-y-5">
+            <SnackBarLoading open={loadingUpdateImage} content={'Đang cập nhật tùy chọn'} />
 
-                    <Button component="label" variant="text" fullWidth sx={{ width: '56px' }}>
-                        <VisuallyHiddenInput
-                            type="file"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleImageChange(index, e)}
-                        />
-                        <img
-                            src={typeof item.imageUrl === 'string' ? item.imageUrl : ''}
-                            alt={`Ảnh`}
-                            className="w-20 h-14 "
-                        />
-                    </Button>
+            <TextField
+                label="Tên biến thể"
+                fullWidth
+                value={nameTitle}
+                onChange={handleChangeName}
+                inputProps={{ readOnly: true }}
+                variant="filled"
+            />
+            <div className="font-semibold">Tùy chọn</div>
+            <div className="grid lg:grid-cols-2 items-center  gap-5">
+                {valueName.map((item, index) => (
+                    <div className="flex items-center gap-2" key={index}>
+                        <div className="group size-fit rounded-lg relative overflow-hidden flex justify-center items-center  cursor-pointer">
+                            <input
+                                ref={inputRef}
+                                className="absolute bottom-0 left-0 hidden size-full"
+                                type="file"
+                                onChange={(e) => handleImageChange(index, e)}
+                            />
+                            <img
+                                src={
+                                    typeof item.imageUrl === 'object'
+                                        ? URL.createObjectURL(item.imageUrl)
+                                        : item.imageUrl
+                                }
+                                alt="hình chưa có"
+                                className="h-16 w-24 object-cover object-center"
+                            />
+                            <div
+                                className="absolute bottom-0 size-full backdrop-blur-sm bg-white/10 transition hidden group-hover:block"
+                                onClick={() => inputRef.current && inputRef.current.click()}
+                            ></div>
+                            <div
+                                className="absolute bottom-0 transition duration-300 translate-y-full group-hover:-translate-y-1/3"
+                                onClick={() => inputRef.current && inputRef.current.click()}
+                            >
+                                <span className="text-primary-500 text-3xl font-bold select-none">+</span>
+                            </div>
+                        </div>
 
-                    <Button onClick={() => handleDeleteValueName(index)} sx={{ color: 'red' }}>
-                        Xóa{' '}
-                    </Button>
-                </div>
-            ))}
-            <div className="flex justify-between">
-                <Button onClick={handleAddValueName} variant="outlined">
-                    Thêm tùy chọn
+                        <TextField
+                            label={`Tên tùy chọn ${index + 1}`}
+                            fullWidth
+                            value={valueName[index]?.valueName || ''}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeValueName(index, e)}
+                        />
+
+                        <PopConfirm
+                            content="Nếu xóa dữ liệu sẽ mất đi và không thể hoàn lại"
+                            title={`Xóa ${nameTitle}`}
+                            onConfirm={() => handleDeleteValueName(index)}
+                        >
+                            <MouseOverPopover content={`Xóa tùy chọn ${index + 1}`}>
+                                <IconButton>
+                                    <DeleteTwoTone className="text-red-500 " />
+                                </IconButton>
+                            </MouseOverPopover>
+                        </PopConfirm>
+                    </div>
+                ))}
+                <Button onClick={handleAddValueName} variant="outline" className="size-12 !rounded-full">
+                    <Add />
                 </Button>
-                <Button onClick={handleSave} variant="contained">
+            </div>
+            <div className="flex justify-end">
+                <Button onClick={handleSave} variant="fill" className="w-40">
                     Lưu
                 </Button>
             </div>

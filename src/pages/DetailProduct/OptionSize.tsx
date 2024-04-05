@@ -59,7 +59,14 @@ const OptionColor = (props: Iprops) => {
 
     return (
         <div className="border-2 px-5 py-6 rounded-md shadow space-y-5">
-            <TextField label="Tên biến thể" fullWidth value={nameTitle} onChange={handleChangeName} />
+            <TextField
+                label="Tên biến thể"
+                fullWidth
+                value={nameTitle}
+                onChange={handleChangeName}
+                inputProps={{ readOnly: true }}
+                variant="filled"
+            />
             <div className="font-semibold">Tùy chọn</div>
             <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5">
                 {valueName.map((_, index) => (

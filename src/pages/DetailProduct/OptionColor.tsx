@@ -131,7 +131,14 @@ const OptionColor = (props: Iprops) => {
         <div className="border-2 px-5 py-6 rounded-md shadow space-y-5">
             <SnackBarLoading open={loadingUpdateImage} content={'Đang cập nhật tùy chọn'} />
 
-            <TextField label="Tên biến thể" fullWidth value={nameTitle} onChange={handleChangeName} />
+            <TextField
+                label="Tên biến thể"
+                fullWidth
+                value={nameTitle}
+                onChange={handleChangeName}
+                inputProps={{ readOnly: true }}
+                variant="filled"
+            />
             <div className="font-semibold">Tùy chọn</div>
             <div className="grid lg:grid-cols-2 items-center  gap-5">
                 {valueName.map((item, index) => (
@@ -149,7 +156,7 @@ const OptionColor = (props: Iprops) => {
                                         ? URL.createObjectURL(item.imageUrl)
                                         : item.imageUrl
                                 }
-                                alt="hình ảnh chưa có"
+                                alt="hình chưa có"
                                 className="h-16 w-24 object-cover object-center"
                             />
                             <div

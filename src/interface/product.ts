@@ -15,14 +15,14 @@ export default interface IProduct {
     id: number;
     name: string;
     description: string;
-    price: number | string;
+    price: number;
     quantity: number;
     quantityAvailable?: number;
     category: ICategoryName;
     categoryId?: number;
     categoryName?: string;
     slug?: string;
-    promotionalPrice?: number | string;
+    promotionalPrice?: number;
     sold?: number;
     rating?: number;
     numberOfRatings?: number;

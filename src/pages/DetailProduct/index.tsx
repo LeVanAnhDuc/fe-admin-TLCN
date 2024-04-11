@@ -199,7 +199,7 @@ const DetailProduct = () => {
             return;
         }
 
-        if (!data.description) {
+        if (!description) {
             toast.error('Mô tả sản phẩm hiện đang trống');
             return;
         }

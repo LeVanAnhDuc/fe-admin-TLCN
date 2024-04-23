@@ -1,43 +1,31 @@
 import { BarChart } from '@mui/x-charts/BarChart';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { getTotalPriceSoldByYear } from '../../apis/statisticApi';
 import { IStaticMonth } from '../../interface/statistic';
-const xLabels = [
-    'Tháng 1',
-    'Tháng 2',
-    'Tháng 3',
-    'Tháng 4',
-    'Tháng 5',
-    'Tháng 6',
-    'Tháng 7',
-    'Tháng 8',
-    'Tháng 9',
-    'Tháng 10',
-    'Tháng 11',
-    'Tháng 12',
-];
+
+const xLabels = ['T 1', 'T 2', 'T 3', 'T 4', 'T 5', 'T 6', 'T 7', 'T 8', 'T 9', 'T 10', 'T 11', 'T 12'];
 
 export default function BarPriceSold() {
-    const [data, setData] = useState<IStaticMonth>({
-        apr: 0,
-        aug: 0,
-        dec: 0,
-        feb: 0,
-        jan: 0,
-        jul: 0,
-        jun: 0,
-        mar: 0,
-        may: 0,
-        nov: 0,
-        oct: 0,
-        sep: 0,
-    });
     const currentYear = new Date().getFullYear();
-    const handleGetDataStatistic = async () => {
+    const totalYearSincePay = currentYear - 2023 + 1;
+
+    const [data, setData] = useState<IStaticMonth>();
+    const [year, setYear] = useState<number>(currentYear);
+
+    const handleChangeYear = (event: SelectChangeEvent) => {
+        setYear(parseInt(event.target.value));
+    };
+
+    const handleGetDataStatistic = async (yearSelect: number) => {
         try {
-            const response = await getTotalPriceSoldByYear(currentYear);
+            const response = await getTotalPriceSoldByYear(yearSelect);
 
             if (response.status === 200) {
                 setData(response.data);
@@ -48,12 +36,35 @@ export default function BarPriceSold() {
             toast.error(`${error}`);
         }
     };
+
     useEffect(() => {
-        handleGetDataStatistic();
-    }, []);
+        handleGetDataStatistic(year);
+    }, [year]);
+
+    if (!data) {
+        return null;
+    }
 
     return (
         <>
+            <div className="w-full flex flex-wrap justify-between items-center gap-5 mb-4">
+                <div className="font-bold">Biểu đồ phân tích doanh thu trong năm {year}</div>
+                <FormControl className="w-32">
+                    <InputLabel>Năm</InputLabel>
+                    <Select className="text-center" value={year.toString()} label="Năm" onChange={handleChangeYear}>
+                        {Array(totalYearSincePay)
+                            .fill(null)
+                            .map((_, index) => {
+                                const year = currentYear - index;
+                                return (
+                                    <MenuItem value={year} key={index}>
+                                        {year}
+                                    </MenuItem>
+                                );
+                            })}
+                    </Select>
+                </FormControl>
+            </div>
             <BarChart
                 xAxis={[{ scaleType: 'band', data: xLabels }]}
                 series={[
@@ -78,9 +89,6 @@ export default function BarPriceSold() {
                 height={400}
                 margin={{ top: 50, right: 30, bottom: 30, left: 120 }}
             />
-            <div className="w-full text-center font-semibold text-lg">
-                Biểu Đồ Phân Tích Doanh Thu Trong Năm {currentYear}
-            </div>
         </>
     );
 }

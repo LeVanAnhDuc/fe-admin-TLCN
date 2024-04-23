@@ -11,9 +11,9 @@ export const getCountStatistic = async () => {
     }
 };
 
-export const getRegisterCompleteStatisticByYear = async () => {
+export const getRegisterCompleteStatisticByYear = async (year: number) => {
     try {
-        const response = await axios.get(`/statistic/account/yearly`);
+        const response = await axios.get(`/statistic/account/yearly?year=${year}`);
 
         return response;
     } catch (error) {
@@ -21,9 +21,9 @@ export const getRegisterCompleteStatisticByYear = async () => {
     }
 };
 
-export const getOrderCompleteStatisticByYear = async () => {
+export const getOrderCompleteStatisticByYear = async (year: number) => {
     try {
-        const response = await axios.get(`/statistic/order_complete/yearly`);
+        const response = await axios.get(`/statistic/order_complete/yearly?year=${year}`);
 
         return response;
     } catch (error) {
@@ -31,9 +31,9 @@ export const getOrderCompleteStatisticByYear = async () => {
     }
 };
 
-export const getOrderStatisticByYear = async () => {
+export const getOrderStatisticByDaily = async (date: string) => {
     try {
-        const response = await axios.get(`/statistic/order/yearly`);
+        const response = await axios.get(`/statistic/order/daily?date=${date}`);
 
         return response;
     } catch (error) {
@@ -51,9 +51,9 @@ export const getOrderStatisticByMonth = async (month: number, year: number) => {
     }
 };
 
-export const getOrderStatisticByDay = async (date: string) => {
+export const getOrderStatisticByYear = async (year: number) => {
     try {
-        const response = await axios.get(`/statistic/order/daily?date=${date}`);
+        const response = await axios.get(`/statistic/order/yearly?year=${year}`);
 
         return response;
     } catch (error) {

@@ -9,3 +9,10 @@ export const convertNumberToVND = (textToConvert?: number | string) => {
         return 0;
     }
 };
+
+export const convertNumberToTwoChar = (textToConvert: number) => {
+    if (textToConvert < 10) {
+        return `0${textToConvert}`;
+    }
+    return textToConvert;
+};

@@ -1,4 +1,8 @@
 import { BarChart } from '@mui/x-charts/BarChart';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
 
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -9,12 +13,19 @@ import { getOrderCompleteStatisticByYear } from '../../apis/statisticApi';
 const xLabels = ['T 1', 'T 2', 'T 3', 'T 4', 'T 5', 'T 6', 'T 7', 'T 8', 'T 9', 'T 10', 'T 11', 'T 12'];
 
 export default function Bar() {
-    const [data, setData] = useState<IStaticMonth>();
     const currentYear = new Date().getFullYear();
+    const totalYearSincePay = currentYear - 2023 + 1;
 
-    const handleGetDataStatistic = async () => {
+    const [data, setData] = useState<IStaticMonth>();
+    const [year, setYear] = useState<number>(currentYear);
+
+    const handleChangeYear = (event: SelectChangeEvent) => {
+        setYear(parseInt(event.target.value));
+    };
+
+    const handleGetDataStatistic = async (yearSelect: number) => {
         try {
-            const response = await getOrderCompleteStatisticByYear();
+            const response = await getOrderCompleteStatisticByYear(yearSelect);
 
             if (response.status === 200) {
                 setData(response.data);
@@ -26,14 +37,32 @@ export default function Bar() {
         }
     };
     useEffect(() => {
-        handleGetDataStatistic();
-    }, []);
+        handleGetDataStatistic(year);
+    }, [year]);
 
     if (!data) {
         return null;
     }
     return (
         <>
+            <div className="w-full flex flex-wrap justify-between items-center gap-5">
+                <div className="font-bold">Biểu đồ thống kê số đơn hàng hoàn thành trong năm {year}</div>
+                <FormControl className="w-32">
+                    <InputLabel>Năm</InputLabel>
+                    <Select className="text-center" value={year.toString()} label="Năm" onChange={handleChangeYear}>
+                        {Array(totalYearSincePay)
+                            .fill(null)
+                            .map((_, index) => {
+                                const year = currentYear - index;
+                                return (
+                                    <MenuItem value={year} key={index}>
+                                        {year}
+                                    </MenuItem>
+                                );
+                            })}
+                    </Select>
+                </FormControl>
+            </div>
             <BarChart
                 xAxis={[{ scaleType: 'band', data: xLabels }]}
                 series={[
@@ -57,9 +86,6 @@ export default function Bar() {
                 ]}
                 height={300}
             />
-            <div className="w-full text-center font-semibold text-lg">
-                Biểu Đồ Thống Kê Số Đơn Hàng Hoàn Thành Trong Năm {currentYear}
-            </div>
         </>
     );
 }

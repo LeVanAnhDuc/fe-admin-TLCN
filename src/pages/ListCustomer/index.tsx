@@ -23,6 +23,7 @@ import IUser from '../../interface/user';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import Error404 from '../Error404';
 import Skeleton from '../../components/Skeleton';
+import PopConfirm from '../../components/PopComfirm';
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -38,6 +39,7 @@ const ListCustomer = () => {
     const itemsPerPage = 20;
 
     const [loadingAPI, setLoadingAPI] = useState<boolean>(false);
+    const [firstLoadingAPIGet, setFirstLoadingAPIGet] = useState<boolean>(true);
     const [errorAPI, setErrorAPI] = useState<boolean>(false);
     const [customers, setCustomers] = useState<Array<IUser>>([]);
     const [page, setPage] = useState(1);
@@ -46,11 +48,17 @@ const ListCustomer = () => {
 
     const getCustomers = async () => {
         try {
-            setLoadingAPI(true);
-            const response = await getAllUserWithinPaginationSearch(page, itemsPerPage, search);
-            setLoadingAPI(false);
+            firstLoadingAPIGet && setLoadingAPI(true);
+
+            const [response] = await Promise.all([
+                getAllUserWithinPaginationSearch(page, itemsPerPage, search),
+                firstLoadingAPIGet && new Promise((resolve) => setTimeout(resolve, 250)),
+            ]);
+
+            firstLoadingAPIGet && setLoadingAPI(false);
 
             if (response.status === 200) {
+                setFirstLoadingAPIGet(false);
                 const { content, totalPages } = response.data;
 
                 setCustomers(content);
@@ -203,17 +211,29 @@ const ListCustomer = () => {
                                               </div>
                                           </TableCell>
                                           <TableCell align="center">
-                                              <IconButton onClick={() => handleLockAccount(item.id)}>
-                                                  <MouseOverPopover
-                                                      content={item.locked ? 'Mở khóa tài khoản' : 'Khóa tài khoản'}
-                                                  >
-                                                      {item.locked ? (
-                                                          <LockTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
-                                                      ) : (
-                                                          <LockOpenTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
-                                                      )}
-                                                  </MouseOverPopover>
-                                              </IconButton>
+                                              <PopConfirm
+                                                  content={
+                                                      item.locked
+                                                          ? `Mở khóa tài khoản ${item.username}`
+                                                          : `Khóa tài khoản ${item.username}`
+                                                  }
+                                                  title={item.locked ? 'Mở khóa tài khoản' : 'Khóa tài khoản'}
+                                                  onConfirm={() => handleLockAccount(item.id)}
+                                              >
+                                                  <IconButton>
+                                                      <MouseOverPopover
+                                                          content={item.locked ? 'Mở khóa tài khoản' : 'Khóa tài khoản'}
+                                                      >
+                                                          {item.locked ? (
+                                                              <LockTwoTone sx={{ color: '#E74646', fontSize: 26 }} />
+                                                          ) : (
+                                                              <LockOpenTwoTone
+                                                                  sx={{ color: '#E74646', fontSize: 26 }}
+                                                              />
+                                                          )}
+                                                      </MouseOverPopover>
+                                                  </IconButton>
+                                              </PopConfirm>
                                           </TableCell>
                                       </TableRowCustom>
                                   ))}

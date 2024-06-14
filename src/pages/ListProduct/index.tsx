@@ -33,7 +33,7 @@ import Search from '../../components/Search/Search';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import ModalQuantity from './ModalQuantity';
 import ICategory from '../../interface/category';
-import { getAllCategory } from '../../apis/categoryApi';
+import { getAllCategory, getAllCategoryWithinPaginationSearch } from '../../apis/categoryApi';
 import { convertNumberToVND } from '../../utils/convertData';
 import Button from '../../components/Button';
 import Error404 from '../Error404';
@@ -51,7 +51,7 @@ const TableRowCustom = styled(TableRow)(({ theme }) => ({
 
 const ListProduct = () => {
     const navigate = useNavigate();
-    const itemsPerPage = 20;
+    const itemsPerPage = 24;
 
     const [categories, setCategories] = useState<Array<ICategory>>([]);
     const [errorAPI, setErrorAPI] = useState<boolean>(false);
@@ -150,7 +150,7 @@ const ListProduct = () => {
     useEffect(() => {
         const handleGetListCate = async () => {
             try {
-                const res = await getAllCategory();
+                const res = await getAllCategoryWithinPaginationSearch(1, 30, "name:asc", );
                 if (res.status === 200) {
                     setCategories(res.data.content);
                 }
@@ -174,23 +174,23 @@ const ListProduct = () => {
                 getAllProducts={getAllProducts}
             />
 
-            <section className="space-y-5">
+            <section className="space-y-2">
                 <div className="flex justify-between items-center">
                     <div className="text-lg font-semibold flex items-center">Danh sách sản phẩm</div>
                     <Link to={config.Routes.addProduct}>
-                        <Button variant="fill">Thêm mới</Button>
+                        <Button className='h-10 rounded-sm p-1 bg-blue-400'>Thêm sản phẩm</Button>
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 bg-white p-4 rounded-lg">
-                    <div className="col-span-2">
+                <div className="grid grid-cols-3 lg:grid-cols-12 gap-3 bg-white p-2 rounded-lg">
+                    <div className="col-span-3">
                         <Search setSearch={setSearch} placeHolder="Tìm theo theo tên sản phẩm" />
                     </div>
 
-                    <FormControl className="col-span-2 sm:col-span-1">
+                    <FormControl className="col-span-2 sm:col-span-1.5">
                         <InputLabel>Lọc theo danh mục</InputLabel>
                         <Select value={cate} label="Lọc theo danh mục" onChange={handleFilterCategory} defaultValue="">
-                            <MenuItem value={''}>Tắt lọc</MenuItem>
+                            <MenuItem value={''}>Không lọc</MenuItem>
                             {categories.map((item, index) => (
                                 <MenuItem key={index} value={item.name}>
                                     {item.name}
@@ -202,25 +202,21 @@ const ListProduct = () => {
                     <FormControl className="col-span-2 sm:col-span-1">
                         <InputLabel>Sắp xếp</InputLabel>
                         <Select value={sortBy} label="Sắp xếp" onChange={handleFilterSortBy}>
-                            <MenuItem value={''}>Tắt sắp xếp</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.priceAsc}>Giá tăng dần</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.priceDesc}>Giá giảm dần</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.idAsc}>Ngày tạo cũ nhất</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.idDesc}>Ngày tạo mới nhất</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.soldAsc}>Số lượng đã bán tăng dần</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.soldDesc}>Số lượng đã bán giảm dần</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.availableAsc}>
-                                Số lượng có sẵn tăng dần
-                            </MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.availableDesc}>
-                                Số lượng có sẵn giảm dần
-                            </MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.reviewAsc}>Số lượt đánh giá tăng dần</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.reviewDesc}>Số lượt đánh giá giảm dần</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.favoriteAsc}>Số yêu thích tăng dần</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.favoriteDesc}>Số yêu thích giảm dần</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.ratingAsc}>Số sao tăng dần</MenuItem>
-                            <MenuItem value={config.SearchFilterProduct.ratingDesc}>Số sao giảm dần</MenuItem>
+                            <MenuItem value={''}>Không sắp xếp</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.idAsc}>Cũ nhất</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.idDesc}>Mới nhất</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.priceAsc}>Giá ↑</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.priceDesc}>Giá ↓</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.ratingAsc}>Số sao ↑</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.ratingDesc}>Số sao ↓</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.soldAsc}> Số lượng đã bán ↑</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.soldDesc}>Số lượng đã bán ↓</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.availableAsc}>Số lượng có sẵn ↑</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.availableDesc}>Số lượng có sẵn ↓</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.reviewAsc}>Lượt đánh giá ↑</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.reviewDesc}>Lượt đánh giá ↓</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.favoriteAsc}>Lượt yêu thích ↑</MenuItem>
+                            <MenuItem value={config.SearchFilterProduct.favoriteDesc}>Lượt yêu thích ↓</MenuItem>
                         </Select>
                     </FormControl>
                 </div>
@@ -230,9 +226,7 @@ const ListProduct = () => {
                         <Table>
                             <TableHead className="!bg-primary-200">
                                 <TableRow>
-                                    <TableCell align="center" className="!font-bold">
-                                        ID
-                                    </TableCell>
+                                    <TableCell align="center" className="!font-bold">ID</TableCell>
                                     <TableCell className="!font-bold"></TableCell>
                                     <TableCell className="!font-bold">Tên sản phẩm</TableCell>
                                     <TableCell className="!font-bold">Đã bán</TableCell>
@@ -271,7 +265,7 @@ const ListProduct = () => {
                                                   className="cursor-pointer"
                                                   onClick={() => handleNavigateDetailProduct(item)}
                                               >
-                                                  <Avatar
+                                                  <Avatar 
                                                       variant="rounded"
                                                       src={item.listImages[0]}
                                                       alt="Sản phẩm"
@@ -303,36 +297,39 @@ const ListProduct = () => {
                                                   {convertNumberToVND(item.price)}
                                               </TableCell>
 
-                                              <TableCell align="center" className="min-w-40">
+                                              <TableCell align="center" className="min-w-30">
                                                   <IconButton onClick={() => handleAddQuantityProduct(item.id)}>
-                                                      <MouseOverPopover content="Nhập thêm hàng">
+                                                      {/* <MouseOverPopover content="Nhập thêm hàng">
                                                           <AddCircle className="text-blue-400" />
-                                                      </MouseOverPopover>
-                                                  </IconButton>
-                                                  <IconButton onClick={() => handleToggleSellProduct(item.id)}>
-                                                      {item.isSelling ? (
-                                                          <MouseOverPopover content="Không đăng bán">
-                                                              <Visibility className="text-gray-500" />
-                                                          </MouseOverPopover>
-                                                      ) : (
-                                                          <MouseOverPopover content="Đăng bán ngay">
-                                                              <VisibilityOff className="text-gray-500" />
-                                                          </MouseOverPopover>
-                                                      )}
+                                                      </MouseOverPopover> */}
+                                                      <Button className='text-sm scale-40 h-7 w-29 px-1 rounded-sm ' variant='outline'>Nhập thêm hàng</Button>
                                                   </IconButton>
                                                   <div className="inline-block">
                                                       <PopConfirm
-                                                          content="Nếu xóa dữ liệu sẽ mất đi và không thể hoàn lại"
-                                                          title="Xóa sản phẩm"
+                                                          title="Xác nhận xóa sản phẩm?"
                                                           onConfirm={() => handleDeleteProduct(item.id)}
                                                       >
-                                                          <MouseOverPopover content="Xóa sản phẩm">
+                                                        <Button className='text-sm scale-40 h-7 w-10 px-1 rounded-sm' variant="outline">Xóa</Button>
+                                                          {/* <MouseOverPopover content="Xóa sản phẩm">
                                                               <IconButton>
                                                                   <DeleteTwoTone className="text-red-500" />
                                                               </IconButton>
-                                                          </MouseOverPopover>
+                                                          </MouseOverPopover> */}
                                                       </PopConfirm>
                                                   </div>
+                                                  <IconButton onClick={() => handleToggleSellProduct(item.id)}>
+                                                      {item.isSelling ? (
+                                                        //   <MouseOverPopover content="Không đăng bán">
+                                                        //       <Visibility className="text-gray-500" />
+                                                        //   </MouseOverPopover>
+                                                          <Button className='text-sm scale-40 h-7 w-29 px-1 rounded-sm bg-gray-400 text-while-500'>Dừng đăng bán</Button>
+                                                      ) : (
+                                                        //   <MouseOverPopover content="Đăng bán ngay">
+                                                        //       <VisibilityOff className="text-gray-500" />
+                                                        //   </MouseOverPopover>
+                                                          <Button className='text-sm scale-40 h-7 w-29 px-1 rounded-sm bg-blue-400' >Đăng bán ngay</Button>
+                                                      )}
+                                                  </IconButton>
                                               </TableCell>
                                           </TableRowCustom>
                                       ))}

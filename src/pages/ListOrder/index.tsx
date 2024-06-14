@@ -28,6 +28,7 @@ import Error404 from '../Error404';
 import Skeleton from '../../components/Skeleton';
 import SidebarFilterStatus from './SidebarFilterStatus';
 import PopConfirm from '../../components/PopComfirm';
+import Button from '@mui/material/Button';
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -123,12 +124,10 @@ const ListOrder = () => {
                         <InputLabel>Sắp xếp</InputLabel>
                         <Select value={sortBy} label="Sắp xếp" onChange={handleChangeSortBy}>
                             <MenuItem value={''}>Không lọc</MenuItem>
-                            <MenuItem value={config.SearchFilterOrder.dateAsc}>Thời gian đặt hàng cũ nhất</MenuItem>
-                            <MenuItem value={config.SearchFilterOrder.dateDesc}>Thời gian đặt hàng mới nhất</MenuItem>
-                            <MenuItem value={config.SearchFilterOrder.idAsc}>Mã hóa đơn cũ nhất</MenuItem>
-                            <MenuItem value={config.SearchFilterOrder.idDesc}>Mã hóa đơn mới nhất</MenuItem>
-                            <MenuItem value={config.SearchFilterOrder.totalAsc}>Tổng tiền tăng dần</MenuItem>
-                            <MenuItem value={config.SearchFilterOrder.totalDesc}>Tổng tiền giảm dần</MenuItem>
+                            <MenuItem value={config.SearchFilterOrder.dateAsc}>Cũ nhất</MenuItem>
+                            <MenuItem value={config.SearchFilterOrder.dateDesc}>Mới nhất</MenuItem>
+                            <MenuItem value={config.SearchFilterOrder.totalAsc}>Tổng giá tiền ↑</MenuItem>
+                            <MenuItem value={config.SearchFilterOrder.totalDesc}>Tổng giá tiền ↓</MenuItem>
                         </Select>
                     </FormControl>
                 </div>
@@ -240,15 +239,17 @@ const ListOrder = () => {
 
                                           <TableCell align="center">
                                               <PopConfirm
-                                                  content="Nếu xóa dữ liệu sẽ mất đi và không thể hoàn lại"
-                                                  title="Xóa đơn hàng"
+                                                  content=""
+                                                  title="Xác nhận xóa đơn hàng?"
                                                   onConfirm={() => handleDeleteOrder(item.id)}
                                               >
-                                                  <MouseOverPopover content="Xóa đơn hàng">
+                                                  {/* <MouseOverPopover content="Xóa đơn hàng">
                                                       <IconButton>
                                                           <DeleteTwoTone className="text-red-500" />
                                                       </IconButton>
-                                                  </MouseOverPopover>
+                                                  </MouseOverPopover> */}
+                                                  <Button className='text-sm scale-40 h-6 w-10 px-1 rounded-sm text-red-500 text-lowercase ' variant='outlined'>Xóa</Button>
+                                                
                                               </PopConfirm>
                                           </TableCell>
                                       </TableRowCustom>

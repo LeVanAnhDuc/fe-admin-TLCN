@@ -137,7 +137,7 @@ const DetailProduct = () => {
             const response = await uploadProductImages(idProduct, formData);
 
             if (response.status === 200) {
-                toast.success('Cập thành công');
+                toast.success('Cập nhật thành công');
             } else {
                 toast.error(response.data.message || response.data);
             }
@@ -248,7 +248,7 @@ const DetailProduct = () => {
     }
 
     return (
-        <section className="space-y-5">
+        <section className="space-y-2">
             <SnackBarLoading open={isLoadingUpdate} content={'Đang cập nhật sản phẩm'} />
 
             <div className="flex flex-wrap justify-between items-center gap-5">
@@ -268,7 +268,7 @@ const DetailProduct = () => {
                 </Link>
             </div>
 
-            <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
+            <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
                 <div className="space-y-5 bg-white p-4 rounded-lg">
                     <div className="font-semibold text-lg">Thông tin sản phẩm</div>
 
@@ -287,9 +287,8 @@ const DetailProduct = () => {
                             )}
                         />
                         <p
-                            className={`${
-                                errors.name ? 'block' : 'hidden'
-                            } text-red-600 text-sm py-1  dark:text-red-500`}
+                            className={`${errors.name ? 'block' : 'hidden'
+                                } text-red-600 text-sm py-1  dark:text-red-500`}
                         >
                             {errors.name?.message}
                         </p>
@@ -318,9 +317,8 @@ const DetailProduct = () => {
                                 )}
                             />
                             <p
-                                className={`${
-                                    errors.categoryName ? 'block' : 'hidden'
-                                }text-red-600 text-sm py-1  dark:text-red-500`}
+                                className={`${errors.categoryName ? 'block' : 'hidden'
+                                    }text-red-600 text-sm py-1  dark:text-red-500`}
                             >
                                 {errors.categoryName?.message}
                             </p>
@@ -401,9 +399,8 @@ const DetailProduct = () => {
                                     )}
                                 />
                                 <p
-                                    className={`${
-                                        errors.price ? 'block' : 'hidden'
-                                    } text-red-600 text-sm py-1 dark:text-red-500`}
+                                    className={`${errors.price ? 'block' : 'hidden'
+                                        } text-red-600 text-sm py-1 dark:text-red-500`}
                                 >
                                     {errors.price?.message}
                                 </p>
@@ -515,6 +512,7 @@ const DetailProduct = () => {
                                     <TableCell align="center">STT</TableCell>
                                     <TableCell align="center">Kích thước</TableCell>
                                     <TableCell align="center">Màu</TableCell>
+                                    <TableCell align="center">Phân loại (sku)</TableCell>
                                     <TableCell align="center">Giá nhập (VNĐ)</TableCell>
                                     <TableCell align="left">Giá hiện thị</TableCell>
                                 </TableRow>
@@ -528,6 +526,11 @@ const DetailProduct = () => {
                                                 {item2.valueName}
                                             </TableCell>
                                         ))}
+                                        <TableCell align="center">
+                                            {item.optionValues.slice(0, 2).map((item2, index2) => (
+                                                <span key={index2}>{item2.valueName}{(index2 === 0) ? ' - ' : ''}</span>
+                                            ))}
+                                        </TableCell>
                                         <TableCell align="center">
                                             <input
                                                 className="w-32 h-8 p-2 rounded-lg border-2 focus:border-primary-100"
@@ -544,14 +547,14 @@ const DetailProduct = () => {
                     </TableContainer>
                 </Paper>
 
-                <div className="flex justify-end gap-5">
+                <div className="flex justify-center gap-5 py-10">
                     <Link to={config.Routes.listProduct}>
-                        <Button className="w-60" variant="outline">
+                        <Button className="w-30" variant="outline">
                             Hủy
                         </Button>
                     </Link>
-                    <Button className="w-60" type="submit" variant="fill">
-                        Lưu
+                    <Button className="w-40" type="submit" variant="fill">
+                        Lưu sản phẩm
                     </Button>
                 </div>
             </form>

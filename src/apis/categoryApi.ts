@@ -5,7 +5,7 @@ import axios from './axiosConfig.js';
 export const getAllCategoryWithinPaginationSearch = async (
     pageNo: number,
     pageSize: number,
-    sort: string = 'id:desc',
+    sort: string,
     key?: string,
 ) => {
     try {

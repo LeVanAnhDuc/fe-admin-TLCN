@@ -65,6 +65,14 @@ export default function Bar() {
             </div>
             <BarChart
                 xAxis={[{ scaleType: 'band', data: xLabels }]}
+                yAxis={[
+                    {
+                        valueFormatter: (value) => {
+                            const absValue = Math.floor(value);
+                            return absValue === value ? absValue.toString() : '';
+                        },
+                    },
+                ]}
                 series={[
                     {
                         data: [

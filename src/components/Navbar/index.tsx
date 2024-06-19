@@ -71,14 +71,14 @@ const Navbar = () => {
                             {({ isActive }) => (
                                 <div
                                     className={`${
-                                        isActive ? 'bg-gray-100 shadow' : ' hover:bg-white/20 z-10 transition'
+                                        isActive ? 'bg-[#f7f5fd] shadow' : ' hover:bg-[#f7f5fd]/20 z-10 transition'
                                     } flex items-center gap-5 p-4 rounded-l-3xl  relative`}
                                 >
                                     {isActive && (
                                         <div className="absolute -top-6 right-0 h-6 w-6 rounded-br-full bg-primary-200 shadow-gray-100 shadow-button-sidebar-t"></div>
                                     )}
                                     {item.icon}
-                                    <div className="font-semibold  hidden group-hover:block truncate">{item.title}</div>
+                                    <div className="font-bold  hidden group-hover:block truncate">{item.title}</div>
                                     {isActive && (
                                         <div className="absolute -bottom-6 right-0 h-6 w-6 rounded-tr-full bg-primary-200 shadow-gray-100 shadow-button-sidebar-b"></div>
                                     )}

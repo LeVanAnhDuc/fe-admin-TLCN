@@ -84,6 +84,8 @@ const DetailProduct = () => {
                     await setValue('category', product.category);
                     await setValue('name', product.name);
                     await setValue('quantity', product.quantity);
+                    await setValue('originalPrice', product.originalPrice);
+                    await setValue('percentDiscount', product.percentDiscount);
                     await setValue('price', product.price);
                     await setValue('promotionalPrice', product.promotionalPrice);
                     await setValue('sold', product.sold);
@@ -293,8 +295,8 @@ const DetailProduct = () => {
                             {errors.name?.message}
                         </p>
                     </div>
-                    <div className="grid  lg:grid-cols-5 gap-4">
-                        <div className="col-span-1 lg:col-span-2">
+                    <div className="grid lg:grid-cols-6 gap-4">
+                        <div className="col-span-1 lg:col-span-1">
                             <Controller
                                 name="categoryName"
                                 control={control}
@@ -324,7 +326,7 @@ const DetailProduct = () => {
                             </p>
                         </div>
 
-                        <div className="col-span-1 lg:col-span-3 grid md:grid-cols-3 gap-4">
+                        <div className="col-span-1 lg:col-span-5 grid md:grid-cols-5 gap-4">
                             <Controller
                                 name="quantity"
                                 control={control}
@@ -374,56 +376,10 @@ const DetailProduct = () => {
                                         InputProps={{
                                             readOnly: true,
                                         }}
-                                        label="Sản phẩm đã bán"
+                                        label="Đã bán"
                                     />
                                 )}
                             />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div className="col-span-1 grid md:grid-cols-2 gap-4">
-                            <div>
-                                <Controller
-                                    name="price"
-                                    control={control}
-                                    defaultValue={0}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            error={errors.price ? true : false}
-                                            fullWidth
-                                            required
-                                            type="number"
-                                            label="Giá bán (VNĐ)"
-                                        />
-                                    )}
-                                />
-                                <p
-                                    className={`${errors.price ? 'block' : 'hidden'
-                                        } text-red-600 text-sm py-1 dark:text-red-500`}
-                                >
-                                    {errors.price?.message}
-                                </p>
-                            </div>
-                            <Controller
-                                name="promotionalPrice"
-                                control={control}
-                                defaultValue={undefined}
-                                render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        variant="filled"
-                                        error={errors.promotionalPrice ? true : false}
-                                        fullWidth
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                        label="Giá khuyến mại (VNĐ)"
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="col-span-1 grid md:grid-cols-2 gap-4">
                             <Controller
                                 name="createdDate"
                                 control={control}
@@ -460,10 +416,69 @@ const DetailProduct = () => {
                             />
                         </div>
                     </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div className="col-span-1 grid md:grid-cols-3 gap-4 lg:col-span-3">
+                                <Controller
+                                    name="originalPrice"
+                                    control={control}
+                                    defaultValue={0}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            error={errors.originalPrice ? true : false}
+                                            fullWidth
+                                            required
+                                            type="number"
+                                            label="Giá gốc (VNĐ)"
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    name="price"
+                                    control={control}
+                                    defaultValue={0}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            error={errors.price ? true : false}
+                                            fullWidth
+                                            required
+                                            type="number"
+                                            label="Giá bán (VNĐ)"
+                                        />
+                                    )}
+                                />
+                                <p
+                                    className={`${errors.price ? 'block' : 'hidden'
+                                        } text-red-600 text-sm py-1 dark:text-red-500`}
+                                >
+                                    {errors.price?.message}
+                                </p>
+                    
+                            <Controller
+                                name="promotionalPrice"
+                                control={control}
+                                defaultValue={undefined}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        variant="filled"
+                                        error={errors.promotionalPrice ? true : false}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        label="Giá khuyến mại (VNĐ)"
+                                    />
+                                )}
+                            />
+                        </div>
+
+                    </div>
                 </div>
 
                 <div className="space-y-5 bg-white p-4 rounded-lg">
-                    <div className="font-semibold text-lg">Danh sách ảnh sản phẩm</div>
+                    <div className="font-semibold text-lg">Danh sách ảnh</div>
                     <div className="flex flex-wrap items-center gap-3">
                         {imagesDisplay.map((item, index) => (
                             <React.Fragment key={index}>
@@ -509,29 +524,29 @@ const DetailProduct = () => {
                         <Table>
                             <TableHead className="!bg-primary-200">
                                 <TableRow>
-                                    <TableCell align="center">STT</TableCell>
-                                    <TableCell align="center">Kích thước</TableCell>
-                                    <TableCell align="center">Màu</TableCell>
-                                    <TableCell align="center">Phân loại (sku)</TableCell>
-                                    <TableCell align="center">Giá nhập (VNĐ)</TableCell>
+                                    {/* <TableCell align="left"></TableCell> */}
+                                    <TableCell align="left">Kích thước</TableCell>
+                                    <TableCell align="left">Màu</TableCell>
+                                    <TableCell align="left">Phân loại (sku)</TableCell>
+                                    <TableCell align="left">Giá bán lẻ (đ)</TableCell>
                                     <TableCell align="left">Giá hiện thị</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {Sku.map((item, index) => (
                                     <TableRowCustom key={index} className="hover:!bg-primary-50">
-                                        <TableCell align="center">{index}</TableCell>
+                                        {/* <TableCell className='w-8 lg:w-16' align="center">{index+1}</TableCell> */}
                                         {item.optionValues.map((item2, index2) => (
-                                            <TableCell key={index2} align="center">
+                                            <TableCell key={index2} className='w-32' align="left">
                                                 {item2.valueName}
                                             </TableCell>
                                         ))}
-                                        <TableCell align="center">
+                                        <TableCell align="left" className='w-32 lg:w-48'>
                                             {item.optionValues.slice(0, 2).map((item2, index2) => (
                                                 <span key={index2}>{item2.valueName}{(index2 === 0) ? ' - ' : ''}</span>
                                             ))}
                                         </TableCell>
-                                        <TableCell align="center">
+                                        <TableCell align="left" className='w-32 lg:w-48'>
                                             <input
                                                 className="w-32 h-8 p-2 rounded-lg border-2 focus:border-primary-100"
                                                 type="number"
@@ -539,7 +554,7 @@ const DetailProduct = () => {
                                                 onChange={(e) => handleChangePrice(index, e)}
                                             />
                                         </TableCell>
-                                        <TableCell align="left">{convertNumberToVND(item.price)}</TableCell>
+                                        <TableCell className='w-32' align="left">{convertNumberToVND(item.price)}đ</TableCell>
                                     </TableRowCustom>
                                 ))}
                             </TableBody>
@@ -549,11 +564,11 @@ const DetailProduct = () => {
 
                 <div className="flex justify-center gap-5 py-10">
                     <Link to={config.Routes.listProduct}>
-                        <Button className="w-30" variant="outline">
-                            Hủy
+                        <Button className="w-30 text-black border border-gray-300">
+                            Hủy bỏ
                         </Button>
                     </Link>
-                    <Button className="w-40" type="submit" variant="fill">
+                    <Button className="w-40 text-white bg-[#4a39e6]" type="submit">
                         Lưu sản phẩm
                     </Button>
                 </div>

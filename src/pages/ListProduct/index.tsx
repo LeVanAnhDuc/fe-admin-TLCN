@@ -69,8 +69,6 @@ const ListProduct = () => {
     const [IDProductAddQuantity, setIDProductAddQuantity] = useState<number>(0);
     const [openModal, setOpenModal] = useState(false);
 
-    const itemIdRef = useRef<number | null>(null);
-
     const getAllProducts = async () => {
         try {
             setLoadingAPIGetProducts(true);
@@ -269,7 +267,7 @@ const ListProduct = () => {
                                         <TableRowCustom key={item.id} className="hover:!bg-primary-50">
                                             <TableCell
                                                 align="left"
-                                                className="cursor-pointer h-10 font-semibold text-blue-500"
+                                                className="cursor-pointer h-10 font-semibold text-blue-500 w-10"
                                                 onClick={() => handleNavigateDetailProduct(item)}
                                             >
                                                 <div className="flex items-left justify-left">
@@ -299,7 +297,7 @@ const ListProduct = () => {
                                             </TableCell>
                                             <TableCell
                                                 align="left"
-                                                className="max-w-40 lg:max-w-40 truncate cursor-pointer"
+                                                className="max-w-52 w-30 lg:max-w-40 truncate cursor-pointer"
                                                 onClick={() => handleNavigateDetailProduct(item)}
                                             >
                                                 {item.name}
@@ -329,7 +327,7 @@ const ListProduct = () => {
                                                 {convertNumberToVND(item.price)}đ
                                             </TableCell>
                                             <TableCell
-                                                className="cursor-pointer"
+                                                className="cursor-pointer min-w-24 max-w-34"
                                                 onClick={() => handleNavigateDetailProduct(item)}
                                             >
                                                 <span className="h-6 font-semibold rounded-md inline-flex items-center px-2 mb-1">
@@ -344,7 +342,7 @@ const ListProduct = () => {
                                                     </span>
                                                 </span>
                                             </TableCell>
-                                            <TableCell align="center" className="min-w-32">
+                                            <TableCell align="center" className="w-68 lg:max-w-88">
                                                 <IconButton onClick={() => handleAddQuantityProduct(item.id)}>
                                                     {/* <MouseOverPopover content="Nhập thêm hàng">
                                                           <AddCircle className="text-blue-400" />
@@ -376,7 +374,7 @@ const ListProduct = () => {
                                                         //   <MouseOverPopover content="Đăng bán ngay">
                                                         //       <VisibilityOff className="text-gray-500" />
                                                         //   </MouseOverPopover>
-                                                        <Button className='text-sm font-semibold scale-40 h-7 w-29 px-1 rounded bg-blue-400' >Đăng bán ngay</Button>
+                                                        <Button className='text-sm font-semibold scale-40 h-7 w-29 px-1 rounded bg-blue-400 text-[#5d51a7]' >Đăng bán ngay</Button>
                                                     )}
                                                 </IconButton>
                                             </TableCell>

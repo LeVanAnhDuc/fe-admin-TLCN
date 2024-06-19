@@ -66,6 +66,14 @@ export default function LineProductSold() {
             </div>
             <LineChart
                 xAxis={[{ scaleType: 'point', data: xLabels }]}
+                yAxis={[
+                    {
+                        valueFormatter: (value) => {
+                            const absValue = Math.floor(value);
+                            return absValue === value ? absValue.toString() : '';
+                        },
+                    },
+                ]}
                 series={[
                     {
                         data: [

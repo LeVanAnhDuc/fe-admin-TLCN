@@ -44,7 +44,7 @@ const DetailCustomer = () => {
     }, []);
 
     return (
-        <section className="space-y-5">
+        <section className="space-y-5 mx-28">
             <div className="flex flex-wrap justify-between items-center gap-2">
                 <Breadcrumbs className="!font-medium">
                     <Link
@@ -56,7 +56,7 @@ const DetailCustomer = () => {
                     <div>{idUser}</div>
                 </Breadcrumbs>
                 <Link to={config.Routes.listCustomer}>
-                    <Button variant="fill">Quay lại</Button>
+                    <Button variant="fill" className='h-9'>Quay lại</Button>
                 </Link>
             </div>
 

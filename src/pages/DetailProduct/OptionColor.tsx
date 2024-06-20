@@ -198,7 +198,7 @@ const OptionColor = (props: Iprops) => {
                 </div>
             </div>
             <div className="flex justify-center">
-                <Button onClick={handleSave} className="w-32 text-sm h-9 text-white bg-[#4a39e6]">
+                <Button onClick={handleSave} className="w-32 text-sm h-9 text-white bg-[#493bc0]">
                     Lưu tùy chọn
                 </Button>
             </div>

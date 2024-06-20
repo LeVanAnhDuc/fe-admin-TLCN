@@ -64,7 +64,7 @@ const Navbar = () => {
 
     return (
         <>
-            <div className="group h-screen space-y-6 bg-primary-200 overflow-hidden py-16 w-24 rounded-r-3xl sticky top-0 hover:w-80 transition-all duration-500 ">
+            <div className="group h-screen space-y-6 bg-primary-200 overflow-hidden py-16 w-24 sticky top-0 hover:w-60 transition-all duration-500 ">
                 <div className="pl-4">
                     {LIST_MENU_NAVBAR.map((item, index) => (
                         <NavLink to={item.to} key={index}>
@@ -72,7 +72,7 @@ const Navbar = () => {
                                 <div
                                     className={`${
                                         isActive ? 'bg-[#f7f5fd] shadow' : ' hover:bg-[#f7f5fd]/20 z-10 transition'
-                                    } flex items-center gap-5 p-4 rounded-l-3xl  relative`}
+                                    } flex items-center gap-5 p-4 rounded-l-3xl relative`}
                                 >
                                     {isActive && (
                                         <div className="absolute -top-6 right-0 h-6 w-6 rounded-br-full bg-primary-200 shadow-gray-100 shadow-button-sidebar-t"></div>
@@ -87,7 +87,7 @@ const Navbar = () => {
                         </NavLink>
                     ))}
                 </div>
-                <div className="h-0.5 w-full bg-dark-200"></div>
+                {/* <div className="h-0.5 w-full bg-dark-200"></div> */}
                 <div
                     className="flex items-center gap-5  pl-8 p-4 relative cursor-pointer hover:bg-white/20 transition-all"
                     onClick={handleLogout}

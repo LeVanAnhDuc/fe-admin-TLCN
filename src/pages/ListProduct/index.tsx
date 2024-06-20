@@ -187,9 +187,9 @@ const ListProduct = () => {
 
             <section className="space-y-3">
                 <div className="flex justify-between items-center">
-                    <div className="text-2xl font-bold flex items-center">Quản lý sản phẩm</div>
+                    <div className="text-2xl font-bold flex items-center">Sản phẩm</div>
                     <Link to={config.Routes.addProduct}>
-                        <Button className='h-10 rounded-medium p-1 bg-[#483ae0] text-0.5rem text-white'>Thêm sản phẩm mới</Button>
+                        <Button className='h-10 rounded-medium p-1 text-0.5rem text-white bg-[#493bc0]'>Thêm sản phẩm mới</Button>
                     </Link>
                 </div>
 
@@ -235,9 +235,9 @@ const ListProduct = () => {
                 <Paper>
                     <TableContainer className='rounded-md'>
                         <Table>
-                            <TableHead className="!bg-primary-200">
+                            <TableHead className="">
                                 <TableRow>
-                                    <TableCell align="left" className="!font-bold">ID</TableCell>
+                                    <TableCell align="center" className="!font-bold">ID</TableCell>
                                     <TableCell className="!font-bold w-12 lg:w-12"></TableCell>
                                     <TableCell className="!font-bold">Sản phẩm</TableCell>
                                     <TableCell className="!font-bold">Số lượng</TableCell>
@@ -330,7 +330,7 @@ const ListProduct = () => {
                                                 className="cursor-pointer min-w-24 max-w-34"
                                                 onClick={() => handleNavigateDetailProduct(item)}
                                             >
-                                                <span className="h-6 font-semibold rounded-md inline-flex items-center px-2 mb-1">
+                                                <span className="h-6 font-semibold rounded-md inline-flex items-center mb-1">
                                                     {item.status === 'Đang hoạt động' && (
                                                         <span className="inline-block w-2 h-2 rounded-full bg-[#7fc066] mr-1 -mt-1"></span>
                                                     )}

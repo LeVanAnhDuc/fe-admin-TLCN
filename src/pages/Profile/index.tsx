@@ -18,7 +18,10 @@ import { objectsAreEqual } from '../../utils/checkData';
 import Error404 from '../Error404';
 import Loading from '../../components/Loading';
 
-interface FormData extends Pick<IInfoProfileUser, 'username' | 'name' | 'email' | 'phoneNumber' | 'gender'> {}
+import Image from '../../components/Image';
+
+
+interface FormData extends Pick<IInfoProfileUser, 'username' | 'name' | 'email' | 'phoneNumber' | 'gender' | 'avatarUrl' > { }
 
 const Settings = () => {
     const [firstLoadingAPIGet, setFirstLoadingAPIGet] = useState<boolean>(true);
@@ -74,13 +77,14 @@ const Settings = () => {
                     await setValue('email', response.data.email);
                     await setValue('phoneNumber', response.data.phoneNumber);
                     await setValue('gender', response.data.gender);
+                    await setValue('avatarUrl', response.data.avatarUrl);
                     setInfo({
                         username: response.data.username,
                         name: response.data.name,
                         email: response.data.email,
                         phoneNumber: response.data.phoneNumber,
                         gender: response.data.gender,
-                        avatarUrl: '',
+                        avatarUrl: response.data.avatarUrl
                     });
                 } else {
                     setErrorAPI(true);
@@ -101,7 +105,7 @@ const Settings = () => {
             email: data.email.trim(),
             phoneNumber: data.phoneNumber.trim(),
             gender: data.gender,
-            avatarUrl: '',
+            avatarUrl: data.avatarUrl
         };
         if (info && objectsAreEqual(info, dataProfile)) {
             toast.warning('Thông tin chưa thay đổi');
@@ -130,9 +134,16 @@ const Settings = () => {
                 <Loading />
             ) : (
                 <section className="bg-white p-7 rounded-lg dark:bg-dark-600">
-                    <div className="space-y-5 lg:w-9/12 xl:w-7/12 m-auto">
-                        <div className="font-bold text-xl text-center">Thông tin cá nhân</div>
+                    <div className="space-y-5 lg:w-5/12 xl:w-5/12 m-auto">
+                        {/* <div className="font-bold text-xl text-center">Thông tin cá nhân</div> */}
                         <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+                            <div className='flex justify-center'>
+                                <Image
+                                    src={errors.avatarUrl ? true : false}
+                                    alt="avatar"
+                                    className="size-20 sm:size-40 rounded-full shadow object-cover object-center"
+                                />
+                            </div>
                             <div>
                                 <Controller
                                     name="username"
@@ -166,7 +177,7 @@ const Settings = () => {
                                             {...field}
                                             error={errors.name ? true : false}
                                             fullWidth
-                                            label={'Nhập tên của bạn'}
+                                            label={'Họ và tên'}
                                             autoComplete="name"
                                         />
                                     )}
@@ -185,7 +196,7 @@ const Settings = () => {
                                             {...field}
                                             error={errors.email ? true : false}
                                             fullWidth
-                                            label={'Nhập email'}
+                                            label={'Email'}
                                             autoComplete="email"
                                         />
                                     )}
@@ -201,7 +212,7 @@ const Settings = () => {
                                     defaultValue=""
                                     render={({ field }) => (
                                         <FormControl fullWidth>
-                                            <InputLabel>{'Chọn giới tính'}</InputLabel>
+                                            <InputLabel>{'Giới tính'}</InputLabel>
                                             <Select
                                                 {...field}
                                                 fullWidth
@@ -229,7 +240,7 @@ const Settings = () => {
                                             {...field}
                                             error={errors.phoneNumber ? true : false}
                                             fullWidth
-                                            label={'Nhập số điện thoại'}
+                                            label={'Số điện thoại'}
                                             autoComplete="phone"
                                         />
                                     )}

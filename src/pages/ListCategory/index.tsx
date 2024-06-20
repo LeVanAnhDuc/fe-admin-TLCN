@@ -17,6 +17,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import { styled } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 
 import config from '../../config';
 import ICategory from '../../interface/category';
@@ -39,6 +41,7 @@ const TableRowCustom = styled(TableRow)(({ theme }) => ({
 }));
 
 const ListCategory = () => {
+    const [copySuccess, setCopySuccess] = useState('');
     const navigate = useNavigate();
     const itemsPerPage = 20;
 
@@ -103,6 +106,13 @@ const ListCategory = () => {
         navigate(`${config.Routes.detailCategory}/${categoryDetail.id}`);
     };
 
+    const handleCopy = (item: IProduct, e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        if (item) {
+            navigator.clipboard.writeText(`${item.id}`);
+        }
+    };
+
     useEffect(() => {
         getCategories();
     }, [page, search, sortBy, callAPICategories]);
@@ -120,7 +130,7 @@ const ListCategory = () => {
             />
 
             <div className="flex justify-between items-center">
-                <div className="text-lg font-semibold flex items-center">Danh sách danh mục</div>
+                <div className="text-2xl font-bold flex items-center">Danh mục sản phẩm</div>
                 <Button variant="fill" onClick={handleOpenModal}>
                     Thêm mới
                 </Button>
@@ -134,8 +144,8 @@ const ListCategory = () => {
                         <MenuItem value={''}>Không sắp xếp</MenuItem>
                         <MenuItem value={config.SearchFilterCategory.idAsc}>Ngày tạo cũ nhất</MenuItem>
                         <MenuItem value={config.SearchFilterCategory.idDesc}>Ngày tạo mới nhất</MenuItem>
-                        <MenuItem value={config.SearchFilterCategory.prod_countAsc}>Tổng sản phẩm tăng dần</MenuItem>
-                        <MenuItem value={config.SearchFilterCategory.prod_countDesc}>Tổng sản phẩm giảm dần</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.prod_countAsc}>Tổng sản phẩm ↑</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.prod_countDesc}>Tổng sản phẩm ↓</MenuItem>
                     </Select>
                 </FormControl>
             </div>
@@ -143,7 +153,8 @@ const ListCategory = () => {
             <Paper>
                 <TableContainer>
                     <Table>
-                        <TableHead className="!bg-primary-200 ">
+                        {/* className="!bg-primary-200 " */}
+                        <TableHead>
                             <TableRow>
                                 <TableCell align="center" className="!font-bold">
                                     ID
@@ -151,76 +162,85 @@ const ListCategory = () => {
                                 <TableCell className="!font-bold">Tên danh mục</TableCell>
                                 <TableCell className="!font-bold">Mô tả</TableCell>
                                 <TableCell className="!font-bold">Tổng sản phẩm</TableCell>
-                                <TableCell align="center" className="!font-bold">
-                                    Thao tác
-                                </TableCell>
+                                <TableCell align="left" className="!font-bold">Thao tác</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {loadingAPI
                                 ? Array(10)
-                                      .fill(null)
-                                      .map((_, index) => (
-                                          <TableRowCustom key={index}>
-                                              <TableCell>
-                                                  <Skeleton className="h-12" />
-                                              </TableCell>
-                                              <TableCell>
-                                                  <Skeleton className="h-12" />
-                                              </TableCell>
-                                              <TableCell>
-                                                  <Skeleton className="h-12" />
-                                              </TableCell>
-                                              <TableCell>
-                                                  <Skeleton className="h-12" />
-                                              </TableCell>
-                                              <TableCell>
-                                                  <Skeleton className="h-12" />
-                                              </TableCell>
-                                          </TableRowCustom>
-                                      ))
+                                    .fill(null)
+                                    .map((_, index) => (
+                                        <TableRowCustom key={index}>
+                                            <TableCell>
+                                                <Skeleton className="h-12" />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Skeleton className="h-12" />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Skeleton className="h-12" />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Skeleton className="h-12" />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Skeleton className="h-12" />
+                                            </TableCell>
+                                        </TableRowCustom>
+                                    ))
                                 : categories.map((item) => (
-                                      <TableRowCustom key={item.id} className="hover:!bg-primary-50">
-                                          <TableCell
-                                              align="center"
-                                              className="cursor-pointer"
-                                              onClick={() => handleNavigateDetailCategory(item)}
-                                          >
-                                              #{item.id}
-                                          </TableCell>
-                                          <TableCell
-                                              className="cursor-pointer"
-                                              onClick={() => handleNavigateDetailCategory(item)}
-                                          >
-                                              {item.name}
-                                          </TableCell>
-                                          <TableCell
-                                              className="cursor-pointer max-w-[30rem] truncate"
-                                              onClick={() => handleNavigateDetailCategory(item)}
-                                          >
-                                              {item.description}
-                                          </TableCell>
-                                          <TableCell
-                                              className="cursor-pointer"
-                                              onClick={() => handleNavigateDetailCategory(item)}
-                                          >
-                                              {item.productNumber}
-                                          </TableCell>
-                                          <TableCell align="center">
-                                              <PopConfirm
-                                                  content="Nếu xóa dữ liệu sẽ mất đi và không thể hoàn lại"
-                                                  title="Xóa danh mục"
-                                                  onConfirm={() => handleDeleteItem(item.id)}
-                                              >
-                                                  <MouseOverPopover content="Xóa danh mục">
+                                    <TableRowCustom key={item.id} className="hover:!bg-primary-50">
+                                        <TableCell
+                                            align="center"
+                                            className="cursor-pointer"
+                                            onClick={() => handleNavigateDetailCategory(item)}
+                                        >
+                                            <Tooltip title="Coppy ID">
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={(e) => handleCopy(item, e)}
+                                                >
+                                                    <FileCopyOutlinedIcon fontSize="small" sx={{ width: '16px', height: '16px' }} />
+                                                </IconButton>
+                                            </Tooltip>
+                                            {item.id}
+                                        </TableCell>
+                                        <TableCell
+                                            className="cursor-pointer"
+                                            onClick={() => handleNavigateDetailCategory(item)}
+                                        >
+                                            {item.name}
+                                        </TableCell>
+                                        <TableCell
+                                            className="cursor-pointer max-w-[30rem] truncate"
+                                            onClick={() => handleNavigateDetailCategory(item)}
+                                        >
+                                            {item.description}
+                                        </TableCell>
+                                        <TableCell
+                                            className="cursor-pointer"
+                                            onClick={() => handleNavigateDetailCategory(item)}
+                                        >
+                                            {item.productNumber}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <PopConfirm
+                                                content=""
+                                                title="Xác nhận xóa danh mục?"
+                                                onConfirm={() => handleDeleteItem(item.id)}
+                                            >
+                                                {/* <MouseOverPopover content="Xóa danh mục">
                                                       <IconButton>
                                                           <DeleteTwoTone className="!text-red-500" />
                                                       </IconButton>
-                                                  </MouseOverPopover>
-                                              </PopConfirm>
-                                          </TableCell>
-                                      </TableRowCustom>
-                                  ))}
+                                                  </MouseOverPopover> */}
+
+                                                <Button className='text-sm font-semibold scale-40 h-7 w-10 px-1 rounded text-[#ff3131]'>Xóa</Button>
+                                            </PopConfirm>
+
+                                        </TableCell>
+                                    </TableRowCustom>
+                                ))}
                         </TableBody>
                     </Table>
                 </TableContainer>

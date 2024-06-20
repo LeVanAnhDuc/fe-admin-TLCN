@@ -13,6 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import TextField from '@mui/material/TextField';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
@@ -33,6 +34,7 @@ import { convertNumberToVND } from '../../utils/convertData';
 import SnackBarLoading from '../../components/SnackBarLoading';
 import Error404 from '../Error404';
 import TextEditer from '../../components/TextEditer';
+
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -250,28 +252,24 @@ const DetailProduct = () => {
     }
 
     return (
-        <section className="space-y-2">
+        <section className="space-y-2 mx-40">
             <SnackBarLoading open={isLoadingUpdate} content={'Đang cập nhật sản phẩm'} />
 
             <div className="flex flex-wrap justify-between items-center gap-5">
                 <Breadcrumbs className="!font-medium">
                     <Link
                         to={config.Routes.listProduct}
-                        className="font-semibold decoration-primary-700 decoration-1 underline-offset-2 transition hover:underline hover:text-primary-700"
+                        className="font-semibold decoration-primary-700 decoration-1 underline-offset-2 transition hover:text-primary-700"
                     >
-                        Danh sách sản phẩm
+                        <ArrowBackIcon fontSize="small" className='mr-2 mb-1' />
+                        Sản phẩm
                     </Link>
                     <div>{idProduct}</div>
                 </Breadcrumbs>
-                <Link to={config.Routes.listProduct}>
-                    <Button variant="fill">
-                        <span className="normal-case">Quay lại</span>
-                    </Button>
-                </Link>
             </div>
 
             <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-                <div className="space-y-5 bg-white p-4 rounded-lg">
+                <div className="space-y-5 bg-white p-4 rounded-lg mt-4">
                     <div className="font-semibold text-lg">Thông tin sản phẩm</div>
 
                     <div>
@@ -418,43 +416,43 @@ const DetailProduct = () => {
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                         <div className="col-span-1 grid md:grid-cols-3 gap-4 lg:col-span-3">
-                                <Controller
-                                    name="originalPrice"
-                                    control={control}
-                                    defaultValue={0}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            error={errors.originalPrice ? true : false}
-                                            fullWidth
-                                            required
-                                            type="number"
-                                            label="Giá gốc (VNĐ)"
-                                        />
-                                    )}
-                                />
-                                <Controller
-                                    name="price"
-                                    control={control}
-                                    defaultValue={0}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            error={errors.price ? true : false}
-                                            fullWidth
-                                            required
-                                            type="number"
-                                            label="Giá bán (VNĐ)"
-                                        />
-                                    )}
-                                />
-                                <p
-                                    className={`${errors.price ? 'block' : 'hidden'
-                                        } text-red-600 text-sm py-1 dark:text-red-500`}
-                                >
-                                    {errors.price?.message}
-                                </p>
-                    
+                            <Controller
+                                name="originalPrice"
+                                control={control}
+                                defaultValue={0}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        error={errors.originalPrice ? true : false}
+                                        fullWidth
+                                        required
+                                        type="number"
+                                        label="Giá gốc (VNĐ)"
+                                    />
+                                )}
+                            />
+                            <Controller
+                                name="price"
+                                control={control}
+                                defaultValue={0}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        error={errors.price ? true : false}
+                                        fullWidth
+                                        required
+                                        type="number"
+                                        label="Giá bán (VNĐ)"
+                                    />
+                                )}
+                            />
+                            <p
+                                className={`${errors.price ? 'block' : 'hidden'
+                                    } text-red-600 text-sm py-1 dark:text-red-500`}
+                            >
+                                {errors.price?.message}
+                            </p>
+
                             <Controller
                                 name="promotionalPrice"
                                 control={control}
@@ -568,7 +566,7 @@ const DetailProduct = () => {
                             Hủy bỏ
                         </Button>
                     </Link>
-                    <Button className="w-40 text-white bg-[#4a39e6]" type="submit">
+                    <Button className="w-40 text-white bg-[#493bc0]" type="submit">
                         Lưu sản phẩm
                     </Button>
                 </div>

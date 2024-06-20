@@ -5,6 +5,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
 import FormControl from '@mui/material/FormControl';
@@ -113,12 +114,12 @@ const ListOrder = () => {
     return (
         <div className="space-y-4 min-h-screen">
             <div className="flex justify-between">
-                <div className="text-lg font-semibold flex items-center">Danh sách đơn hàng</div>
+                <div className="text-2xl font-bold flex items-center">Quản lý đơn hàng</div>
             </div>
             <div className="bg-white p-4 rounded-lg space-y-4">
                 <SidebarFilterStatus status={status} setStatus={setStatus} />
-                <div className="flex justify-center gap-2">
-                    <Search setSearch={setSearch} placeHolder="Tìm theo tên người mua nhận hàng hoặc tên sản phẩm" />
+                <div className="flex justify-center gap-4">
+                    <Search setSearch={setSearch} placeHolder="Tìm theo tên người đặt hàng hoặc tên sản phẩm"/>
 
                     <FormControl sx={{ width: 400 }}>
                         <InputLabel>Sắp xếp</InputLabel>
@@ -135,7 +136,8 @@ const ListOrder = () => {
             <Paper>
                 <TableContainer>
                     <Table>
-                        <TableHead className="!bg-primary-200 ">
+                    {/* className="!bg-primary-200 " */}
+                        <TableHead>
                             <TableRow>
                                 <TableCell align="center" className="!font-bold">
                                     ID
@@ -248,8 +250,7 @@ const ListOrder = () => {
                                                           <DeleteTwoTone className="text-red-500" />
                                                       </IconButton>
                                                   </MouseOverPopover> */}
-                                                  <Button className='text-sm scale-40 h-6 w-10 px-1 rounded-sm text-red-500 text-lowercase ' variant='outlined'>Xóa</Button>
-                                                
+                                                    <Button className='text-sm font-semibold scale-40 h-7 w-10 px-1 rounded text-[#ff3131]'>Xóa</Button>
                                               </PopConfirm>
                                           </TableCell>
                                       </TableRowCustom>

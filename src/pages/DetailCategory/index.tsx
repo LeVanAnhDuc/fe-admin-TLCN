@@ -4,6 +4,8 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import TextField from '@mui/material/TextField';
+import EditIcon from '@mui/icons-material/Edit';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -106,25 +108,24 @@ const DetailCategory = () => {
     }, []);
 
     return (
-        <section className="space-y-5">
+        <section className="space-y-5 mx-28">
             <div className="flex flex-wrap justify-between items-center gap-5">
                 <Breadcrumbs className="!font-medium">
                     <Link
                         to={config.Routes.listCategory}
-                        className="font-semibold decoration-primary-700 decoration-1 underline-offset-2 transition hover:underline hover:text-primary-700"
+                        className="font-semibold decoration-primary-700 text-lg decoration-1 underline-offset-2 transition hover:text-primary-700"
                     >
-                        Danh sách đơn hàng
+                        <ArrowBackIcon fontSize="small" className='mr-2 mb-1' />
+                        Danh mục sản phẩm
                     </Link>
-                    <div>{idCategory}</div>
+                    <div>
+                        {idCategory}
+                    </div>
                 </Breadcrumbs>
-                <Link to={config.Routes.listCategory}>
-                    <Button variant="fill">
-                        <span className="normal-case">Quay lại</span>
-                    </Button>
-                </Link>
+
             </div>
             <form className="space-y-5 bg-white p-4 rounded-lg" onSubmit={handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className='space-y-5 mx-24 mt-5'>
                     <div>
                         <Controller
                             name="name"
@@ -140,76 +141,78 @@ const DetailCategory = () => {
                             )}
                         />
                         <p
-                            className={`${
-                                errors.name ? 'block' : 'hidden'
-                            }text-red-600 text-sm py-1  dark:text-red-500`}
+                            className={`${errors.name ? 'block' : 'hidden'
+                                }text-red-600 text-sm py-1  dark:text-red-500`}
                         >
                             {errors.name?.message}
                         </p>
                     </div>
-
-                    <Controller
-                        name="parentName"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                            <FormControl fullWidth>
-                                <InputLabel>Thuộc danh mục</InputLabel>
-                                <Select {...field} fullWidth label="Thuộc danh mục">
-                                    <MenuItem value={''}>Không thuộc danh mục nào</MenuItem>
-                                    {categories.map((item, index) => (
-                                        <MenuItem key={index} value={item.name}>
-                                            {item.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        )}
-                    />
-                    <Controller
-                        name="lastModifiedDate"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                variant="filled"
-                                fullWidth
-                                label="Ngày chỉnh sửa cuối"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                            />
-                        )}
-                    />
+                    <div>
+                        <Controller
+                            name="parentName"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <FormControl fullWidth>
+                                    <InputLabel>Danh mục cha</InputLabel>
+                                    <Select {...field} fullWidth label="Thuộc danh mục">
+                                        <MenuItem value={''}>Không thuộc danh mục nào</MenuItem>
+                                        {categories.map((item, index) => (
+                                            <MenuItem key={index} value={item.name}>
+                                                {item.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <Controller
+                            name="description"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    error={errors.description ? true : false}
+                                    fullWidth
+                                    multiline
+                                    rows={6}
+                                    label="Mô tả"
+                                />
+                            )}
+                        />
+                        <p
+                            className={`${errors.description ? 'block' : 'hidden'
+                                }text-red-600 text-sm py-1  dark:text-red-500`}
+                        >
+                            {errors.description?.message}
+                        </p>
+                    </div>
+                    <div>
+                        <Controller
+                            name="lastModifiedDate"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    variant="filled"
+                                    fullWidth
+                                    label="Lần chỉnh sửa cuối"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                />
+                            )}
+                        />
+                    </div>
                 </div>
-                <div>
-                    <Controller
-                        name="description"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                error={errors.description ? true : false}
-                                fullWidth
-                                multiline
-                                rows={6}
-                                label="Mô tả"
-                            />
-                        )}
-                    />
-                    <p
-                        className={`${
-                            errors.description ? 'block' : 'hidden'
-                        }text-red-600 text-sm py-1  dark:text-red-500`}
-                    >
-                        {errors.description?.message}
-                    </p>
-                </div>
 
-                <div className="flex justify-end">
-                    <Button type="submit" variant="fill" className="min-w-40">
+
+                <div className="flex justify-center space-x-4">
+                    <Button type="submit" className="min-w-40 bg-[#493bc0] text-white">
                         Cập nhật
                     </Button>
                 </div>

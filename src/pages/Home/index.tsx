@@ -67,7 +67,7 @@ const Home = () => {
                     delay={0.3}
                 />
             </div>
-            <AnimationScale scale={0.8} className="p-5 rounded bg-white">
+            <AnimationScale scale={0.8} className="p-5 bg-white">
                 <LineChart />
             </AnimationScale>
             <div className="grid grid-cols-1 xl:grid-cols-5 gap-5">

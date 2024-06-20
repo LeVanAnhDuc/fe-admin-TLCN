@@ -111,7 +111,7 @@ const ListCustomer = () => {
     return (
         <section className="space-y-5">
             <div className="flex justify-between">
-                <div className="text-lg font-semibold flex items-center">Quản lý người dùng</div>
+                <div className="text-2xl font-bold flex items-center">Quản lý người dùng</div>
             </div>
             <div className="flex justify-start bg-white p-3 rounded-lg shadow">
                 <Search
@@ -122,7 +122,8 @@ const ListCustomer = () => {
             <Paper>
                 <TableContainer>
                     <Table>
-                        <TableHead className="!bg-primary-200 ">
+                    {/* className="!bg-primary-200 " */}
+                        <TableHead>
                             <TableRow>
                                 <TableCell></TableCell>
                                 <TableCell className="!font-bold">Tên tài khoản</TableCell>

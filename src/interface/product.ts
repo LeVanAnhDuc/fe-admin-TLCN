@@ -15,6 +15,7 @@ export default interface IProduct {
     id: number;
     name: string;
     description: string;
+    originalPrice: number;
     price: number;
     quantity: number;
     quantityAvailable?: number;
@@ -29,6 +30,7 @@ export default interface IProduct {
     favoriteCount?: number;
     isActive?: boolean;
     isSelling?: boolean;
+    status?: string;
     createdDate?: string;
     lastModifiedDate?: string;
     createdBy?: string;

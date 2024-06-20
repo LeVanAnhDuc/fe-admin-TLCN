@@ -37,7 +37,7 @@ const SidebarFilterStatus = (props: Iprops) => {
         }
     };
     return (
-        <div className="flex gap-1 rounded-lg">
+        <div className="flex gap-4 rounded-lg">
             {arrayStatus.map((item, index) => (
                 <Button
                     key={index}

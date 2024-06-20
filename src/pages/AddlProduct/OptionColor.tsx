@@ -123,7 +123,7 @@ const OptionSize = (props: Iprops) => {
     return (
         <div className="border-2 px-5 py-6 rounded-md shadow space-y-5">
             <SnackBarLoading open={loadingUpdateImage} content={'Đang cập nhật tùy chọn'} />
-
+            <div className="font-semibold">Tên biến thể</div>
             <TextField
                 label="Tên biến thể"
                 fullWidth
@@ -188,9 +188,9 @@ const OptionSize = (props: Iprops) => {
                     <Add />
                 </Button>
             </div>
-            <div className="flex justify-end">
-                <Button onClick={handleSave} variant="fill" className="w-40">
-                    Lưu
+            <div className="flex justify-center">
+                <Button onClick={handleSave} className="w-32 text-sm h-9 text-white bg-[#493bc0]">
+                    Lưu tùy chọn
                 </Button>
             </div>
         </div>

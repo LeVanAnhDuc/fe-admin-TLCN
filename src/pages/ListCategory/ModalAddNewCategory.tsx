@@ -4,6 +4,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -78,7 +79,7 @@ const ModalAddNewCategory = (props: IPropsAddress) => {
     return (
         <Modal open={open} onClose={handleClose}>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 bg-gray-100 border border-black rounded-lg shadow-lg p-6 space-y-3">
-                <div className="text-lg font-semibold flex items-center">Thêm Danh mục mới</div>
+                <div className="text-lg font-semibold flex items-center">Thêm danh mục <DriveFileRenameOutlineIcon className='ml-1' fontSize='small' /></div>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 bg-white p-4 rounded-lg shadow">
                     <div>
                         <Controller
@@ -122,9 +123,9 @@ const ModalAddNewCategory = (props: IPropsAddress) => {
                         defaultValue=""
                         render={({ field }) => (
                             <FormControl fullWidth>
-                                <InputLabel>Thuộc danh mục</InputLabel>
-                                <Select {...field} fullWidth label="Thuộc danh mục">
-                                    <MenuItem value={''}>Không thuộc danh mục nào</MenuItem>
+                                <InputLabel>Danh mục sản phẩm cha</InputLabel>
+                                <Select {...field} fullWidth label="Danh mục sản phẩm cha">
+                                    <MenuItem value={''}>Không chọn</MenuItem>
                                     {categories.map((item, index) => (
                                         <MenuItem key={index} value={item.name}>
                                             {item.name}
@@ -136,12 +137,13 @@ const ModalAddNewCategory = (props: IPropsAddress) => {
                     />
 
                     <div className="flex justify-end">
-                        <Button className="min-w-40" onClick={handleClose}>
+                        <Button className="min-w-40 mt-4" onClick={handleClose}>
                             Trở lại
                         </Button>
-                        <Button className="min-w-40" variant="fill" type="submit">
+                        <Button className="min-w-40 mt-4 text-white bg-[#493bc0]" type="submit">
                             Thêm
                         </Button>
+
                     </div>
                 </form>
             </div>

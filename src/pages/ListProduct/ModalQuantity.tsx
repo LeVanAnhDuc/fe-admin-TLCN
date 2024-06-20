@@ -52,7 +52,7 @@ export default function ModalQuantity(props: IProps) {
     return (
         <div>
             <Modal open={open} onClose={handleClose}>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 bg-gray-100 border border-black rounded-lg shadow-lg p-6 space-y-3">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/4 bg-gray-100 border border-black rounded-lg shadow-lg p-6 space-y-3">
                     <div className="font-semibold text-lg">Sản phẩm: {IDProduct}</div>
                     <div className="bg-white rounded-lg p-4 space-y-5">
                         <TextField

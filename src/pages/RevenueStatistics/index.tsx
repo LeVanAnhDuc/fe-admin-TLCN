@@ -35,10 +35,10 @@ const RevenueStatistics = () => {
 
     return (
         <div className="space-y-5">
-            <div className="w-full grid grid-cols-2 gap-4 mt-10">
+            <div className="w-full grid grid-cols-2 gap-4">
                 <CardStatictis
                     icon={VolunteerActivismTwoTone}
-                    data={`${convertNumberToVND(data.countRevenue)} VNĐ`}
+                    data={`${convertNumberToVND(data.countRevenue)} đ`}
                     content={'Tổng doanh thu'}
                     className="bg-orange-200 dark:bg-orange-300"
                 />
@@ -52,10 +52,10 @@ const RevenueStatistics = () => {
             </div>
             <div className="grid lg:grid-cols-2 gap-5">
                 <AnimationScale scale={0.9} className="p-5 rounded-lg bg-white">
-                    <LineProductSold />
+                    <BarPriceSold />
                 </AnimationScale>
                 <AnimationScale scale={0.9} className="p-5 rounded-lg bg-white">
-                    <BarPriceSold />
+                    <LineProductSold />
                 </AnimationScale>
             </div>
         </div>

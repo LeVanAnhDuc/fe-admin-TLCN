@@ -131,8 +131,8 @@ const ListCategory = () => {
 
             <div className="flex justify-between items-center">
                 <div className="text-2xl font-bold flex items-center">Danh mục sản phẩm</div>
-                <Button variant="fill" onClick={handleOpenModal}>
-                    Thêm mới
+                <Button className='h-10 rounded-medium p-1 text-0.5rem text-white bg-[#493bc0]' onClick={handleOpenModal}>
+                    Thêm danh mục mới
                 </Button>
             </div>
 

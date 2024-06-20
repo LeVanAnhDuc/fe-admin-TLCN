@@ -108,7 +108,7 @@ const DetailCategory = () => {
     }, []);
 
     return (
-        <section className="space-y-5 mx-28">
+        <section className="space-y-5 mx-40">
             <div className="flex flex-wrap justify-between items-center gap-5">
                 <Breadcrumbs className="!font-medium">
                     <Link

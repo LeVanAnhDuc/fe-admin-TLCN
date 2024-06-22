@@ -1,11 +1,12 @@
 /* eslint-disable no-useless-catch */
+import config from '../config/index.js';
 import { IUpdateCategory } from '../interface/category.js';
 import axios from './axiosConfig.js';
 
 export const getAllCategoryWithinPaginationSearch = async (
     pageNo: number,
     pageSize: number,
-    sort: string,
+    sort: string = config.SearchFilterCategory.idDesc,
     key?: string,
 ) => {
     try {
@@ -15,7 +16,7 @@ export const getAllCategoryWithinPaginationSearch = async (
             sort: sort,
         };
         // Thêm key vào đối tượng nếu key không rỗng
-        if (key !== undefined && key !== null && key !== '') {
+        if (key !== undefined && key !== null) {
             params['key'] = key;
         }
         const url = '/categories/search?' + new URLSearchParams(params as Record<string, string>).toString();

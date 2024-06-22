@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import TextField from '@mui/material/TextField';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import config from '../../config';
 import IOrder from '../../interface/order';
 import IProductCart from '../../interface/productCart';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Button from '../../components/Button';
 import { convertNumberToVND } from '../../utils/convertData';
 import Image from '../../components/Image';
 
@@ -59,22 +59,18 @@ const DetailOrder = () => {
     const { control, setValue, getValues } = useForm<IOrder>({});
 
     return (
-        <section className="space-y-5">
+        <section className="space-y-5 mx-40">
             <div className="flex flex-wrap justify-between items-center gap-5">
                 <Breadcrumbs className="!font-medium">
                     <Link
                         to={config.Routes.listBill}
                         className="font-semibold decoration-primary-700 decoration-1 underline-offset-2 transition hover:underline hover:text-primary-700"
                     >
+                        <ArrowBackIcon fontSize="small" className="mr-2 mb-1" />
                         Danh sách đơn hàng
                     </Link>
                     <div>{idOrder}</div>
                 </Breadcrumbs>
-                <Link to={config.Routes.listBill}>
-                    <Button variant="fill">
-                        <span className="normal-case">Quay lại</span>
-                    </Button>
-                </Link>
             </div>
             <form className="space-y-4 bg-white rounded-lg p-5">
                 <div className="font-semibold text-lg">Thông tin đơn hàng</div>

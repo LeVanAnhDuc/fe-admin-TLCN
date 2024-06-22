@@ -15,15 +15,15 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import { styled } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 
 import config from '../../config';
 import ICategory from '../../interface/category';
 import { deteleASingleCategory, getAllCategoryWithinPaginationSearch } from '../../apis/categoryApi';
 import Search from '../../components/Search/Search';
 import ModalAddNewCategory from './ModalAddNewCategory';
-import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import Skeleton from '../../components/Skeleton';
 import Error404 from '../Error404';
 import PopConfirm from '../../components/PopComfirm';
@@ -103,6 +103,13 @@ const ListCategory = () => {
         navigate(`${config.Routes.detailCategory}/${categoryDetail.id}`);
     };
 
+    const handleCopyID = (item: ICategory, e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        if (item) {
+            navigator.clipboard.writeText(`${item.id}`);
+        }
+    };
+
     useEffect(() => {
         getCategories();
     }, [page, search, sortBy, callAPICategories]);
@@ -120,9 +127,12 @@ const ListCategory = () => {
             />
 
             <div className="flex justify-between items-center">
-                <div className="text-lg font-semibold flex items-center">Danh sách danh mục</div>
-                <Button variant="fill" onClick={handleOpenModal}>
-                    Thêm mới
+                <div className="text-2xl font-bold flex items-center">Danh mục sản phẩm</div>
+                <Button
+                    className="h-10 rounded-medium p-1 text-0.5rem text-white bg-[#493bc0]"
+                    onClick={handleOpenModal}
+                >
+                    Thêm danh mục mới
                 </Button>
             </div>
 
@@ -134,8 +144,8 @@ const ListCategory = () => {
                         <MenuItem value={''}>Không sắp xếp</MenuItem>
                         <MenuItem value={config.SearchFilterCategory.idAsc}>Ngày tạo cũ nhất</MenuItem>
                         <MenuItem value={config.SearchFilterCategory.idDesc}>Ngày tạo mới nhất</MenuItem>
-                        <MenuItem value={config.SearchFilterCategory.prod_countAsc}>Tổng sản phẩm tăng dần</MenuItem>
-                        <MenuItem value={config.SearchFilterCategory.prod_countDesc}>Tổng sản phẩm giảm dần</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.prod_countAsc}>Tổng sản phẩm ↑</MenuItem>
+                        <MenuItem value={config.SearchFilterCategory.prod_countDesc}>Tổng sản phẩm ↓</MenuItem>
                     </Select>
                 </FormControl>
             </div>
@@ -143,7 +153,8 @@ const ListCategory = () => {
             <Paper>
                 <TableContainer>
                     <Table>
-                        <TableHead className="!bg-primary-200 ">
+                        {/* className="!bg-primary-200 " */}
+                        <TableHead>
                             <TableRow>
                                 <TableCell align="center" className="!font-bold">
                                     ID
@@ -151,7 +162,7 @@ const ListCategory = () => {
                                 <TableCell className="!font-bold">Tên danh mục</TableCell>
                                 <TableCell className="!font-bold">Mô tả</TableCell>
                                 <TableCell className="!font-bold">Tổng sản phẩm</TableCell>
-                                <TableCell align="center" className="!font-bold">
+                                <TableCell align="left" className="!font-bold">
                                     Thao tác
                                 </TableCell>
                             </TableRow>
@@ -186,7 +197,15 @@ const ListCategory = () => {
                                               className="cursor-pointer"
                                               onClick={() => handleNavigateDetailCategory(item)}
                                           >
-                                              #{item.id}
+                                              <Tooltip title="Copy ID">
+                                                  <IconButton size="small" onClick={(e) => handleCopyID(item, e)}>
+                                                      <FileCopyOutlinedIcon
+                                                          fontSize="small"
+                                                          sx={{ width: '16px', height: '16px' }}
+                                                      />
+                                                  </IconButton>
+                                              </Tooltip>
+                                              {item.id}
                                           </TableCell>
                                           <TableCell
                                               className="cursor-pointer"
@@ -206,17 +225,15 @@ const ListCategory = () => {
                                           >
                                               {item.productNumber}
                                           </TableCell>
-                                          <TableCell align="center">
+                                          <TableCell align="right">
                                               <PopConfirm
-                                                  content="Nếu xóa dữ liệu sẽ mất đi và không thể hoàn lại"
-                                                  title="Xóa danh mục"
+                                                  content=""
+                                                  title="Xác nhận xóa danh mục?"
                                                   onConfirm={() => handleDeleteItem(item.id)}
                                               >
-                                                  <MouseOverPopover content="Xóa danh mục">
-                                                      <IconButton>
-                                                          <DeleteTwoTone className="!text-red-500" />
-                                                      </IconButton>
-                                                  </MouseOverPopover>
+                                                  <Button className="text-sm font-semibold scale-40 h-7 w-10 px-1 rounded text-[#ff3131]">
+                                                      Xóa
+                                                  </Button>
                                               </PopConfirm>
                                           </TableCell>
                                       </TableRowCustom>

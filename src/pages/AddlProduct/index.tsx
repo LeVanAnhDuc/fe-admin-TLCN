@@ -12,6 +12,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TextField } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { toast } from 'react-toastify';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -32,6 +33,7 @@ import SnackBarLoading from '../../components/SnackBarLoading';
 import Button from '../../components/Button';
 import TextEditer from '../../components/TextEditer';
 import { convertNumberToVND } from '../../utils/convertData';
+
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -171,14 +173,15 @@ const AddProduct = () => {
     }, []);
 
     return (
-        <section className="space-y-5">
+        <section className="space-y-5 mx-40">
             <SnackBarLoading open={loadingSubmit} content={'Đang cập nhật sản phẩm'} />
-
-            <div className="flex justify-end items-center">
-                <Link to={config.Routes.listProduct}>
-                    <Button variant="fill">
-                        <span className="normal-case">Quay lại</span>
-                    </Button>
+            <div>
+                <Link
+                    to={config.Routes.listProduct}
+                    className="font-semibold decoration-primary-700 decoration-1 underline-offset-2 transition hover:underline hover:text-primary-700"
+                >
+                    <ArrowBackIcon fontSize="small" className='mr-2 mb-1' />
+                    Quay lại
                 </Link>
             </div>
 
@@ -193,9 +196,8 @@ const AddProduct = () => {
                             {...register('name', { required: 'Tên sản phẩm hiện đang trống' })}
                         />
                         <p
-                            className={`${
-                                errors.name ? 'block' : 'hidden'
-                            } text-red-600 text-sm py-1  dark:text-red-500`}
+                            className={`${errors.name ? 'block' : 'hidden'
+                                } text-red-600 text-sm py-1  dark:text-red-500`}
                         >
                             {errors.name?.message}
                         </p>
@@ -223,9 +225,8 @@ const AddProduct = () => {
                                 </Select>
                             </FormControl>
                             <p
-                                className={`${
-                                    errors.category?.name ? 'block' : 'hidden'
-                                } text-red-600 text-sm py-1  dark:text-red-500`}
+                                className={`${errors.category?.name ? 'block' : 'hidden'
+                                    } text-red-600 text-sm py-1  dark:text-red-500`}
                             >
                                 {errors.category?.name?.message}
                             </p>
@@ -245,9 +246,8 @@ const AddProduct = () => {
                                 })}
                             />
                             <p
-                                className={`${
-                                    errors.quantity ? 'block' : 'hidden'
-                                } text-red-600 text-sm py-1  dark:text-red-500`}
+                                className={`${errors.quantity ? 'block' : 'hidden'
+                                    } text-red-600 text-sm py-1  dark:text-red-500`}
                             >
                                 {errors.quantity?.message}
                             </p>
@@ -268,9 +268,8 @@ const AddProduct = () => {
                                 })}
                             />
                             <p
-                                className={`${
-                                    errors.price ? 'block' : 'hidden'
-                                } text-red-600 text-sm py-1  dark:text-red-500`}
+                                className={`${errors.price ? 'block' : 'hidden'
+                                    } text-red-600 text-sm py-1  dark:text-red-500`}
                             >
                                 {errors.price?.message}
                             </p>
@@ -357,14 +356,14 @@ const AddProduct = () => {
                     </TableContainer>
                 </Paper>
 
-                <div className="flex justify-end gap-5">
+                <div className="flex justify-center gap-5 py-10">
                     <Link to={config.Routes.listProduct}>
-                        <Button className="w-60" variant="outline">
-                            Hủy
+                        <Button className="w-30 text-black border border-gray-300">
+                            Hủy bỏ
                         </Button>
                     </Link>
-                    <Button className="w-60" type="submit" variant="fill">
-                        Lưu
+                    <Button className="w-40 text-white bg-[#493bc0]" type="submit">
+                        Lưu sản phẩm
                     </Button>
                 </div>
             </form>

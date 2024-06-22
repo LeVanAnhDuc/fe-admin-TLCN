@@ -80,7 +80,15 @@ export default function BasicLineChart() {
                 </FormControl>
             </div>
             <LineChart
-                xAxis={[{ scaleType: 'point', data: xLabels }]}
+                xAxis={[{ scaleType: 'band', data: xLabels }]}
+                yAxis={[
+                    {
+                        valueFormatter: (value) => {
+                            const absValue = Math.floor(value);
+                            return absValue === value ? absValue.toString() : '';
+                        },
+                    },
+                ]}
                 series={[
                     {
                         data: [

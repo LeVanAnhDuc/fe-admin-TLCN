@@ -59,6 +59,7 @@ const OptionColor = (props: Iprops) => {
 
     return (
         <div className="border-2 px-5 py-6 rounded-md shadow space-y-5">
+            <div className="font-semibold">Tên biến thể</div>
             <TextField
                 label="Tên biến thể"
                 fullWidth
@@ -67,7 +68,7 @@ const OptionColor = (props: Iprops) => {
                 inputProps={{ readOnly: true }}
                 variant="filled"
             />
-            <div className="font-semibold">Tùy chọn</div>
+            <div className="font-semibold pt-4">Tùy chọn</div>
             <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5">
                 {valueName.map((_, index) => (
                     <div className="flex items-center gap-2" key={index}>
@@ -96,9 +97,9 @@ const OptionColor = (props: Iprops) => {
                     </Button>
                 </div>
             </div>
-            <div className="flex justify-end">
-                <Button onClick={handleSave} variant="fill" className="w-40">
-                    Lưu
+            <div className="flex justify-center">
+                <Button onClick={handleSave} className="w-32 text-sm h-9 text-white bg-[#493bc0]">
+                    Lưu tùy chọn
                 </Button>
             </div>
         </div>

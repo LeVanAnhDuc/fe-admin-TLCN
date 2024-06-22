@@ -1,5 +1,6 @@
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import TextField from '@mui/material/TextField';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -7,7 +8,6 @@ import { useEffect, useState } from 'react';
 
 import config from '../../config';
 import IUser from '../../interface/user';
-import Button from '../../components/Button';
 import Image from '../../components/Image';
 
 const DetailCustomer = () => {
@@ -44,20 +44,18 @@ const DetailCustomer = () => {
     }, []);
 
     return (
-        <section className="space-y-5">
+        <section className="space-y-5 mx-40">
             <div className="flex flex-wrap justify-between items-center gap-2">
                 <Breadcrumbs className="!font-medium">
                     <Link
                         to={config.Routes.listCustomer}
                         className="font-semibold decoration-primary-700 decoration-1 underline-offset-2 transition hover:underline hover:text-primary-700"
                     >
-                        Danh sách người dùng
+                        <ArrowBackIcon fontSize="small" className="mr-2 mb-1" />
+                        Người dùng
                     </Link>
                     <div>{idUser}</div>
                 </Breadcrumbs>
-                <Link to={config.Routes.listCustomer}>
-                    <Button variant="fill">Quay lại</Button>
-                </Link>
             </div>
 
             <div className="flex flex-col sm:flex-row lg:items-center gap-4 space-y-2 sm:space-y-0">

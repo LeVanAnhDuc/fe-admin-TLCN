@@ -1,6 +1,8 @@
 /* eslint-disable no-useless-catch */
-import config from '../config/index.js';
+// types
 import { IUpdateCategory } from '../interface/category.js';
+// others
+import config from '../config/index.js';
 import axios from './axiosConfig.js';
 
 export const getAllCategoryWithinPaginationSearch = async (

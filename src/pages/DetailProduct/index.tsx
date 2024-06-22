@@ -35,7 +35,6 @@ import SnackBarLoading from '../../components/SnackBarLoading';
 import Error404 from '../Error404';
 import TextEditer from '../../components/TextEditer';
 
-
 const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,
@@ -225,6 +224,8 @@ const DetailProduct = () => {
             options: [optionsSize, optionsColor],
             skus: Sku,
             id: 0,
+            originalPrice: 0,
+            percentDiscount: 0,
         };
 
         setIsLoadingUpdate(true);
@@ -261,7 +262,7 @@ const DetailProduct = () => {
                         to={config.Routes.listProduct}
                         className="font-semibold decoration-primary-700 decoration-1 underline-offset-2 transition hover:text-primary-700"
                     >
-                        <ArrowBackIcon fontSize="small" className='mr-2 mb-1' />
+                        <ArrowBackIcon fontSize="small" className="mr-2 mb-1" />
                         Sản phẩm
                     </Link>
                     <div>{idProduct}</div>
@@ -287,8 +288,9 @@ const DetailProduct = () => {
                             )}
                         />
                         <p
-                            className={`${errors.name ? 'block' : 'hidden'
-                                } text-red-600 text-sm py-1  dark:text-red-500`}
+                            className={`${
+                                errors.name ? 'block' : 'hidden'
+                            } text-red-600 text-sm py-1  dark:text-red-500`}
                         >
                             {errors.name?.message}
                         </p>
@@ -317,8 +319,9 @@ const DetailProduct = () => {
                                 )}
                             />
                             <p
-                                className={`${errors.categoryName ? 'block' : 'hidden'
-                                    }text-red-600 text-sm py-1  dark:text-red-500`}
+                                className={`${
+                                    errors.categoryName ? 'block' : 'hidden'
+                                }text-red-600 text-sm py-1  dark:text-red-500`}
                             >
                                 {errors.categoryName?.message}
                             </p>
@@ -447,8 +450,9 @@ const DetailProduct = () => {
                                 )}
                             />
                             <p
-                                className={`${errors.price ? 'block' : 'hidden'
-                                    } text-red-600 text-sm py-1 dark:text-red-500`}
+                                className={`${
+                                    errors.price ? 'block' : 'hidden'
+                                } text-red-600 text-sm py-1 dark:text-red-500`}
                             >
                                 {errors.price?.message}
                             </p>
@@ -471,7 +475,6 @@ const DetailProduct = () => {
                                 )}
                             />
                         </div>
-
                     </div>
                 </div>
 
@@ -535,16 +538,19 @@ const DetailProduct = () => {
                                     <TableRowCustom key={index} className="hover:!bg-primary-50">
                                         {/* <TableCell className='w-8 lg:w-16' align="center">{index+1}</TableCell> */}
                                         {item.optionValues.map((item2, index2) => (
-                                            <TableCell key={index2} className='w-32' align="left">
+                                            <TableCell key={index2} className="w-32" align="left">
                                                 {item2.valueName}
                                             </TableCell>
                                         ))}
-                                        <TableCell align="left" className='w-32 lg:w-48'>
+                                        <TableCell align="left" className="w-32 lg:w-48">
                                             {item.optionValues.slice(0, 2).map((item2, index2) => (
-                                                <span key={index2}>{item2.valueName}{(index2 === 0) ? ' - ' : ''}</span>
+                                                <span key={index2}>
+                                                    {item2.valueName}
+                                                    {index2 === 0 ? ' - ' : ''}
+                                                </span>
                                             ))}
                                         </TableCell>
-                                        <TableCell align="left" className='w-32 lg:w-48'>
+                                        <TableCell align="left" className="w-32 lg:w-48">
                                             <input
                                                 className="w-32 h-8 p-2 rounded-lg border-2 focus:border-primary-100"
                                                 type="number"
@@ -552,7 +558,9 @@ const DetailProduct = () => {
                                                 onChange={(e) => handleChangePrice(index, e)}
                                             />
                                         </TableCell>
-                                        <TableCell className='w-32' align="left">{convertNumberToVND(item.price)}đ</TableCell>
+                                        <TableCell className="w-32" align="left">
+                                            {convertNumberToVND(item.price)}đ
+                                        </TableCell>
                                     </TableRowCustom>
                                 ))}
                             </TableBody>
@@ -562,9 +570,7 @@ const DetailProduct = () => {
 
                 <div className="flex justify-center gap-5 py-10">
                     <Link to={config.Routes.listProduct}>
-                        <Button className="w-30 text-black border border-gray-300">
-                            Hủy bỏ
-                        </Button>
+                        <Button className="w-30 text-black border border-gray-300">Hủy bỏ</Button>
                     </Link>
                     <Button className="w-40 text-white bg-[#493bc0]" type="submit">
                         Lưu sản phẩm

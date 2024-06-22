@@ -12,11 +12,7 @@ import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Pagination from '@mui/material/Pagination';
-import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import { styled } from '@mui/material/styles';
-import Visibility from '@mui/icons-material/Visibility';
-import AddCircle from '@mui/icons-material/AddCircle';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Avatar from '@mui/material/Avatar';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -32,7 +28,6 @@ import {
     toggleIsSellingProduct,
 } from '../../apis/productApi';
 import Search from '../../components/Search/Search';
-import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import ModalQuantity from './ModalQuantity';
 import ICategory from '../../interface/category';
 import { getAllCategory, getAllCategoryWithinPaginationSearch } from '../../apis/categoryApi';
@@ -52,10 +47,9 @@ const TableRowCustom = styled(TableRow)(({ theme }) => ({
 }));
 
 const ListProduct = () => {
-
     const [copySuccess, setCopySuccess] = useState('');
     const navigate = useNavigate();
-    const itemsPerPage = 20;
+    const itemsPerPage = 24;
 
     const [categories, setCategories] = useState<Array<ICategory>>([]);
     const [errorAPI, setErrorAPI] = useState<boolean>(false);
@@ -161,7 +155,7 @@ const ListProduct = () => {
     useEffect(() => {
         const handleGetListCate = async () => {
             try {
-                const res = await getAllCategoryWithinPaginationSearch(1, 30, "name:asc",);
+                const res = await getAllCategoryWithinPaginationSearch(1, 30, 'name:asc');
                 if (res.status === 200) {
                     setCategories(res.data.content);
                 }
@@ -189,7 +183,9 @@ const ListProduct = () => {
                 <div className="flex justify-between items-center">
                     <div className="text-2xl font-bold flex items-center">Sản phẩm</div>
                     <Link to={config.Routes.addProduct}>
-                        <Button className='h-10 rounded-medium p-1 text-0.5rem text-white bg-[#493bc0]'>Thêm sản phẩm mới</Button>
+                        <Button className="h-10 rounded-medium p-1 text-0.5rem text-white bg-[#493bc0]">
+                            Thêm sản phẩm mới
+                        </Button>
                     </Link>
                 </div>
 
@@ -233,11 +229,13 @@ const ListProduct = () => {
                 </div>
 
                 <Paper>
-                    <TableContainer className='rounded-md'>
+                    <TableContainer className="rounded-md">
                         <Table>
                             <TableHead className="">
                                 <TableRow>
-                                    <TableCell align="center" className="!font-bold">ID</TableCell>
+                                    <TableCell align="center" className="!font-bold">
+                                        ID
+                                    </TableCell>
                                     <TableCell className="!font-bold w-12 lg:w-12"></TableCell>
                                     <TableCell className="!font-bold">Sản phẩm</TableCell>
                                     <TableCell className="!font-bold">Số lượng</TableCell>
@@ -245,141 +243,154 @@ const ListProduct = () => {
                                     <TableCell className="!font-bold">Có sẵn</TableCell>
                                     <TableCell className="!font-bold">Giá bán lẻ</TableCell>
                                     <TableCell className="!font-bold">Trạng thái</TableCell>
-                                    <TableCell align="center" className="!font-bold">Thao tác</TableCell>
+                                    <TableCell align="center" className="!font-bold">
+                                        Thao tác
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {loadingAPIGetProducts
                                     ? Array(10)
-                                        .fill(null)
-                                        .map((_, index) => (
-                                            <TableRowCustom key={index} className='h-10 bg-white'>
-                                                {Array(7)
-                                                    .fill(null)
-                                                    .map((_, index) => (
-                                                        <TableCell key={index}>
-                                                            <Skeleton className="h-10" />
-                                                        </TableCell>
-                                                    ))}
-                                            </TableRowCustom>
-                                        ))
+                                          .fill(null)
+                                          .map((_, index) => (
+                                              <TableRowCustom key={index} className="h-10 bg-white">
+                                                  {Array(7)
+                                                      .fill(null)
+                                                      .map((_, index) => (
+                                                          <TableCell key={index}>
+                                                              <Skeleton className="h-10" />
+                                                          </TableCell>
+                                                      ))}
+                                              </TableRowCustom>
+                                          ))
                                     : products.map((item) => (
-                                        <TableRowCustom key={item.id} className="hover:!bg-primary-50">
-                                            <TableCell
-                                                align="left"
-                                                className="cursor-pointer h-10 font-semibold text-blue-500 w-10"
-                                                onClick={() => handleNavigateDetailProduct(item)}
-                                            >
-                                                <div className="flex items-left justify-left">
-                                                    <Tooltip title="Coppy ID">
-                                                        <IconButton
-                                                            size="small"
-                                                            onClick={(e) => handleCopy(item, e)}
-                                                        >
-                                                            <FileCopyOutlinedIcon fontSize="small" sx={{ width: '16px', height: '16px' }} />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                    <span>{item.id}</span>
-                                                </div>
-                                                {copySuccess && <p>{copySuccess}</p>}
-                                            </TableCell>
-                                            <TableCell
-                                                align="right"
-                                                className="cursor-pointer"
-                                                onClick={() => handleNavigateDetailProduct(item)}
-                                            >
-                                                <Avatar
-                                                    variant="rounded"
-                                                    src={item.listImages[0]}
-                                                    alt="Sản phẩm"
-                                                    className="object-cover object-center size-full"
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                align="left"
-                                                className="max-w-52 w-30 lg:max-w-40 truncate cursor-pointer"
-                                                onClick={() => handleNavigateDetailProduct(item)}
-                                            >
-                                                {item.name}
-                                            </TableCell>
-                                            <TableCell
-                                                className="cursor-pointer"
-                                                onClick={() => handleNavigateDetailProduct(item)}
-                                            >
-                                                {item.quantity}
-                                            </TableCell>
-                                            <TableCell
-                                                className="cursor-pointer"
-                                                onClick={() => handleNavigateDetailProduct(item)}
-                                            >
-                                                {item.sold}
-                                            </TableCell>
-                                            <TableCell
-                                                className="cursor-pointer"
-                                                onClick={() => handleNavigateDetailProduct(item)}
-                                            >
-                                                {item.quantityAvailable}
-                                            </TableCell>
-                                            <TableCell
-                                                className="cursor-pointer"
-                                                onClick={() => handleNavigateDetailProduct(item)}
-                                            >
-                                                {convertNumberToVND(item.price)}đ
-                                            </TableCell>
-                                            <TableCell
-                                                className="cursor-pointer min-w-24 max-w-34"
-                                                onClick={() => handleNavigateDetailProduct(item)}
-                                            >
-                                                <span className="h-6 font-semibold rounded-md inline-flex items-center mb-1">
-                                                    {item.status === 'Đang hoạt động' && (
-                                                        <span className="inline-block w-2 h-2 rounded-full bg-[#7fc066] mr-1 -mt-1"></span>
-                                                    )}
-                                                    <span className={`inline-block ${item.status === 'Đang hoạt động'
-                                                        ? 'text-[#7fc066] bg-[#e8ffdb]'
-                                                        : 'text-gray-400 bg-gray-200'
-                                                        } rounded-md items-center px-2`}>
-                                                        {item.status}
-                                                    </span>
-                                                </span>
-                                            </TableCell>
-                                            <TableCell align="center" className="w-68 lg:max-w-88">
-                                                <IconButton onClick={() => handleAddQuantityProduct(item.id)}>
-                                                    {/* <MouseOverPopover content="Nhập thêm hàng">
+                                          <TableRowCustom key={item.id} className="hover:!bg-primary-50">
+                                              <TableCell
+                                                  align="left"
+                                                  className="cursor-pointer h-10 font-semibold text-blue-500 w-10"
+                                                  onClick={() => handleNavigateDetailProduct(item)}
+                                              >
+                                                  <div className="flex items-left justify-left">
+                                                      <Tooltip title="Coppy ID">
+                                                          <IconButton size="small" onClick={(e) => handleCopy(item, e)}>
+                                                              <FileCopyOutlinedIcon
+                                                                  fontSize="small"
+                                                                  sx={{ width: '16px', height: '16px' }}
+                                                              />
+                                                          </IconButton>
+                                                      </Tooltip>
+                                                      <span>{item.id}</span>
+                                                  </div>
+                                                  {copySuccess && <p>{copySuccess}</p>}
+                                              </TableCell>
+                                              <TableCell
+                                                  align="right"
+                                                  className="cursor-pointer"
+                                                  onClick={() => handleNavigateDetailProduct(item)}
+                                              >
+                                                  <Avatar
+                                                      variant="rounded"
+                                                      src={item.listImages[0]}
+                                                      alt="Sản phẩm"
+                                                      className="object-cover object-center size-full"
+                                                  />
+                                              </TableCell>
+                                              <TableCell
+                                                  align="left"
+                                                  className="max-w-52 w-30 lg:max-w-40 truncate cursor-pointer"
+                                                  onClick={() => handleNavigateDetailProduct(item)}
+                                              >
+                                                  {item.name}
+                                              </TableCell>
+                                              <TableCell
+                                                  className="cursor-pointer"
+                                                  onClick={() => handleNavigateDetailProduct(item)}
+                                              >
+                                                  {item.quantity}
+                                              </TableCell>
+                                              <TableCell
+                                                  className="cursor-pointer"
+                                                  onClick={() => handleNavigateDetailProduct(item)}
+                                              >
+                                                  {item.sold}
+                                              </TableCell>
+                                              <TableCell
+                                                  className="cursor-pointer"
+                                                  onClick={() => handleNavigateDetailProduct(item)}
+                                              >
+                                                  {item.quantityAvailable}
+                                              </TableCell>
+                                              <TableCell
+                                                  className="cursor-pointer"
+                                                  onClick={() => handleNavigateDetailProduct(item)}
+                                              >
+                                                  {convertNumberToVND(item.price)}đ
+                                              </TableCell>
+                                              <TableCell
+                                                  className="cursor-pointer min-w-24 max-w-34"
+                                                  onClick={() => handleNavigateDetailProduct(item)}
+                                              >
+                                                  <span className="h-6 font-semibold rounded-md inline-flex items-center mb-1">
+                                                      {item.status === 'Đang hoạt động' && (
+                                                          <span className="inline-block w-2 h-2 rounded-full bg-[#7fc066] mr-1 -mt-1"></span>
+                                                      )}
+                                                      <span
+                                                          className={`inline-block ${
+                                                              item.status === 'Đang hoạt động'
+                                                                  ? 'text-[#7fc066] bg-[#e8ffdb]'
+                                                                  : 'text-gray-400 bg-gray-200'
+                                                          } rounded-md items-center px-2`}
+                                                      >
+                                                          {item.status}
+                                                      </span>
+                                                  </span>
+                                              </TableCell>
+                                              <TableCell align="center" className="w-68 lg:max-w-88">
+                                                  <IconButton onClick={() => handleAddQuantityProduct(item.id)}>
+                                                      {/* <MouseOverPopover content="Nhập thêm hàng">
                                                           <AddCircle className="text-blue-400" />
                                                       </MouseOverPopover> */}
-                                                    <Button className='text-sm font-semibold scale-40 h-7 w-30 px-1 rounded text-[#5d51a7]'>Nhập hàng</Button>
-                                                </IconButton>
-                                                <span className="text-gray-400">|</span>
-                                                <div className="inline-block">
-                                                    <PopConfirm
-                                                        title="Xác nhận xóa sản phẩm?"
-                                                        onConfirm={() => handleDeleteProduct(item.id)}
-                                                    >
-                                                        <Button className='text-sm font-semibold scale-40 h-7 w-10 px-1 rounded text-[#ff3131]'>Xóa</Button>
-                                                        {/* <MouseOverPopover content="Xóa sản phẩm">
+                                                      <Button className="text-sm font-semibold scale-40 h-7 w-30 px-1 rounded text-[#5d51a7]">
+                                                          Nhập hàng
+                                                      </Button>
+                                                  </IconButton>
+                                                  <span className="text-gray-400">|</span>
+                                                  <div className="inline-block">
+                                                      <PopConfirm
+                                                          title="Xác nhận xóa sản phẩm?"
+                                                          onConfirm={() => handleDeleteProduct(item.id)}
+                                                      >
+                                                          <Button className="text-sm font-semibold scale-40 h-7 w-10 px-1 rounded text-[#ff3131]">
+                                                              Xóa
+                                                          </Button>
+                                                          {/* <MouseOverPopover content="Xóa sản phẩm">
                                                               <IconButton>
                                                                   <DeleteTwoTone className="text-red-500" />
                                                               </IconButton>
                                                           </MouseOverPopover> */}
-                                                    </PopConfirm>
-                                                </div>
-                                                <span className="text-gray-400">|</span>
-                                                <IconButton onClick={() => handleToggleSellProduct(item.id)}>
-                                                    {item.isSelling ? (
-                                                        //   <MouseOverPopover content="Không đăng bán">
-                                                        //       <Visibility className="text-gray-500" />
-                                                        //   </MouseOverPopover>
-                                                        <Button className='text-sm font-semibold scale-40 h-7 w-29 px-1 rounded bg-gray-400 text-while-500'>Dừng đăng bán</Button>
-                                                    ) : (
-                                                        //   <MouseOverPopover content="Đăng bán ngay">
-                                                        //       <VisibilityOff className="text-gray-500" />
-                                                        //   </MouseOverPopover>
-                                                        <Button className='text-sm font-semibold scale-40 h-7 w-29 px-1 rounded bg-blue-400 text-[#5d51a7]' >Đăng bán ngay</Button>
-                                                    )}
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRowCustom>
-                                    ))}
+                                                      </PopConfirm>
+                                                  </div>
+                                                  <span className="text-gray-400">|</span>
+                                                  <IconButton onClick={() => handleToggleSellProduct(item.id)}>
+                                                      {item.isSelling ? (
+                                                          //   <MouseOverPopover content="Không đăng bán">
+                                                          //       <Visibility className="text-gray-500" />
+                                                          //   </MouseOverPopover>
+                                                          <Button className="text-sm font-semibold scale-40 h-7 w-29 px-1 rounded bg-gray-400 text-while-500">
+                                                              Dừng đăng bán
+                                                          </Button>
+                                                      ) : (
+                                                          //   <MouseOverPopover content="Đăng bán ngay">
+                                                          //       <VisibilityOff className="text-gray-500" />
+                                                          //   </MouseOverPopover>
+                                                          <Button className="text-sm font-semibold scale-40 h-7 w-29 px-1 rounded bg-blue-400 text-[#5d51a7]">
+                                                              Đăng bán ngay
+                                                          </Button>
+                                                      )}
+                                                  </IconButton>
+                                              </TableCell>
+                                          </TableRowCustom>
+                                      ))}
                             </TableBody>
                         </Table>
                     </TableContainer>

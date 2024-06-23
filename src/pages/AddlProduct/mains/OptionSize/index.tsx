@@ -1,25 +1,27 @@
+// libs
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import Add from '@mui/icons-material/Add';
-
 import { ChangeEvent, useState } from 'react';
-
-import { IValue } from '../../interface/productCart';
-import config from '../../config';
-import PopConfirm from '../../components/PopConfirm';
-import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
-import Button from '../../components/Button';
+// types
+import { IValue } from '@/types/productCart';
+import { IValueSizeCreate } from '@/types/product';
+// components
+import PopConfirm from '@/components/PopConfirm';
+import Button from '@/components/Button';
+// others
+import config from '@/config';
 
 interface Iprops {
-    handleSetOptionsSize?: (title: string, arrayValue: Array<IValue>) => void;
+    handleSetOptionsSize?: (optionName: string, values: Array<IValue>) => void;
 }
 
-const OptionColor = (props: Iprops) => {
+const OptionSize = (props: Iprops) => {
     const { handleSetOptionsSize } = props;
 
     const [nameTitle, setNameTitle] = useState<string>(config.TypeOption.Size || '');
-    const [valueName, setValueName] = useState<Array<IValue>>([]);
+    const [valueName, setValueName] = useState<Array<IValueSizeCreate>>([]);
 
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
         setNameTitle(e.target.value);
@@ -36,7 +38,7 @@ const OptionColor = (props: Iprops) => {
         });
     };
 
-    const handleChangeValueName = (index: number, e: ChangeEvent<HTMLInputElement>) => {
+    const handleChangeValueName = (index: number, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const newValue = e.target.value;
         setValueName((prev) => {
             const updatedArray = [...prev];
@@ -72,18 +74,16 @@ const OptionColor = (props: Iprops) => {
                             label={`Tên tùy chọn ${index + 1}`}
                             fullWidth
                             value={valueName[index]?.valueName || ''}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeValueName(index, e)}
+                            onChange={(e) => handleChangeValueName(index, e)}
                         />
                         <PopConfirm
                             content="Nếu xóa dữ liệu sẽ mất đi và không thể hoàn lại"
                             title={`Xóa ${nameTitle}`}
                             onConfirm={() => handleDeleteValueName(index)}
                         >
-                            <MouseOverPopover content={`Xóa tùy chọn ${index + 1}`}>
-                                <IconButton>
-                                    <DeleteTwoTone className="text-red-500 " />
-                                </IconButton>
-                            </MouseOverPopover>
+                            <IconButton>
+                                <DeleteTwoTone className="text-red-500 " />
+                            </IconButton>
                         </PopConfirm>
                     </div>
                 ))}
@@ -92,7 +92,7 @@ const OptionColor = (props: Iprops) => {
                 </Button>
             </div>
             <div className="flex justify-center">
-                <Button onClick={handleSave} className="w-32 text-sm h-9 text-white bg-[#493bc0]">
+                <Button variant="fill" size="small" onClick={handleSave}>
                     Lưu tùy chọn
                 </Button>
             </div>
@@ -100,4 +100,4 @@ const OptionColor = (props: Iprops) => {
     );
 };
 
-export default OptionColor;
+export default OptionSize;

@@ -63,7 +63,6 @@ export interface IProductCreate {
 
 export interface IProductInputCreate {
     name: string;
-    description: string;
     originalPrice: number;
     percentDiscount: number;
     categoryName: string;

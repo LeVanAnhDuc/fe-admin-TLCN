@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-import IProduct from '../interface/product.js';
+import IProduct, { IProductCreate } from '../types/product.js';
 import axios from './axiosConfig.js';
 
 export const getAllProductSearchWithinPagination = async (
@@ -24,7 +24,7 @@ export const getAllProductSearchWithinPagination = async (
         if (sort !== '') {
             params['sort'] = sort;
         } else {
-            params['sort'] = 'id:desc'
+            params['sort'] = 'id:desc';
         }
 
         // Thêm cate vào đối tượng nếu cate không rỗng
@@ -64,15 +64,15 @@ export const getSingleProduct = async (id: number) => {
     }
 };
 
-export const createNewProduct = async (object: IProduct) => {
+export const createNewProduct = async (object: IProductCreate) => {
     try {
         const response = await axios.post(`/products`, {
             name: object.name,
             description: object.description,
-            price: object.price,
-            quantity: object.quantity,
             listImages: object.listImages,
-            category: object.category,
+            originalPrice: object.originalPrice,
+            percentDiscount: object.percentDiscount,
+            category: { name: object.categoryName },
             options: object.options,
             skus: object.skus,
         });

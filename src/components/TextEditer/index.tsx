@@ -4,10 +4,12 @@ import 'react-quill/dist/quill.snow.css';
 interface Iprops {
     value: string;
     setValue: React.Dispatch<React.SetStateAction<string>>;
+    className?: string;
+    error?: boolean;
 }
 
 const TextEditer = (props: Iprops) => {
-    const { value, setValue } = props;
+    const { value, setValue, className, error } = props;
 
     const modules = {
         toolbar: [
@@ -34,9 +36,17 @@ const TextEditer = (props: Iprops) => {
         ],
     };
 
+    const classError = error && '!border-red-400 border-2';
+
     return (
         <>
-            <ReactQuill className="bg-gray-100 " theme="snow" modules={modules} value={value} onChange={setValue} />
+            <ReactQuill
+                className={`${className} ${classError} bg-gray-100`}
+                theme="snow"
+                modules={modules}
+                value={value}
+                onChange={setValue}
+            />
         </>
     );
 };

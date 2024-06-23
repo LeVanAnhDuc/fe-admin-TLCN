@@ -11,7 +11,7 @@ import { uploadImage } from '../../apis/uploadImageApi';
 import SnackBarLoading from '../../components/SnackBarLoading';
 import Button from '../../components/Button';
 import PopConfirm from '../../components/PopConfirm';
-import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
+import MouseOverPopover from '../../components/MouseOverPopover';
 
 interface Iprops {
     handleSetOptionsColor?: (title: string, arrayValue: Array<IValue>) => void;

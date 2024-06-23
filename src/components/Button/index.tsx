@@ -37,7 +37,7 @@ const Button = (props: Iprops) => {
         ${disabled ? '!bg-transparent !text-gray-400 border-2 !border-gray-400' : ''} 
         ${loading ? '!bg-gray-300 !text-gray-400 border-2 !border-gray-400' : ''} 
         ${fullWidth ? 'w-full' : ''} 
-        ${size === 'small' ? 'h-8 text-sm px-2' : ''} 
+        ${size === 'small' ? 'h-9 text-sm px-2' : ''} 
         ${size === 'medium' ? 'h-12 text-base' : ''} 
         ${size === 'large' ? 'h-16 text-lg px-6' : ''} 
         ${variant === 'fill' ? 'bg-primary-400 text-white dark:bg-primary-700' : ''} 

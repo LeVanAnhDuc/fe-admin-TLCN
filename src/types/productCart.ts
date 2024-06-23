@@ -9,9 +9,18 @@ export interface IValue {
     imageUrl?: string | File;
 }
 export interface ISku {
-    price?: number;
+    originalPrice: number;
+    quantity: number;
+    price: number;
     sku?: string;
     skuId?: number;
+    optionValues: Array<IValue>;
+}
+
+export interface ISkuCreate {
+    originalPrice: number;
+    quantity: number;
+    price: number;
     optionValues: Array<IValue>;
 }
 

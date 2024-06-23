@@ -24,7 +24,7 @@ import Search from '../../components/Search/Search';
 import Error404 from '../Error404';
 import Skeleton from '../../components/Skeleton';
 import SidebarFilterStatus from './SidebarFilterStatus';
-import PopConfirm from '../../components/PopComfirm';
+import PopConfirm from '../../components/PopConfirm';
 import Button from '@mui/material/Button';
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({

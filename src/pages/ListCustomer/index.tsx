@@ -23,7 +23,7 @@ import IUser from '../../interface/user';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import Error404 from '../Error404';
 import Skeleton from '../../components/Skeleton';
-import PopConfirm from '../../components/PopComfirm';
+import PopConfirm from '../../components/PopConfirm';
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {

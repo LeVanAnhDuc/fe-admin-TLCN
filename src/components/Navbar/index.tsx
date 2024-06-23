@@ -1,57 +1,13 @@
-import Home from '@mui/icons-material/Home';
-import Inventory from '@mui/icons-material/Inventory';
-import Category from '@mui/icons-material/Category';
-import PeopleAlt from '@mui/icons-material/PeopleAlt';
-import Receipt from '@mui/icons-material/Receipt';
-import TrendingUp from '@mui/icons-material/TrendingUp';
-import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings';
+// libs
 import Logout from '@mui/icons-material/Logout';
-
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
-import config from '../../config';
+// hooks
 import { useAuth } from '../../hook/AuthContext';
-
-const LIST_MENU_NAVBAR = [
-    {
-        title: 'Trang chủ',
-        icon: <Home />,
-        to: config.Routes.home,
-    },
-    {
-        title: 'Doanh thu',
-        icon: <TrendingUp />,
-        to: config.Routes.revenue,
-    },
-    {
-        title: 'Sản phẩm',
-        icon: <Inventory />,
-        to: config.Routes.listProduct,
-    },
-    {
-        title: 'Danh mục',
-        icon: <Category />,
-        to: config.Routes.listCategory,
-    },
-
-    {
-        title: 'Người dùng',
-        icon: <PeopleAlt />,
-        to: config.Routes.listCustomer,
-    },
-    {
-        title: 'Đơn hàng',
-        icon: <Receipt />,
-        to: config.Routes.listBill,
-    },
-
-    {
-        title: 'Tài khoản',
-        icon: <AdminPanelSettings />,
-        to: config.Routes.profileSetting,
-    },
-];
+// dataSources
+import { LIST_MENU_NAVBAR } from '../../dataSources';
+// others
+import config from '../../config';
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -64,21 +20,21 @@ const Navbar = () => {
 
     return (
         <>
-            <div className="group h-screen space-y-6 bg-primary-200 overflow-hidden py-16 w-24 sticky top-0 hover:w-60 transition-all duration-500 ">
+            <div className="group h-screen space-y-6 bg-primary-200 overflow-hidden py-16 w-24 sticky top-0 hover:w-72 transition-all duration-500 ">
                 <div className="pl-4">
                     {LIST_MENU_NAVBAR.map((item, index) => (
                         <NavLink to={item.to} key={index}>
                             {({ isActive }) => (
                                 <div
                                     className={`${
-                                        isActive ? 'bg-[#f7f5fd] shadow' : ' hover:bg-[#f7f5fd]/20 z-10 transition'
+                                        isActive ? 'bg-[#f7f5fd] shadow' : ' hover:bg-white/30 z-10 transition'
                                     } flex items-center gap-5 p-4 rounded-l-3xl relative`}
                                 >
                                     {isActive && (
                                         <div className="absolute -top-6 right-0 h-6 w-6 rounded-br-full bg-primary-200 shadow-gray-100 shadow-button-sidebar-t"></div>
                                     )}
                                     {item.icon}
-                                    <div className="font-bold  hidden group-hover:block truncate">{item.title}</div>
+                                    <div className="font-semibold hidden group-hover:block truncate">{item.title}</div>
                                     {isActive && (
                                         <div className="absolute -bottom-6 right-0 h-6 w-6 rounded-tr-full bg-primary-200 shadow-gray-100 shadow-button-sidebar-b"></div>
                                     )}
@@ -87,9 +43,8 @@ const Navbar = () => {
                         </NavLink>
                     ))}
                 </div>
-                {/* <div className="h-0.5 w-full bg-dark-200"></div> */}
                 <div
-                    className="flex items-center gap-5  pl-8 p-4 relative cursor-pointer hover:bg-white/20 transition-all"
+                    className="flex items-center gap-5  pl-8 p-4 relative cursor-pointer hover:bg-white/30 transition-all"
                     onClick={handleLogout}
                 >
                     <Logout />

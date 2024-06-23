@@ -9,7 +9,7 @@ import { IValue } from '../../interface/product';
 import { uploadImage } from '../../apis/uploadImageApi';
 import config from '../../config';
 import SnackBarLoading from '../../components/SnackBarLoading';
-import PopConfirm from '../../components/PopComfirm';
+import PopConfirm from '../../components/PopConfirm';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import Button from '../../components/Button';
 

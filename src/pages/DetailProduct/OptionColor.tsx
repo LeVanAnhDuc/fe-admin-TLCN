@@ -10,7 +10,7 @@ import { IOption } from '../../interface/product';
 import { uploadImage } from '../../apis/uploadImageApi';
 import SnackBarLoading from '../../components/SnackBarLoading';
 import Button from '../../components/Button';
-import PopConfirm from '../../components/PopComfirm';
+import PopConfirm from '../../components/PopConfirm';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 
 interface Iprops {

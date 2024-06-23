@@ -26,7 +26,7 @@ import Search from '../../components/Search/Search';
 import ModalAddNewCategory from './ModalAddNewCategory';
 import Skeleton from '../../components/Skeleton';
 import Error404 from '../Error404';
-import PopConfirm from '../../components/PopComfirm';
+import PopConfirm from '../../components/PopConfirm';
 import Button from '../../components/Button';
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({

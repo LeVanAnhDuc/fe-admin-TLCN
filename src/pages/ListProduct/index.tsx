@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+// libs
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -19,23 +19,26 @@ import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
-
-import config from '../../config';
-import IProduct from '../../interface/product';
+// types
 import {
     getAllProductSearchWithinPagination,
     toggleIsActiveProduct,
     toggleIsSellingProduct,
 } from '../../apis/productApi';
-import Search from '../../components/Search/Search';
-import ModalQuantity from './ModalQuantity';
 import ICategory from '../../interface/category';
-import { getAllCategory, getAllCategoryWithinPaginationSearch } from '../../apis/categoryApi';
-import { convertNumberToVND } from '../../utils/convertData';
+import IProduct from '../../interface/product';
+// components
+import Search from '../../components/Search/Search';
 import Button from '../../components/Button';
-import Error404 from '../Error404';
 import Skeleton from '../../components/Skeleton';
-import PopConfirm from '../../components/PopComfirm';
+import PopConfirm from '../../components/PopConfirm';
+import Error404 from '../Error404';
+import ModalQuantity from './ModalQuantity';
+// apis
+import { getAllCategory } from '../../apis/categoryApi';
+// others
+import config from '../../config';
+import { convertNumberToVND } from '../../utils/convertData';
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -47,7 +50,6 @@ const TableRowCustom = styled(TableRow)(({ theme }) => ({
 }));
 
 const ListProduct = () => {
-    const [copySuccess, setCopySuccess] = useState('');
     const navigate = useNavigate();
     const itemsPerPage = 24;
 
@@ -155,7 +157,7 @@ const ListProduct = () => {
     useEffect(() => {
         const handleGetListCate = async () => {
             try {
-                const res = await getAllCategoryWithinPaginationSearch(1, 30, 'name:asc');
+                const res = await getAllCategory();
                 if (res.status === 200) {
                     setCategories(res.data.content);
                 }
@@ -183,18 +185,18 @@ const ListProduct = () => {
                 <div className="flex justify-between items-center">
                     <div className="text-2xl font-bold flex items-center">Sản phẩm</div>
                     <Link to={config.Routes.addProduct}>
-                        <Button className="h-10 rounded-medium p-1 text-0.5rem text-white bg-[#493bc0]">
+                        <Button variant="fill" className="!h-9 text-sm">
                             Thêm sản phẩm mới
                         </Button>
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-3 lg:grid-cols-12 gap-3 bg-white p-2 rounded-lg">
-                    <div className="col-span-3">
+                <div className="grid sm:grid-cols-3 lg:grid-cols-12 gap-3 bg-white p-2 rounded-lg">
+                    <div className="col-span-1 lg:col-span-6">
                         <Search setSearch={setSearch} placeHolder="Tìm theo theo tên sản phẩm" />
                     </div>
 
-                    <FormControl className="col-span-2 sm:col-span-1.5">
+                    <FormControl className="col-span-1 lg:col-span-3">
                         <InputLabel>Lọc theo danh mục</InputLabel>
                         <Select value={cate} label="Lọc theo danh mục" onChange={handleFilterCategory} defaultValue="">
                             <MenuItem value={''}>Không lọc</MenuItem>
@@ -206,7 +208,7 @@ const ListProduct = () => {
                         </Select>
                     </FormControl>
 
-                    <FormControl className="col-span-2 sm:col-span-2">
+                    <FormControl className="col-span-1 lg:col-span-3">
                         <InputLabel>Sắp xếp</InputLabel>
                         <Select value={sortBy} label="Sắp xếp" onChange={handleFilterSortBy}>
                             <MenuItem value={''}>Không sắp xếp</MenuItem>
@@ -233,17 +235,20 @@ const ListProduct = () => {
                         <Table>
                             <TableHead className="">
                                 <TableRow>
-                                    <TableCell align="center" className="!font-bold">
+                                    <TableCell align="center" className="!font-bold text-nowrap">
                                         ID
                                     </TableCell>
-                                    <TableCell className="!font-bold w-12 lg:w-12"></TableCell>
-                                    <TableCell className="!font-bold">Sản phẩm</TableCell>
-                                    <TableCell className="!font-bold">Số lượng</TableCell>
-                                    <TableCell className="!font-bold">Đã bán</TableCell>
-                                    <TableCell className="!font-bold">Có sẵn</TableCell>
-                                    <TableCell className="!font-bold">Giá bán lẻ</TableCell>
-                                    <TableCell className="!font-bold">Trạng thái</TableCell>
-                                    <TableCell align="center" className="!font-bold">
+                                    <TableCell align="center" className="!font-bold text-nowrap">
+                                        Sản phẩm
+                                    </TableCell>
+                                    <TableCell className="!font-bold text-nowrap">Số lượng</TableCell>
+                                    <TableCell className="!font-bold text-nowrap">Đã bán</TableCell>
+                                    <TableCell className="!font-bold text-nowrap">Có sẵn</TableCell>
+                                    <TableCell className="!font-bold text-nowrap">Giá bán lẻ</TableCell>
+                                    <TableCell align="center" className="!font-bold text-nowrap">
+                                        Trạng thái
+                                    </TableCell>
+                                    <TableCell align="center" className="!font-bold text-nowrap">
                                         Thao tác
                                     </TableCell>
                                 </TableRow>
@@ -254,7 +259,7 @@ const ListProduct = () => {
                                           .fill(null)
                                           .map((_, index) => (
                                               <TableRowCustom key={index} className="h-10 bg-white">
-                                                  {Array(7)
+                                                  {Array(8)
                                                       .fill(null)
                                                       .map((_, index) => (
                                                           <TableCell key={index}>
@@ -267,40 +272,36 @@ const ListProduct = () => {
                                           <TableRowCustom key={item.id} className="hover:!bg-primary-50">
                                               <TableCell
                                                   align="left"
-                                                  className="cursor-pointer h-10 font-semibold text-blue-500 w-10"
+                                                  className="cursor-pointer"
                                                   onClick={() => handleNavigateDetailProduct(item)}
                                               >
-                                                  <div className="flex items-left justify-left">
-                                                      <Tooltip title="Coppy ID">
+                                                  <div className="flex items-center">
+                                                      <Tooltip title="Copy ID">
                                                           <IconButton size="small" onClick={(e) => handleCopy(item, e)}>
                                                               <FileCopyOutlinedIcon
-                                                                  fontSize="small"
                                                                   sx={{ width: '16px', height: '16px' }}
                                                               />
                                                           </IconButton>
                                                       </Tooltip>
                                                       <span>{item.id}</span>
                                                   </div>
-                                                  {copySuccess && <p>{copySuccess}</p>}
-                                              </TableCell>
-                                              <TableCell
-                                                  align="right"
-                                                  className="cursor-pointer"
-                                                  onClick={() => handleNavigateDetailProduct(item)}
-                                              >
-                                                  <Avatar
-                                                      variant="rounded"
-                                                      src={item.listImages[0]}
-                                                      alt="Sản phẩm"
-                                                      className="object-cover object-center size-full"
-                                                  />
                                               </TableCell>
                                               <TableCell
                                                   align="left"
-                                                  className="max-w-52 w-30 lg:max-w-40 truncate cursor-pointer"
+                                                  className="cursor-pointer"
                                                   onClick={() => handleNavigateDetailProduct(item)}
                                               >
-                                                  {item.name}
+                                                  <div className="flex items-center gap-2">
+                                                      <Avatar
+                                                          variant="rounded"
+                                                          src={item.listImages[0]}
+                                                          alt="Sản phẩm"
+                                                          className="object-cover object-center size-full"
+                                                      />
+                                                      <div className="max-w-52 w-30 lg:max-w-72 truncate">
+                                                          {item.name}
+                                                      </div>
+                                                  </div>
                                               </TableCell>
                                               <TableCell
                                                   className="cursor-pointer"
@@ -327,67 +328,55 @@ const ListProduct = () => {
                                                   {convertNumberToVND(item.price)}đ
                                               </TableCell>
                                               <TableCell
-                                                  className="cursor-pointer min-w-24 max-w-34"
+                                                  className="cursor-pointer"
                                                   onClick={() => handleNavigateDetailProduct(item)}
                                               >
-                                                  <span className="h-6 font-semibold rounded-md inline-flex items-center mb-1">
+                                                  <span className="font-semibold rounded-md space-x-1 flex items-center">
                                                       {item.status === 'Đang hoạt động' && (
-                                                          <span className="inline-block w-2 h-2 rounded-full bg-[#7fc066] mr-1 -mt-1"></span>
+                                                          <span className="inline-block size-2 rounded-full bg-[#7fc066]"></span>
                                                       )}
                                                       <span
-                                                          className={`inline-block ${
+                                                          className={` ${
                                                               item.status === 'Đang hoạt động'
                                                                   ? 'text-[#7fc066] bg-[#e8ffdb]'
                                                                   : 'text-gray-400 bg-gray-200'
-                                                          } rounded-md items-center px-2`}
+                                                          } rounded-md items-center px-2 truncate`}
                                                       >
                                                           {item.status}
                                                       </span>
                                                   </span>
                                               </TableCell>
-                                              <TableCell align="center" className="w-68 lg:max-w-88">
-                                                  <IconButton onClick={() => handleAddQuantityProduct(item.id)}>
-                                                      {/* <MouseOverPopover content="Nhập thêm hàng">
-                                                          <AddCircle className="text-blue-400" />
-                                                      </MouseOverPopover> */}
-                                                      <Button className="text-sm font-semibold scale-40 h-7 w-30 px-1 rounded text-[#5d51a7]">
+                                              <TableCell align="center">
+                                                  <div className="flex items-center justify-center">
+                                                      <Button
+                                                          className="text-sm font-semibold text-[#5d51a7] rounded-3xl text-nowrap hover:bg-[rgba(0,0,0,0.04)]"
+                                                          onClick={() => handleAddQuantityProduct(item.id)}
+                                                      >
                                                           Nhập hàng
                                                       </Button>
-                                                  </IconButton>
-                                                  <span className="text-gray-400">|</span>
-                                                  <div className="inline-block">
+                                                      <span className="text-gray-400">|</span>
                                                       <PopConfirm
                                                           title="Xác nhận xóa sản phẩm?"
+                                                          content=""
                                                           onConfirm={() => handleDeleteProduct(item.id)}
                                                       >
-                                                          <Button className="text-sm font-semibold scale-40 h-7 w-10 px-1 rounded text-[#ff3131]">
+                                                          <Button className="text-sm font-semibold rounded-3xl text-[#ff3131] hover:bg-[rgba(0,0,0,0.04)]">
                                                               Xóa
                                                           </Button>
-                                                          {/* <MouseOverPopover content="Xóa sản phẩm">
-                                                              <IconButton>
-                                                                  <DeleteTwoTone className="text-red-500" />
-                                                              </IconButton>
-                                                          </MouseOverPopover> */}
                                                       </PopConfirm>
+                                                      <span className="text-gray-400">|</span>
+                                                      <div onClick={() => handleToggleSellProduct(item.id)}>
+                                                          {item.isSelling ? (
+                                                              <Button className="text-sm font-semibold rounded-3xl bg-gray-400 text-while-500 text-nowrap hover:bg-[rgba(0,0,0,0.04)]">
+                                                                  Dừng đăng bán
+                                                              </Button>
+                                                          ) : (
+                                                              <Button className="text-sm font-semibold rounded-3xl bg-blue-400 text-[#5d51a7] text-nowrap hover:bg-[rgba(0,0,0,0.04)]">
+                                                                  Đăng bán ngay
+                                                              </Button>
+                                                          )}
+                                                      </div>
                                                   </div>
-                                                  <span className="text-gray-400">|</span>
-                                                  <IconButton onClick={() => handleToggleSellProduct(item.id)}>
-                                                      {item.isSelling ? (
-                                                          //   <MouseOverPopover content="Không đăng bán">
-                                                          //       <Visibility className="text-gray-500" />
-                                                          //   </MouseOverPopover>
-                                                          <Button className="text-sm font-semibold scale-40 h-7 w-29 px-1 rounded bg-gray-400 text-while-500">
-                                                              Dừng đăng bán
-                                                          </Button>
-                                                      ) : (
-                                                          //   <MouseOverPopover content="Đăng bán ngay">
-                                                          //       <VisibilityOff className="text-gray-500" />
-                                                          //   </MouseOverPopover>
-                                                          <Button className="text-sm font-semibold scale-40 h-7 w-29 px-1 rounded bg-blue-400 text-[#5d51a7]">
-                                                              Đăng bán ngay
-                                                          </Button>
-                                                      )}
-                                                  </IconButton>
                                               </TableCell>
                                           </TableRowCustom>
                                       ))}

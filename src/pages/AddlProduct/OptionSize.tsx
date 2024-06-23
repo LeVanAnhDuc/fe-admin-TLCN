@@ -7,7 +7,7 @@ import { ChangeEvent, useState } from 'react';
 
 import { IValue } from '../../interface/productCart';
 import config from '../../config';
-import PopConfirm from '../../components/PopComfirm';
+import PopConfirm from '../../components/PopConfirm';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import Button from '../../components/Button';
 

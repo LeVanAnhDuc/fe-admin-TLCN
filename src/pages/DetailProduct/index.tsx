@@ -1,3 +1,4 @@
+// libs
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import InputLabel from '@mui/material/InputLabel';
@@ -14,26 +15,28 @@ import Paper from '@mui/material/Paper';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import TextField from '@mui/material/TextField';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+// types
 import IProduct, { IOption, IValue } from '../../interface/product';
-import Image from '../../components/Image';
-import config from '../../config';
-import OptionColor from './OptionColor';
-import OptionSize from './OptionSize';
 import { ISku } from '../../interface/productCart';
 import ICategory from '../../interface/category';
+// components
+import Image from '../../components/Image';
+import Button from '../../components/Button';
+import SnackBarLoading from '../../components/SnackBarLoading';
+import TextEditer from '../../components/TextEditer';
+import Error404 from '../Error404';
+import OptionColor from './OptionColor';
+import OptionSize from './OptionSize';
+// apis
 import { getSingleProduct, updateProduct } from '../../apis/productApi';
 import { uploadProductImages } from '../../apis/uploadImageApi';
-import Button from '../../components/Button';
+// others
+import config from '../../config';
 import { convertNumberToVND } from '../../utils/convertData';
-import SnackBarLoading from '../../components/SnackBarLoading';
-import Error404 from '../Error404';
-import TextEditer from '../../components/TextEditer';
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -253,7 +256,7 @@ const DetailProduct = () => {
     }
 
     return (
-        <section className="space-y-2 mx-40">
+        <section className="space-y-2 ">
             <SnackBarLoading open={isLoadingUpdate} content={'Đang cập nhật sản phẩm'} />
 
             <div className="flex flex-wrap justify-between items-center gap-5">
@@ -464,12 +467,8 @@ const DetailProduct = () => {
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
-                                        variant="filled"
                                         error={errors.promotionalPrice ? true : false}
                                         fullWidth
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
                                         label="Giá khuyến mại (VNĐ)"
                                     />
                                 )}

@@ -20,9 +20,9 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 // types
-import IProduct, { IOption, IValue } from '../../interface/product';
-import { ISku } from '../../interface/productCart';
-import ICategory from '../../interface/category';
+import IProduct, { IOption, IValue } from '../../types/product';
+import { ISku } from '../../types/productCart';
+import ICategory from '../../types/category';
 // components
 import Image from '../../components/Image';
 import Button from '../../components/Button';

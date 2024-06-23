@@ -7,8 +7,8 @@ import TextField from '@mui/material/TextField';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import config from '../../config';
-import IOrder from '../../interface/order';
-import IProductCart from '../../interface/productCart';
+import IOrder from '../../types/order';
+import IProductCart from '../../types/productCart';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { convertNumberToVND } from '../../utils/convertData';
 import Image from '../../components/Image';

@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { getOrderStatisticByDaily, getOrderStatisticByMonth, getOrderStatisticByYear } from '../../apis/statisticApi';
-import { IStatisticStatusOrder } from '../../interface/statistic';
+import { IStatisticStatusOrder } from '../../types/statistic';
 import helpers from '../../helpers';
 import { convertNumberToTwoChar } from '../../utils/convertData';
 

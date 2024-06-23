@@ -5,8 +5,8 @@ import Add from '@mui/icons-material/Add';
 
 import { ChangeEvent, useEffect, useState } from 'react';
 
-import { IValue } from '../../interface/productCart';
-import { IOption } from '../../interface/product';
+import { IValue } from '../../types/productCart';
+import { IOption } from '../../types/product';
 import Button from '../../components/Button';
 import PopConfirm from '../../components/PopConfirm';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';

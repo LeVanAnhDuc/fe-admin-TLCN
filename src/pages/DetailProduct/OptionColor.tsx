@@ -5,8 +5,8 @@ import Add from '@mui/icons-material/Add';
 
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import { IValue } from '../../interface/productCart';
-import { IOption } from '../../interface/product';
+import { IValue } from '../../types/productCart';
+import { IOption } from '../../types/product';
 import { uploadImage } from '../../apis/uploadImageApi';
 import SnackBarLoading from '../../components/SnackBarLoading';
 import Button from '../../components/Button';

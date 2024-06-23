@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-import { IInfoProfileUser } from '../interface/user.js';
+import { IInfoProfileUser } from '../types/user.js';
 import axios from './axiosConfig.js';
 
 export const getAllUserWithinPaginationSearch = async (pageNo: number, pageSize: number, key?: string) => {

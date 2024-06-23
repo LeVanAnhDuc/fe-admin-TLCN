@@ -25,8 +25,8 @@ import {
     toggleIsActiveProduct,
     toggleIsSellingProduct,
 } from '../../apis/productApi';
-import ICategory from '../../interface/category';
-import IProduct from '../../interface/product';
+import ICategory from '../../types/category';
+import IProduct from '../../types/product';
 // components
 import Search from '../../components/Search/Search';
 import Button from '../../components/Button';

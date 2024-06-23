@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 // types
-import { IUpdateCategory } from '../interface/category.js';
+import { IUpdateCategory } from '../types/category.js';
 // others
 import config from '../config/index.js';
 import axios from './axiosConfig.js';

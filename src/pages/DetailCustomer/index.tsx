@@ -7,7 +7,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import config from '../../config';
-import IUser from '../../interface/user';
+import IUser from '../../types/user';
 import Image from '../../components/Image';
 
 const DetailCustomer = () => {

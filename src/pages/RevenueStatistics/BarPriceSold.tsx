@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { getTotalPriceSoldByYear } from '../../apis/statisticApi';
-import { IStaticMonth } from '../../interface/statistic';
+import { IStaticMonth } from '../../types/statistic';
 
 const xLabels = ['T 1', 'T 2', 'T 3', 'T 4', 'T 5', 'T 6', 'T 7', 'T 8', 'T 9', 'T 10', 'T 11', 'T 12'];
 

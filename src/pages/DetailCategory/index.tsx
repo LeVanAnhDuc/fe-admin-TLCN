@@ -14,7 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import config from '../../config';
-import ICategory, { IUpdateCategory } from '../../interface/category';
+import ICategory, { IUpdateCategory } from '../../types/category';
 import { getAllCategory, getCategoryByIDOrSlug, updateCategory } from '../../apis/categoryApi';
 import Button from '../../components/Button';
 import { objectsAreEqual } from '../../utils/checkData';

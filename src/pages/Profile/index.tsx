@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 
 import config from '../../config';
-import { IInfoProfileUser } from '../../interface/user';
+import { IInfoProfileUser } from '../../types/user';
 import { getUserByUserNameOrEmail, updateAccountProfileOfSignedinAccount } from '../../apis/userApi';
 import Button from '../../components/Button';
 import TextField from '@mui/material/TextField';
@@ -20,8 +20,8 @@ import Loading from '../../components/Loading';
 
 import Image from '../../components/Image';
 
-
-interface FormData extends Pick<IInfoProfileUser, 'username' | 'name' | 'email' | 'phoneNumber' | 'gender' | 'avatarUrl' > { }
+interface FormData
+    extends Pick<IInfoProfileUser, 'username' | 'name' | 'email' | 'phoneNumber' | 'gender' | 'avatarUrl'> {}
 
 const Settings = () => {
     const [firstLoadingAPIGet, setFirstLoadingAPIGet] = useState<boolean>(true);
@@ -84,7 +84,7 @@ const Settings = () => {
                         email: response.data.email,
                         phoneNumber: response.data.phoneNumber,
                         gender: response.data.gender,
-                        avatarUrl: response.data.avatarUrl
+                        avatarUrl: response.data.avatarUrl,
                     });
                 } else {
                     setErrorAPI(true);
@@ -105,7 +105,7 @@ const Settings = () => {
             email: data.email.trim(),
             phoneNumber: data.phoneNumber.trim(),
             gender: data.gender,
-            avatarUrl: data.avatarUrl
+            avatarUrl: data.avatarUrl,
         };
         if (info && objectsAreEqual(info, dataProfile)) {
             toast.warning('Thông tin chưa thay đổi');
@@ -137,7 +137,7 @@ const Settings = () => {
                     <div className="space-y-5 lg:w-5/12 xl:w-5/12 m-auto">
                         {/* <div className="font-bold text-xl text-center">Thông tin cá nhân</div> */}
                         <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-                            <div className='flex justify-center'>
+                            <div className="flex justify-center">
                                 <Image
                                     src={errors.avatarUrl ? true : false}
                                     alt="avatar"

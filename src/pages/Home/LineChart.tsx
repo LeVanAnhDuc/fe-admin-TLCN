@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { getRegisterCompleteStatisticByYear } from '../../apis/statisticApi';
-import { IStaticMonth } from '../../interface/statistic';
+import { IStaticMonth } from '../../types/statistic';
 
 const xLabels = [
     'Tháng 1',

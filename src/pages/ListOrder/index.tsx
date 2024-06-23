@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import config from '../../config';
-import IOrder from '../../interface/order';
+import IOrder from '../../types/order';
 import { deleteOrderByAdmin, getAllOrderWithinPaginationSearch } from '../../apis/orderApi';
 import SelectStatus from './ChangeStatusItem';
 import Search from '../../components/Search/Search';

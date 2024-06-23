@@ -20,7 +20,7 @@ import Tooltip from '@mui/material/Tooltip';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 
 import config from '../../config';
-import ICategory from '../../interface/category';
+import ICategory from '../../types/category';
 import { deteleASingleCategory, getAllCategoryWithinPaginationSearch } from '../../apis/categoryApi';
 import Search from '../../components/Search/Search';
 import ModalAddNewCategory from './ModalAddNewCategory';

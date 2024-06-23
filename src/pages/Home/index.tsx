@@ -10,7 +10,7 @@ import LineChart from './LineChart';
 import BarChart from './BarChart';
 import BasicPie from './PieChart';
 import { getCountStatistic } from '../../apis/statisticApi';
-import { IStatisticCount } from '../../interface/statistic';
+import { IStatisticCount } from '../../types/statistic';
 import config from '../../config';
 import CardStatictis from '../../components/CardStatictis';
 import AnimationScale from '../../components/AnimationScale';

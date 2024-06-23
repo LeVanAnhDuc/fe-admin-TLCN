@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-import { IOrderCheckOut } from '../interface/order.js';
+import { IOrderCheckOut } from '../types/order.js';
 import axios from './axiosConfig.js';
 
 export const getAllOrderWithinPaginationSearch = async (

@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import config from '../../config';
 import Search from '../../components/Search/Search';
 import { changeLockUnlockUserAccountByIDUser, getAllUserWithinPaginationSearch } from '../../apis/userApi';
-import IUser from '../../interface/user';
+import IUser from '../../types/user';
 import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 import Error404 from '../Error404';
 import Skeleton from '../../components/Skeleton';

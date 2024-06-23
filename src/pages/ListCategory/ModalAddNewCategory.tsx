@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import ICategory, { IUpdateCategory } from '../../interface/category';
+import ICategory, { IUpdateCategory } from '../../types/category';
 import { createNewCategory, getAllCategory } from '../../apis/categoryApi';
 import Button from '../../components/Button';
 
@@ -79,7 +79,9 @@ const ModalAddNewCategory = (props: IPropsAddress) => {
     return (
         <Modal open={open} onClose={handleClose}>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 bg-gray-100 border border-black rounded-lg shadow-lg p-6 space-y-3">
-                <div className="text-lg font-semibold flex items-center">Thêm danh mục <DriveFileRenameOutlineIcon className='ml-1' fontSize='small' /></div>
+                <div className="text-lg font-semibold flex items-center">
+                    Thêm danh mục <DriveFileRenameOutlineIcon className="ml-1" fontSize="small" />
+                </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 bg-white p-4 rounded-lg shadow">
                     <div>
                         <Controller
@@ -143,7 +145,6 @@ const ModalAddNewCategory = (props: IPropsAddress) => {
                         <Button className="min-w-40 mt-4 text-white bg-[#493bc0]" type="submit">
                             Thêm
                         </Button>
-
                     </div>
                 </form>
             </div>

@@ -20,19 +20,14 @@ interface Iprops {
 const OptionSize = (props: Iprops) => {
     const { handleSetOptionsSize } = props;
 
-    const [nameTitle, setNameTitle] = useState<string>(config.TypeOption.Size || '');
-    const [valueName, setValueName] = useState<Array<IValueSizeCreate>>([]);
-
-    const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-        setNameTitle(e.target.value);
-    };
+    const [valueOptionSize, setOptionSize] = useState<Array<IValueSizeCreate>>([]);
 
     const handleAddValueName = () => {
-        setValueName((prev) => [...prev, { valueName: '' }]);
+        setOptionSize((prev) => [...prev, { valueName: '' }]);
     };
 
     const handleDeleteValueName = (index: number) => {
-        setValueName((prev) => {
+        setOptionSize((prev) => {
             const updatedArray = prev.filter((_, i) => i !== index);
             return updatedArray;
         });
@@ -40,19 +35,19 @@ const OptionSize = (props: Iprops) => {
 
     const handleChangeValueName = (index: number, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const newValue = e.target.value;
-        setValueName((prev) => {
+        setOptionSize((prev) => {
             const updatedArray = [...prev];
-            if (updatedArray[index]) {
-                updatedArray[index].valueName = newValue;
-            } else {
-                updatedArray[index] = { valueName: newValue };
-            }
+
+            updatedArray[index]
+                ? (updatedArray[index].valueName = newValue)
+                : (updatedArray[index] = { valueName: newValue });
+
             return updatedArray;
         });
     };
 
     const handleSave = () => {
-        handleSetOptionsSize && handleSetOptionsSize(nameTitle, valueName);
+        handleSetOptionsSize && handleSetOptionsSize(config.TypeOption.Size, valueOptionSize);
     };
 
     return (
@@ -61,24 +56,23 @@ const OptionSize = (props: Iprops) => {
             <TextField
                 label="Tên biến thể"
                 fullWidth
-                value={nameTitle}
-                onChange={handleChangeName}
+                value={config.TypeOption.Size}
                 inputProps={{ readOnly: true }}
                 variant="filled"
             />
             <div className="font-semibold">Tùy chọn</div>
             <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5">
-                {valueName.map((_, index) => (
+                {valueOptionSize.map((item, index) => (
                     <div className="flex items-center gap-2" key={index}>
                         <TextField
                             label={`Tên tùy chọn ${index + 1}`}
                             fullWidth
-                            value={valueName[index]?.valueName || ''}
+                            value={item.valueName}
                             onChange={(e) => handleChangeValueName(index, e)}
                         />
                         <PopConfirm
                             content="Nếu xóa dữ liệu sẽ mất đi và không thể hoàn lại"
-                            title={`Xóa ${nameTitle}`}
+                            title={`Xóa ${config.TypeOption.Size}`}
                             onConfirm={() => handleDeleteValueName(index)}
                         >
                             <IconButton>

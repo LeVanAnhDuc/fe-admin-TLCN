@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import Add from '@mui/icons-material/Add';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 // types
 import { IValue, IValueColorCreate } from '@/types/product';
 // components
@@ -20,8 +20,6 @@ const OptionColor = ({
 }: {
     handleSetOptionsColor: (optionName: string, values: Array<IValue>) => void;
 }) => {
-    const inputRef = useRef<HTMLInputElement>(null);
-
     const [loadingUpdateImage, setLoadingUpdateImage] = useState<boolean>(false);
     const [valueOptionColor, setValueOptionColor] = useState<Array<IValueColorCreate>>([]);
     const [postActionUploadImage, setPostActionUploadImage] = useState<boolean>(false);
@@ -128,7 +126,6 @@ const OptionColor = ({
                         >
                             <input
                                 id={`dropzone-file-${index}`}
-                                ref={inputRef}
                                 className="absolute bottom-0 left-0 hidden size-1"
                                 type="file"
                                 onChange={(e) => handleImageChange(index, e)}

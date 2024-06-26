@@ -24,25 +24,25 @@ export default interface IProduct {
     id: number;
     name: string;
     description: string;
-    originalPrice: number; // nhập
-    percentDiscount: number; // không nhâp, %
-    price: number; // không nhâp, show
-    quantity: number; // không nhâp, show
-    quantityAvailable?: number; // không nhâp, show
+    originalPrice: number;
+    percentDiscount: number;
+    price: number;
+    quantity: number;
+    quantityAvailable?: number;
     category: ICategoryName;
     categoryId?: number;
-    categoryName?: string;
+    categoryName: string;
     slug?: string;
     promotionalPrice?: number;
-    sold?: number; // không nhâp, show
+    sold?: number;
     rating?: number;
     numberOfRatings?: number;
     favoriteCount?: number;
     isActive?: boolean;
     isSelling?: boolean;
     status?: string;
-    createdDate?: string; // không nhâp, show
-    lastModifiedDate?: string; // không nhâp, show
+    createdDate?: string;
+    lastModifiedDate?: string;
     createdBy?: string;
     lastModifiedBy?: string;
     listImages: Array<string>;
@@ -66,4 +66,28 @@ export interface IProductInputCreate {
     originalPrice: number;
     percentDiscount: number;
     categoryName: string;
+}
+
+export interface IProductUpdate {
+    name: string;
+    description: string;
+    originalPrice: number;
+    percentDiscount: number;
+    categoryName: string;
+    listImages: Array<string>;
+    options: Array<IOption>;
+    skus: Array<ISku>;
+}
+
+export interface IProductInputUpdate {
+    name: string;
+    description?: string;
+    originalPrice: number;
+    percentDiscount: number;
+    quantity?: number;
+    quantityAvailable?: number;
+    categoryName: string;
+    sold?: number;
+    createdDate?: string;
+    lastModifiedDate?: string;
 }

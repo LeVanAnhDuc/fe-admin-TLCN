@@ -15,3 +15,7 @@ export const arraysAreEqual = <T>(array1: T[], array2: T[]): boolean => {
 
     return lodash.isEqual(sortedArray1, sortedArray2);
 };
+
+export const checkVariableIsNil = <T>(someThing: T): boolean => {
+    return lodash.isNil(someThing);
+};

@@ -1,5 +1,7 @@
 /* eslint-disable no-useless-catch */
-import IProduct, { IProductCreate } from '../types/product.js';
+// types
+import { IProductCreate, IProductUpdate } from '@/types/product.js';
+// others
 import axios from './axiosConfig.js';
 
 export const getAllProductSearchWithinPagination = async (
@@ -83,15 +85,15 @@ export const createNewProduct = async (object: IProductCreate) => {
     }
 };
 
-export const updateProduct = async (idProduct: number, object: IProduct) => {
+export const updateProduct = async (idProduct: number, object: IProductUpdate) => {
     try {
         const response = await axios.put(`/products/${idProduct}`, {
             name: object.name,
             description: object.description,
-            price: object.price,
-            quantity: object.quantity,
+            originalPrice: object.originalPrice,
+            percentDiscount: object.percentDiscount,
             listImages: object.listImages,
-            category: object.category,
+            category: { name: object.categoryName },
             options: object.options,
             skus: object.skus,
         });

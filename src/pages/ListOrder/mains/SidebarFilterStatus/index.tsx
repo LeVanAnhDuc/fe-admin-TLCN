@@ -1,5 +1,7 @@
-import Button from '../../components/Button';
-import config from '../../config';
+// components
+import Button from '@/components/Button';
+// others
+import config from '@/config';
 
 const changeStatus = (nameStatus: string) => {
     switch (nameStatus) {

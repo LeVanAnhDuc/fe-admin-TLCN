@@ -1,16 +1,17 @@
+// libs
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-
 import { toast } from 'react-toastify';
-
-import config from '../../config';
-import { updateOrderStatusByID } from '../../apis/orderApi';
+// apis
+import { updateOrderStatusByID } from '@/apis/orderApi';
+// others
+import config from '@/config';
 
 interface Iprops {
     status: string;
     idOrder: number;
-    getAllOrder: () => Promise<void>;
+    setBehaviorGetProducts: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const getStatusStyles = (status: string) => {
@@ -33,7 +34,7 @@ const getStatusStyles = (status: string) => {
 };
 
 const SelectStatus = (props: Iprops) => {
-    const { status, idOrder, getAllOrder } = props;
+    const { status, idOrder, setBehaviorGetProducts } = props;
 
     const handleChangeStatus = async (e: SelectChangeEvent) => {
         const userConfirmed = window.confirm(`Bạn có chắc chắn muốn đổi sang trạng thái sang ${e.target.value} không?`);
@@ -41,7 +42,7 @@ const SelectStatus = (props: Iprops) => {
             try {
                 const response = await updateOrderStatusByID(idOrder, e.target.value);
                 if (response.status === 200) {
-                    getAllOrder();
+                    setBehaviorGetProducts((prev) => !prev);
                     toast.success(`Cập nhật đơn hàng ${response.data.id} : ${response.data.status}`);
                 } else {
                     toast.error(response.data.message || response.data);

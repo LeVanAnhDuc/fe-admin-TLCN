@@ -172,7 +172,7 @@ const DetailProduct = () => {
                 }}
             />
             <GenerateSKU {...{ optionsColor, optionsSize, setSku }} />
-            <section className="space-y-2 ">
+            <section className="space-y-2">
                 <SnackBarLoading open={isLoadingUpdate} content={'Đang cập nhật sản phẩm'} />
 
                 <div className="flex flex-wrap justify-between items-center gap-5">

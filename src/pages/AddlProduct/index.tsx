@@ -139,7 +139,7 @@ const AddProduct = () => {
         <>
             <GetCategories setListCate={setListCate} />
             <GenerateSKU {...{ optionsColor, optionsSize, setSku }} />
-            <section className="space-y-5 my-5">
+            <section className="space-y-2">
                 <SnackBarLoading open={loadingSubmit} content={'Đang lưu sản phẩm'} />
                 <Link
                     to={config.Routes.listProduct}
@@ -214,7 +214,7 @@ const AddProduct = () => {
                                                 {...field}
                                                 error={errors.originalPrice ? true : false}
                                                 fullWidth
-                                                label="Giá bán"
+                                                label="Giá gốc  "
                                                 type="number"
                                             />
                                         )}

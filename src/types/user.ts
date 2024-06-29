@@ -14,11 +14,10 @@ export default interface IUser {
     username: string;
 }
 
-export interface IInfoProfileUser {
+export interface IInfoProfileUserInputUpdate {
     username: string;
     name: string;
     email: string;
     phoneNumber: string;
     gender: string;
-    avatarUrl: string;
 }

@@ -1,6 +1,8 @@
 /* eslint-disable no-useless-catch */
-import { IInfoProfileUser } from '../types/user.js';
+// libs
 import axios from './axiosConfig.js';
+// types
+import { IInfoProfileUserInputUpdate } from '../types/user.js';
 
 export const getAllUserWithinPaginationSearch = async (pageNo: number, pageSize: number, key?: string) => {
     try {
@@ -8,15 +10,13 @@ export const getAllUserWithinPaginationSearch = async (pageNo: number, pageSize:
             pageNo: pageNo,
             pageSize: pageSize,
         };
-        // Thêm key vào đối tượng nếu key không rỗng
         if (key !== undefined && key !== null && key !== '') {
             params['key'] = key;
         }
         const url = '/users/search?' + new URLSearchParams(params as Record<string, string>).toString();
+
         const response = await axios.get(url);
-        // const response = await axios.get(
-        //     `/categories/search?key=${key}&sort=id:desc&pageNo=${pageNo}&pageSize=${pageSize}`,
-        // );
+
         return response;
     } catch (error) {
         throw error;
@@ -70,7 +70,7 @@ export const forgotPassWord = async (email: string, newPassword: string) => {
     }
 };
 
-export const updateAccountProfileOfSignedinAccount = async (data: IInfoProfileUser) => {
+export const updateAccountProfileOfSignedInAccount = async (data: IInfoProfileUserInputUpdate) => {
     try {
         const response = await axios.put(`/users/profile`, {
             username: data.username,

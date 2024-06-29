@@ -4,10 +4,11 @@ import useDebounceCustom from '../../hook/useDebounceCustom';
 interface Iprops {
     setSearch: React.Dispatch<React.SetStateAction<string>>;
     placeHolder?: string;
+    className?: string;
 }
 
 const Search = (props: Iprops) => {
-    const { setSearch, placeHolder = 'Search...' } = props;
+    const { setSearch, placeHolder = 'Search...', className } = props;
 
     const [valueSearch, setValueSearch] = useState<string>('');
 
@@ -26,7 +27,7 @@ const Search = (props: Iprops) => {
     }, [debounce]);
 
     return (
-        <div className="w-full relative">
+        <div className={`${className} w-full relative`}>
             <TextField label={placeHolder} variant="outlined" value={valueSearch} onChange={handleChange} fullWidth />
         </div>
     );

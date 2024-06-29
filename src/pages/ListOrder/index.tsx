@@ -62,10 +62,14 @@ const ListOrder = () => {
                 </div>
                 <div className="bg-white p-4 rounded-lg space-y-4">
                     <SidebarFilterStatus status={status} setStatus={setStatus} />
-                    <div className="flex justify-center gap-4">
-                        <Search setSearch={setSearch} placeHolder="Tìm theo tên người đặt hàng hoặc tên sản phẩm" />
+                    <div className="grid grid-cols-1 sm:grid-cols-3 justify-center gap-4">
+                        <Search
+                            className="sm:col-span-2"
+                            setSearch={setSearch}
+                            placeHolder="Tìm theo tên người đặt hàng hoặc tên sản phẩm"
+                        />
 
-                        <FormControl sx={{ width: 400 }}>
+                        <FormControl>
                             <InputLabel>Sắp xếp</InputLabel>
                             <Select value={sortBy} label="Sắp xếp" onChange={handleChangeSortBy}>
                                 <MenuItem value={''}>Không lọc</MenuItem>

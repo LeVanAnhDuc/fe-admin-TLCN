@@ -39,11 +39,11 @@ const SidebarFilterStatus = (props: Iprops) => {
         }
     };
     return (
-        <div className="flex gap-4 rounded-lg">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 rounded-lg">
             {arrayStatus.map((item, index) => (
                 <Button
                     key={index}
-                    className="!rounded"
+                    className="!rounded !text-base truncate"
                     variant={changeStatus(status) === item ? 'fill' : 'outline'}
                     fullWidth
                     onClick={() => handleChangeStatus(item)}

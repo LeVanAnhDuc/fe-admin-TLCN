@@ -153,7 +153,6 @@ const ListCategory = () => {
             <Paper>
                 <TableContainer>
                     <Table>
-                        {/* className="!bg-primary-200 " */}
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center" className="!font-bold">

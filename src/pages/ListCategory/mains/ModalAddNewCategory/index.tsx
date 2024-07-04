@@ -109,8 +109,8 @@ const ModalAddNewCategory = (props: IPropsAddress) => {
                             defaultValue=""
                             render={({ field }) => (
                                 <FormControl fullWidth>
-                                    <InputLabel>Danh mục sản phẩm cha</InputLabel>
-                                    <Select {...field} fullWidth label="Danh mục sản phẩm cha">
+                                    <InputLabel>Thuộc danh mục</InputLabel>
+                                    <Select {...field} fullWidth label="Thuộc danh mục">
                                         <MenuItem value={''}>Không chọn</MenuItem>
                                         {categories.map((item, index) => (
                                             <MenuItem key={index} value={item.name}>

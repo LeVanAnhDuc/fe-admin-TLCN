@@ -48,7 +48,7 @@ const TableCategories = ({
     };
 
     const handleNavigateDetailCategory = (categoryDetail: ICategory) => {
-        navigate(`${config.Routes.detailCategory}/${categoryDetail.id}`);
+        navigate(`${config.Routes.detailCategory}/${categoryDetail.id}`, { state: { category: categoryDetail } });
     };
 
     const handleCopyID = (item: ICategory, e: React.MouseEvent<HTMLButtonElement>) => {
@@ -138,7 +138,7 @@ const TableCategories = ({
                                               title="Xác nhận xóa danh mục?"
                                               onConfirm={() => handleDeleteItem(item.id)}
                                           >
-                                              <Button className="text-sm font-semibold scale-40 h-7 w-10 px-1 rounded text-[#ff3131]">
+                                              <Button className="text-sm font-semibold rounded-3xl text-[#ff3131] hover:bg-[rgba(0,0,0,0.04)]">
                                                   Xóa
                                               </Button>
                                           </PopConfirm>

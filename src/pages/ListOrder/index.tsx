@@ -33,6 +33,7 @@ const ListOrder = () => {
     };
 
     const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         setPage(newPage);
     };
 

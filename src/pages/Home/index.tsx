@@ -1,19 +1,22 @@
+// libs
 import VolunteerActivismTwoTone from '@mui/icons-material/VolunteerActivismTwoTone';
 import InventoryTwoTone from '@mui/icons-material/InventoryTwoTone';
 import AirportShuttleTwoTone from '@mui/icons-material/AirportShuttleTwoTone';
 import ShoppingBagTwoTone from '@mui/icons-material/ShoppingBagTwoTone';
-
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-
-import LineChart from './LineChart';
-import BarChart from './BarChart';
-import BasicPie from './PieChart';
-import { getCountStatistic } from '../../apis/statisticApi';
-import { IStatisticCount } from '../../types/statistic';
-import config from '../../config';
-import CardStatictis from '../../components/CardStatictis';
-import AnimationScale from '../../components/AnimationScale';
+// types
+import { IStatisticCount } from '@/types/statistic';
+// components
+import LineChart from './mains/BarChart';
+import BasicPie from './mains/PieChart';
+import BarChart from './mains/BarChart';
+import CardStatictis from '@/components/CardStatictis';
+import AnimationScale from '@/components/AnimationScale';
+// apis
+import { getCountStatistic } from '@/apis/statisticApi';
+// others
+import config from '@/config';
 
 const Home = () => {
     const [statictis, setData] = useState<IStatisticCount>();

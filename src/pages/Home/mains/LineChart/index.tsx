@@ -1,18 +1,19 @@
-import { BarChart } from '@mui/x-charts/BarChart';
+// libs
+import { LineChart } from '@mui/x-charts/LineChart';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+// types
+import { IStaticMonth } from '@/types/statistic';
+// apis
+import { getRegisterCompleteStatisticByYear } from '@/apis/statisticApi';
+// others
+import { X_LABELS_YEAR } from '@/dataSources';
 
-import { getTotalPriceSoldByYear } from '../../apis/statisticApi';
-import { IStaticMonth } from '../../types/statistic';
-
-const xLabels = ['T 1', 'T 2', 'T 3', 'T 4', 'T 5', 'T 6', 'T 7', 'T 8', 'T 9', 'T 10', 'T 11', 'T 12'];
-
-export default function BarPriceSold() {
+export default function BasicLineChart() {
     const currentYear = new Date().getFullYear();
     const totalYearSincePay = currentYear - 2023 + 1;
 
@@ -25,7 +26,7 @@ export default function BarPriceSold() {
 
     const handleGetDataStatistic = async (yearSelect: number) => {
         try {
-            const response = await getTotalPriceSoldByYear(yearSelect);
+            const response = await getRegisterCompleteStatisticByYear(yearSelect);
 
             if (response.status === 200) {
                 setData(response.data);
@@ -47,8 +48,9 @@ export default function BarPriceSold() {
 
     return (
         <>
-            <div className="w-full flex flex-wrap justify-between items-center gap-5 mb-4">
-                <div className="font-bold">Biểu đồ phân tích doanh thu trong năm {year}</div>
+            <div className="size-full flex flex-wrap justify-between items-center gap-5">
+                <div className="font-bold">Biểu đồ thể hiện số lượng người dùng mới trong năm {year}</div>
+
                 <FormControl className="w-32">
                     <InputLabel>Năm</InputLabel>
                     <Select className="text-center" value={year.toString()} label="Năm" onChange={handleChangeYear}>
@@ -65,8 +67,16 @@ export default function BarPriceSold() {
                     </Select>
                 </FormControl>
             </div>
-            <BarChart
-                xAxis={[{ scaleType: 'band', data: xLabels }]}
+            <LineChart
+                xAxis={[{ scaleType: 'band', data: X_LABELS_YEAR }]}
+                yAxis={[
+                    {
+                        valueFormatter: (value) => {
+                            const absValue = Math.floor(value);
+                            return absValue === value ? absValue.toString() : '';
+                        },
+                    },
+                ]}
                 series={[
                     {
                         data: [
@@ -83,11 +93,11 @@ export default function BarPriceSold() {
                             data?.nov,
                             data?.dec,
                         ],
-                        label: `Tổng doanh thu (VNĐ)`,
+                        area: true,
+                        label: `Số người dùng mới`,
                     },
                 ]}
                 height={400}
-                margin={{ top: 50, right: 30, bottom: 30, left: 120 }}
             />
         </>
     );

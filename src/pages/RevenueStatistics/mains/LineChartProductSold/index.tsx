@@ -1,18 +1,19 @@
-import { BarChart } from '@mui/x-charts/BarChart';
+// libs
+import { LineChart } from '@mui/x-charts/LineChart';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+// types
+import { IStaticMonth } from '@/types/statistic';
+// apis
+import { getTotalProductSoldByYear } from '@/apis/statisticApi';
+// others
+import { X_LABELS_YEAR } from '@/dataSources';
 
-import { IStaticMonth } from '../../types/statistic';
-import { getOrderCompleteStatisticByYear } from '../../apis/statisticApi';
-
-const xLabels = ['T 1', 'T 2', 'T 3', 'T 4', 'T 5', 'T 6', 'T 7', 'T 8', 'T 9', 'T 10', 'T 11', 'T 12'];
-
-export default function Bar() {
+const LineChartProductSold = () => {
     const currentYear = new Date().getFullYear();
     const totalYearSincePay = currentYear - 2023 + 1;
 
@@ -25,7 +26,7 @@ export default function Bar() {
 
     const handleGetDataStatistic = async (yearSelect: number) => {
         try {
-            const response = await getOrderCompleteStatisticByYear(yearSelect);
+            const response = await getTotalProductSoldByYear(yearSelect);
 
             if (response.status === 200) {
                 setData(response.data);
@@ -36,6 +37,7 @@ export default function Bar() {
             toast.error(`${error}`);
         }
     };
+
     useEffect(() => {
         handleGetDataStatistic(year);
     }, [year]);
@@ -45,8 +47,8 @@ export default function Bar() {
     }
     return (
         <>
-            <div className="w-full flex flex-wrap justify-between items-center gap-5">
-                <div className="font-bold">Biểu đồ thống kê số đơn hàng hoàn thành trong năm {year}</div>
+            <div className="w-full flex flex-wrap justify-between items-center gap-5 mb-4">
+                <div className="font-bold">Biểu đồ thống kê doanh số sản phẩm bán ra trong năm {year}</div>
                 <FormControl className="w-32">
                     <InputLabel>Năm</InputLabel>
                     <Select className="text-center" value={year.toString()} label="Năm" onChange={handleChangeYear}>
@@ -63,8 +65,8 @@ export default function Bar() {
                     </Select>
                 </FormControl>
             </div>
-            <BarChart
-                xAxis={[{ scaleType: 'band', data: xLabels }]}
+            <LineChart
+                xAxis={[{ scaleType: 'point', data: X_LABELS_YEAR }]}
                 yAxis={[
                     {
                         valueFormatter: (value) => {
@@ -75,25 +77,15 @@ export default function Bar() {
                 ]}
                 series={[
                     {
-                        data: [
-                            data?.jan,
-                            data?.feb,
-                            data?.mar,
-                            data?.apr,
-                            data?.may,
-                            data?.jun,
-                            data?.jul,
-                            data?.aug,
-                            data?.sep,
-                            data?.oct,
-                            data?.nov,
-                            data?.dec,
-                        ],
-                        label: 'Số đơn hàng thành công',
+                        data: Object.entries(data).map((item) => item[1]),
+                        area: true,
+                        label: 'Tổng sản phẩm bán được',
                     },
                 ]}
-                height={300}
+                height={400}
             />
         </>
     );
-}
+};
+
+export default LineChartProductSold;

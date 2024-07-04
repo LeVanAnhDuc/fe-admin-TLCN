@@ -1,16 +1,18 @@
+// libs
 import { PieChart } from '@mui/x-charts/PieChart';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-
-import { getOrderStatisticByDaily, getOrderStatisticByMonth, getOrderStatisticByYear } from '../../apis/statisticApi';
-import { IStatisticStatusOrder } from '../../types/statistic';
-import helpers from '../../helpers';
-import { convertNumberToTwoChar } from '../../utils/convertData';
+// types
+import { IStatisticStatusOrder } from '@/types/statistic';
+// apis
+import { getOrderStatisticByDaily, getOrderStatisticByMonth, getOrderStatisticByYear } from '@/apis/statisticApi';
+// others
+import helpers from '@/helpers';
+import { convertNumberToTwoChar } from '@/utils/convertData';
 
 export default function BasicPie() {
     const currentYear = new Date().getFullYear();

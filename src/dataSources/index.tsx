@@ -48,3 +48,5 @@ export const LIST_MENU_NAVBAR = [
         to: config.Routes.profileSetting,
     },
 ];
+
+export const X_LABELS_YEAR = ['T 1', 'T 2', 'T 3', 'T 4', 'T 5', 'T 6', 'T 7', 'T 8', 'T 9', 'T 10', 'T 11', 'T 12'];

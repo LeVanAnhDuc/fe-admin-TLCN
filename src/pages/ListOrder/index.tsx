@@ -13,7 +13,7 @@ import Error404 from '../Error404';
 import SidebarFilterStatus from './mains/SidebarFilterStatus';
 import TableOrders from './mains/TableOrders';
 // ghosts
-import GetProducts from './ghosts/GetProducts';
+import GetOrders from './ghosts/GetOrders';
 // others
 import config from '@/config';
 
@@ -43,7 +43,7 @@ const ListOrder = () => {
 
     return (
         <>
-            <GetProducts
+            <GetOrders
                 {...{
                     page,
                     sortBy,

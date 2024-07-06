@@ -1,20 +1,22 @@
+// libs
 import TextField from '@mui/material/TextField';
-
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-
-import config from '../../config';
-import { sendOTPRegister, verifyOTPRegister } from '../../apis/authApi';
-import { forgotPassWord } from '../../apis/userApi';
-import SnackBarLoading from '../../components/SnackBarLoading';
-import AnimationTran from '../../components/AnimationTran';
-import InputPassword from '../../components/InputPassword';
-import Logo from '../../components/Logo';
-import Button from '../../components/Button';
+// components
+import SnackBarLoading from '@/components/SnackBarLoading';
+import AnimationTran from '@/components/AnimationTran';
+import InputPassword from '@/components/InputPassword';
+import Logo from '@/components/Logo';
+import Button from '@/components/Button';
+// apis
+import { sendOTPRegister, verifyOTPRegister } from '@/apis/authApi';
+import { forgotPassWord } from '@/apis/userApi';
+// others
+import config from '@/config';
 
 type FormDataForgotPassword = {
     otp: string;

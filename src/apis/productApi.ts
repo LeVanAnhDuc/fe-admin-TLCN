@@ -3,6 +3,7 @@
 import { IProductCreate, IProductUpdate } from '@/types/product.js';
 // others
 import axios from './axiosConfig.js';
+import { ISku } from '@/types/productCart.js';
 
 export const getAllProductSearchWithinPagination = async (
     pageNo: number,
@@ -104,9 +105,15 @@ export const updateProduct = async (idProduct: number, object: IProductUpdate) =
     }
 };
 
-export const updateQuantityProduct = async (idProduct: number, quantity: number) => {
+export const updateQuantityProduct = async (productId: number, skus: ISku[]) => {
     try {
-        const response = await axios.put(`/products/add-quantity?productId=${idProduct}&quantity=${quantity}`);
+        const response = await axios.post(`/products/add-inventory`, {
+            productId,
+            skus: skus.map((item) => ({
+                skuId: item.skuId,
+                addNumber: item.quantity,
+            })),
+        });
 
         return response;
     } catch (error) {

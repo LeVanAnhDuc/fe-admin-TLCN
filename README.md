@@ -1,27 +1,39 @@
-# React + TypeScript + Vite
+# LEDUCK Fashion Ecommerce website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 1. Giới thiệu
 
-Currently, two official plugins are available:
+Web được viết khi làm dự án tiểu luận và khóa luận tại trường Đại học Sư phạm Kỹ thuật TPHCM.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Nội dung gồm:
 
-## Expanding the ESLint configuration
+-   Web viết về giao diện admin.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 2. Cài đặt dự án
 
-- Configure the top-level `parserOptions` property like this:
+### Bước 1:
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+-   Mở terminal của dự án chạy 1 lần với folder câu lệnh sau "yarn i" hoặc "npm i"
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Bước 2:
+
+-   Mở terminal của dự án chạy câu lệnh sau "yarn dev" hoặc "npm run dev"
+
+### Bước 3:
+
+-   FE đã được chạy với host là: "localhost:5174"
+
+### Lưu ý
+
+-   Ở những lần chạy sau chỉ cần chạy câu lệnh "yarn dev" hoặc "npm run dev" là đã được start.
+
+## 3. Công nghệ sử dụng trong dự án
+
+-   Ngôn ngữ lập trình: TypeScript
+-   FE: React, TailwindCSS, React-hook-form, yub, MUI, axios, framer-motion, i18next, redux, react-quill, lodash,...
+
+### Những thứ đã làm được trong dự án
+
+-   Animation (framer-motion)
+-   Validate form ( yub + react-hook-form )
+-   Nghiệp vụ của 1 trang e-commerce (quản lí, thống kê)
+-   CRUD , lọc, search, đăng nhập, đăng kí, quên mật khẩu,...

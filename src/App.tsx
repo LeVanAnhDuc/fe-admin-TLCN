@@ -1,11 +1,14 @@
+// libs
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Fragment } from 'react';
 import { Slide, ToastContainer } from 'react-toastify';
-
 import { publishRoute, privateRoute } from './routes';
-import { DefaultLayout } from './layouts';
+// components
 import ScrollAutoTop from './components/ScrollAutoTop/ScrollAutoTop.ts';
+// hooks
 import { useAuth } from './hook/AuthContext.tsx';
+// layouts
+import { DefaultLayout } from './layouts';
 
 function App() {
     const { isLoggedIn } = useAuth();

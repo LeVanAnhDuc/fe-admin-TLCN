@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 // types
 import { IStatisticCount } from '@/types/statistic';
 // components
-import LineChart from './mains/BarChart';
+import LineChart from './mains/LineChart';
 import BasicPie from './mains/PieChart';
 import BarChart from './mains/BarChart';
 import CardStatictis from '@/components/CardStatictis';

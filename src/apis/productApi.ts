@@ -140,3 +140,15 @@ export const toggleIsSellingProduct = async (idProduct: number) => {
         throw error;
     }
 };
+
+export const updateDiscountProduct = async (idProduct: number, percentDiscount: number) => {
+    try {
+        const response = await axios.put(
+            `/products/make-discount?product_id=${idProduct}&percent_discount=${percentDiscount}`,
+        );
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

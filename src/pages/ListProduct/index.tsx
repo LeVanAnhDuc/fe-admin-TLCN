@@ -11,6 +11,7 @@ import Error404 from '../Error404';
 import ModalQuantity from './mains/ModalQuantity';
 import TableProducts from './mains/TableProducts';
 import FilterProducts from './mains/FilterProducts';
+import ModalDiscount from './mains/ModalDiscount';
 // ghosts
 import GetProducts from './ghosts/GetProducts';
 import GetCategories from './ghosts/GetCategories';
@@ -28,10 +29,15 @@ const ListProduct = () => {
     const [cate, setCate] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('');
     const [productAddQuantity, setProductAddQuantity] = useState<IProduct>();
-    const [openModalQuantity, setOpenModalQuantity] = useState(false);
-    const [behaviorGetCategories, setBehaviorGetCategories] = useState<boolean>(false);
+    const [openModalQuantity, setOpenModalQuantity] = useState<boolean>(false);
+    const [productAddDiscount, setProductAddDiscount] = useState<IProduct>();
+    const [openModalDiscount, setOpenModalDiscount] = useState<boolean>(false);
+    const [behaviorGetProducts, setBehaviorGetProducts] = useState<boolean>(false);
 
-    const handleCloseModal = useCallback(() => setOpenModalQuantity(false), []);
+    const handleCloseModal = useCallback(() => {
+        setOpenModalQuantity(false);
+        setOpenModalDiscount(false);
+    }, []);
 
     if (errorAPI) {
         return <Error404 />;
@@ -50,7 +56,7 @@ const ListProduct = () => {
                     setTotalPages,
                     setPage,
                     setErrorAPI,
-                    behaviorGetCategories,
+                    behaviorGetProducts,
                 }}
             />
             <GetCategories {...{ setCategories, setErrorAPI }} />
@@ -59,7 +65,14 @@ const ListProduct = () => {
                 open={openModalQuantity}
                 handleClose={handleCloseModal}
                 product={productAddQuantity}
-                setBehaviorGetCategories={setBehaviorGetCategories}
+                setBehaviorGetProducts={setBehaviorGetProducts}
+            />
+
+            <ModalDiscount
+                open={openModalDiscount}
+                handleClose={handleCloseModal}
+                product={productAddDiscount}
+                setBehaviorGetProducts={setBehaviorGetProducts}
             />
 
             <section className="space-y-3">
@@ -81,9 +94,11 @@ const ListProduct = () => {
                         loadingAPIGetProducts,
                         categories,
                         products,
-                        setBehaviorGetCategories,
+                        setBehaviorGetProducts,
                         setProductAddQuantity,
                         setOpenModalQuantity,
+                        setProductAddDiscount,
+                        setOpenModalDiscount,
                     }}
                 />
 

@@ -28,16 +28,20 @@ const TableProducts = ({
     loadingAPIGetProducts,
     categories,
     products,
-    setBehaviorGetCategories,
+    setBehaviorGetProducts,
     setProductAddQuantity,
     setOpenModalQuantity,
+    setProductAddDiscount,
+    setOpenModalDiscount,
 }: {
     loadingAPIGetProducts: boolean;
     categories: ICategory[];
     products: IProduct[];
-    setBehaviorGetCategories: React.Dispatch<React.SetStateAction<boolean>>;
+    setBehaviorGetProducts: React.Dispatch<React.SetStateAction<boolean>>;
     setProductAddQuantity: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
     setOpenModalQuantity: React.Dispatch<React.SetStateAction<boolean>>;
+    setProductAddDiscount: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
+    setOpenModalDiscount: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const navigate = useNavigate();
 
@@ -57,12 +61,17 @@ const TableProducts = ({
         setOpenModalQuantity(true);
     };
 
+    const handleAddDiscountProduct = async (product: IProduct) => {
+        setProductAddDiscount(product);
+        setOpenModalDiscount(true);
+    };
+
     const handleDeleteProduct = async (idProduct: number) => {
         try {
             const response = await toggleIsActiveProduct(idProduct);
             if (response.status === 200) {
                 toast.success('Xóa thành công');
-                setBehaviorGetCategories((prev) => !prev);
+                setBehaviorGetProducts((prev) => !prev);
             } else {
                 toast.error(response.data.message || response.data);
             }
@@ -80,7 +89,7 @@ const TableProducts = ({
                 } else {
                     toast.success('Ẩn bán thành công');
                 }
-                setBehaviorGetCategories((prev) => !prev);
+                setBehaviorGetProducts((prev) => !prev);
             } else {
                 toast.error(response.data.message || response.data);
             }
@@ -156,7 +165,7 @@ const TableProducts = ({
                                                   alt="Sản phẩm"
                                                   className="object-cover object-center size-full"
                                               />
-                                              <div className="max-w-52 w-30 lg:max-w-72 truncate">{item.name}</div>
+                                              <div className="max-w-52 w-30 lg:max-w-64 truncate">{item.name}</div>
                                           </div>
                                       </TableCell>
                                       <TableCell
@@ -205,33 +214,51 @@ const TableProducts = ({
                                       <TableCell align="center">
                                           <div className="flex items-center justify-center">
                                               <Button
+                                                  size="small"
                                                   className="text-sm font-semibold text-[#5d51a7] rounded-3xl text-nowrap hover:bg-[rgba(0,0,0,0.04)]"
                                                   onClick={() => handleAddQuantityProduct(item)}
                                               >
                                                   Nhập hàng
                                               </Button>
                                               <span className="text-gray-400">|</span>
+                                              <Button
+                                                  size="small"
+                                                  className="text-sm font-semibold text-[#5d51a7] rounded-3xl text-nowrap hover:bg-[rgba(0,0,0,0.04)]"
+                                                  onClick={() => handleAddDiscountProduct(item)}
+                                              >
+                                                  Giảm giá
+                                              </Button>
+                                              <span className="text-gray-400">|</span>
+                                              <div onClick={() => handleToggleSellProduct(item.id)}>
+                                                  {item.isSelling ? (
+                                                      <Button
+                                                          size="small"
+                                                          className="text-sm font-semibold rounded-3xl bg-gray-400 text-while-500 text-nowrap hover:bg-[rgba(0,0,0,0.04)]"
+                                                      >
+                                                          Dừng đăng bán
+                                                      </Button>
+                                                  ) : (
+                                                      <Button
+                                                          size="small"
+                                                          className="text-sm font-semibold rounded-3xl bg-blue-400 text-[#5d51a7] text-nowrap hover:bg-[rgba(0,0,0,0.04)]"
+                                                      >
+                                                          Đăng bán ngay
+                                                      </Button>
+                                                  )}
+                                              </div>
+                                              <span className="text-gray-400">|</span>
                                               <PopConfirm
                                                   title="Xác nhận xóa sản phẩm?"
                                                   content=""
                                                   onConfirm={() => handleDeleteProduct(item.id)}
                                               >
-                                                  <Button className="text-sm font-semibold rounded-3xl text-[#ff3131] hover:bg-[rgba(0,0,0,0.04)]">
+                                                  <Button
+                                                      size="small"
+                                                      className="text-sm font-semibold rounded-3xl text-[#ff3131] hover:bg-[rgba(0,0,0,0.04)]"
+                                                  >
                                                       Xóa
                                                   </Button>
                                               </PopConfirm>
-                                              <span className="text-gray-400">|</span>
-                                              <div onClick={() => handleToggleSellProduct(item.id)}>
-                                                  {item.isSelling ? (
-                                                      <Button className="text-sm font-semibold rounded-3xl bg-gray-400 text-while-500 text-nowrap hover:bg-[rgba(0,0,0,0.04)]">
-                                                          Dừng đăng bán
-                                                      </Button>
-                                                  ) : (
-                                                      <Button className="text-sm font-semibold rounded-3xl bg-blue-400 text-[#5d51a7] text-nowrap hover:bg-[rgba(0,0,0,0.04)]">
-                                                          Đăng bán ngay
-                                                      </Button>
-                                                  )}
-                                              </div>
                                           </div>
                                       </TableCell>
                                   </TableRow>

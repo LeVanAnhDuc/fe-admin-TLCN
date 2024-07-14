@@ -23,12 +23,12 @@ const ModalQuantity = ({
     open,
     handleClose,
     product,
-    setBehaviorGetCategories,
+    setBehaviorGetProducts,
 }: {
     open: boolean;
     handleClose: () => void;
     product?: IProduct;
-    setBehaviorGetCategories: React.Dispatch<React.SetStateAction<boolean>>;
+    setBehaviorGetProducts: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const [sku, setSku] = useState<ISku[]>([]);
 
@@ -70,7 +70,7 @@ const ModalQuantity = ({
 
                 if (response.status === 200) {
                     toast.success('Cập nhật thành công');
-                    setBehaviorGetCategories((prev) => !prev);
+                    setBehaviorGetProducts((prev) => !prev);
                     setSku((prev) => prev.map((item) => ({ ...item, quantity: 0 })));
                 } else {
                     toast.error(response.data.message || response.data);

@@ -214,7 +214,7 @@ const AddProduct = () => {
                                                 {...field}
                                                 error={errors.originalPrice ? true : false}
                                                 fullWidth
-                                                label="Giá gốc  "
+                                                label="Giá gốc"
                                                 type="number"
                                             />
                                         )}

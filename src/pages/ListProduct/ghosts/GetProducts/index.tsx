@@ -16,7 +16,7 @@ const GetProducts = ({
     setTotalPages,
     setPage,
     setErrorAPI,
-    behaviorGetCategories,
+    behaviorGetProducts,
 }: {
     setLoadingAPIGetProducts: React.Dispatch<React.SetStateAction<boolean>>;
     page: number;
@@ -27,7 +27,7 @@ const GetProducts = ({
     setTotalPages: React.Dispatch<React.SetStateAction<number>>;
     setPage: React.Dispatch<React.SetStateAction<number>>;
     setErrorAPI: React.Dispatch<React.SetStateAction<boolean>>;
-    behaviorGetCategories: boolean;
+    behaviorGetProducts: boolean;
 }) => {
     const itemsPerPage = useMemo(() => 24, []);
 
@@ -54,7 +54,7 @@ const GetProducts = ({
     };
     useEffect(() => {
         getAllProducts();
-    }, [page, search, cate, sortBy, behaviorGetCategories]);
+    }, [page, search, cate, sortBy, behaviorGetProducts]);
 
     return null;
 };

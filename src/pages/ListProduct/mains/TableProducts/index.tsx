@@ -30,14 +30,14 @@ const TableProducts = ({
     products,
     setBehaviorGetCategories,
     setProductAddQuantity,
-    setOpenModal,
+    setOpenModalQuantity,
 }: {
     loadingAPIGetProducts: boolean;
     categories: ICategory[];
     products: IProduct[];
     setBehaviorGetCategories: React.Dispatch<React.SetStateAction<boolean>>;
     setProductAddQuantity: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpenModalQuantity: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
     const navigate = useNavigate();
 
@@ -54,7 +54,7 @@ const TableProducts = ({
 
     const handleAddQuantityProduct = (product: IProduct) => {
         setProductAddQuantity(product);
-        setOpenModal(true);
+        setOpenModalQuantity(true);
     };
 
     const handleDeleteProduct = async (idProduct: number) => {

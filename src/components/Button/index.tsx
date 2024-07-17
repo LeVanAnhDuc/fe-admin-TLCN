@@ -34,7 +34,7 @@ const Button = (props: Iprops) => {
     const checkActiveAnimation = !disabled && !loading;
 
     const allClass = `
-        ${disabled ? '!bg-transparent !text-gray-400 border-2 !border-gray-400' : ''} 
+        ${disabled ? '!bg-transparent !text-gray-400 border-2 !border-gray-400 cursor-not-allowed' : ''} 
         ${loading ? '!bg-gray-300 !text-gray-400 border-2 !border-gray-400' : ''} 
         ${fullWidth ? 'w-full' : ''} 
         ${size === 'small' ? 'h-9 text-sm px-2' : ''} 

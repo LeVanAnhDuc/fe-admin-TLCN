@@ -18,7 +18,7 @@ import PopConfirm from '@/components/PopConfirm';
 import Button from '@/components/Button';
 import SelectStatus from '../ChangeStatusItem';
 // apis
-import { deleteOrderByAdmin } from '@/apis/orderApi';
+import { deleteOrderByAdmin, updateOrderStatusByID } from '@/apis/orderApi';
 // others
 import config from '@/config';
 
@@ -49,6 +49,20 @@ const TableOrders = ({
             if (response.status === 200) {
                 toast.success(response.data);
                 setBehaviorGetProducts((prev) => !prev);
+            } else {
+                toast.error(response.data.message || response.data);
+            }
+        } catch (error) {
+            toast.error(`${error}`);
+        }
+    };
+
+    const handleResolveOder = async (idOrder: number) => {
+        try {
+            const response = await updateOrderStatusByID(idOrder, config.StatusOrder.PROCESSING);
+            if (response.status === 200) {
+                setBehaviorGetProducts((prev) => !prev);
+                toast.success(`Cập nhật đơn hàng ${response.data.id} : ${response.data.status}`);
             } else {
                 toast.error(response.data.message || response.data);
             }
@@ -172,13 +186,29 @@ const TableOrders = ({
                                       </TableCell>
 
                                       <TableCell align="center">
-                                          <PopConfirm
-                                              content=""
-                                              title="Xác nhận xóa đơn hàng?"
-                                              onConfirm={() => handleDeleteOrder(item.id)}
-                                          >
-                                              <Button className="text-sm font-semibold text-[#ff3131]">Xóa</Button>
-                                          </PopConfirm>
+                                          <div className="flex items-center">
+                                              <Button
+                                                  size="small"
+                                                  className="border-none rounded-3xl bg-blue-400 text-[#5d51a7] text-nowrap hover:bg-[rgba(0,0,0,0.04)]"
+                                                  onClick={() => handleResolveOder(item.id)}
+                                                  disabled={item.status === config.StatusOrder.PROCESSING}
+                                              >
+                                                  Xử lý đơn hàng
+                                              </Button>
+                                              <span className="text-gray-400">|</span>
+                                              <PopConfirm
+                                                  content=""
+                                                  title="Xác nhận xóa đơn hàng?"
+                                                  onConfirm={() => handleDeleteOrder(item.id)}
+                                              >
+                                                  <Button
+                                                      size="small"
+                                                      className="text-[#ff3131] hover:bg-[rgba(0,0,0,0.04)]"
+                                                  >
+                                                      Xóa
+                                                  </Button>
+                                              </PopConfirm>
+                                          </div>
                                       </TableCell>
                                   </TableRow>
                               ))}

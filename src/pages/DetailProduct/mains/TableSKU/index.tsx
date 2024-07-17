@@ -97,8 +97,16 @@ const TableSKU = ({
                             <TableCell align="center">Kích thước</TableCell>
                             <TableCell align="center">Màu</TableCell>
                             <TableCell align="center">Giá gốc</TableCell>
-                            <TableCell align="center">Giá hiện thị</TableCell>
+                            <TableCell align="center">
+                                Giá hiện thị
+                                <span className="text-gray-400 font-extralight text-xs">
+                                    {' '}
+                                    (-{valuePercentDiscount}%)
+                                </span>
+                            </TableCell>
                             <TableCell align="center">Số lượng</TableCell>
+                            <TableCell align="center">Số lượng có sẵn</TableCell>
+                            <TableCell align="center">Đã bán</TableCell>
                             <TableCell align="center"></TableCell>
                         </TableRow>
                     </TableHead>
@@ -126,6 +134,8 @@ const TableSKU = ({
                                         onChange={(e) => handleChangeQuantity(index, e)}
                                     />
                                 </TableCell>
+                                <TableCell align="center">{item.quantityAvailable}</TableCell>
+                                <TableCell align="center">{item.sold}</TableCell>
                                 <TableCell align="center">
                                     <PopConfirm
                                         title="Xác nhận xóa biến thể?"

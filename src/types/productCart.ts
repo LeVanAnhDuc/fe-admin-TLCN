@@ -22,6 +22,8 @@ export interface ISkuCreate {
     quantity: number;
     price: number;
     optionValues: Array<IValue>;
+    quantityAvailable?: number;
+    sold?: number;
 }
 
 export default interface IProductCart {

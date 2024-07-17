@@ -22,6 +22,7 @@ const GetProduct = ({
     setOptionsColor,
     setSku,
     setErrorAPI,
+    setProduct,
 }: {
     idProduct?: string;
     setValue: UseFormSetValue<IProductInputUpdate>;
@@ -32,6 +33,7 @@ const GetProduct = ({
     setOptionsColor: React.Dispatch<React.SetStateAction<IOption>>;
     setSku: React.Dispatch<React.SetStateAction<ISkuCreate[]>>;
     setErrorAPI: React.Dispatch<React.SetStateAction<boolean>>;
+    setProduct: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
 }) => {
     const navigate = useNavigate();
 
@@ -42,6 +44,7 @@ const GetProduct = ({
 
                 if (response.status === 200) {
                     const product: IProduct = response.data;
+                    setProduct(product);
 
                     setValue('categoryName', product.categoryName);
                     setValue('name', product.name);

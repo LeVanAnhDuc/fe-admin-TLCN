@@ -14,7 +14,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 // types
-import { IOption, IProductInputUpdate, IProductUpdate, IValue } from '@/types/product';
+import IProduct, { IOption, IProductInputUpdate, IProductUpdate, IValue } from '@/types/product';
 import { ISkuCreate } from '@/types/productCart';
 import ICategory from '@/types/category';
 // components
@@ -26,6 +26,7 @@ import Error404 from '../Error404';
 import OptionSize from './mains/OptionSize';
 import OptionColor from './mains/OptionColor';
 import TableSKU from './mains/TableSKU';
+import ActionProduct from './mains/ActionProduct';
 // apis
 import { updateProduct } from '@/apis/productApi';
 import { uploadProductImages } from '@/apis/uploadImageApi';
@@ -68,6 +69,7 @@ const DetailProduct = () => {
     const [optionsSize, setOptionsSize] = useState<IOption>({ optionId: 0, optionName: '', values: [] });
     const [optionsColor, setOptionsColor] = useState<IOption>({ optionId: 0, optionName: '', values: [] });
     const [Sku, setSku] = useState<Array<ISkuCreate>>([]);
+    const [product, setProduct] = useState<IProduct>();
 
     const {
         control,
@@ -169,6 +171,7 @@ const DetailProduct = () => {
                     setOptionsColor,
                     setSku,
                     setErrorAPI,
+                    setProduct,
                 }}
             />
             <GenerateSKU {...{ optionsColor, optionsSize, setSku }} />
@@ -186,6 +189,7 @@ const DetailProduct = () => {
                         </Link>
                         <div>{idProduct}</div>
                     </Breadcrumbs>
+                    <ActionProduct {...{ product }} />
                 </div>
 
                 <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>

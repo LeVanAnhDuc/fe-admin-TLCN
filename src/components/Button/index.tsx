@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ReactElement, ReactNode } from 'react';
+import { MouseEvent, ReactElement, ReactNode } from 'react';
 import { TailSpinIcon } from '../../assets/icon';
 
 interface Iprops {
@@ -11,7 +11,7 @@ interface Iprops {
     loading?: boolean;
     children: ReactElement | string | ReactNode;
     type?: 'button' | 'submit' | 'reset' | undefined;
-    onClick?: () => Promise<void> | void;
+    onClick?: (event: MouseEvent<HTMLButtonElement>) => Promise<void> | void;
     startIcon?: ReactNode;
     endIcon?: ReactNode;
 }

@@ -174,7 +174,7 @@ const TableOrders = ({
                                           className="truncate cursor-pointer"
                                           onClick={() => handleNavigateDetailOrders(item)}
                                       >
-                                          {item.address.ward}, {item.address.district}, {item.address.city}
+                                          {item.address.ward}, {item.address.district}, {item.address.province}
                                       </TableCell>
 
                                       <TableCell align="center">

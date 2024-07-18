@@ -1,5 +1,4 @@
 // libs
-import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -19,12 +18,11 @@ const DetailOrder = () => {
     const { idOrder } = useParams();
 
     const [products, setProducts] = useState<Array<IProductCart>>([]);
-
-    const { control, setValue, getValues } = useForm<IOrder>({});
+    const [order, setOrder] = useState<IOrder>();
 
     return (
         <>
-            <GetOrder {...{ setProducts, setValue }} />
+            <GetOrder {...{ setProducts, setOrder }} />
             <section className="space-y-5 max-w-[1240px] m-auto">
                 <div className="flex flex-wrap justify-between items-center gap-5">
                     <Breadcrumbs className="!font-medium">
@@ -38,12 +36,7 @@ const DetailOrder = () => {
                         <div>{idOrder}</div>
                     </Breadcrumbs>
                 </div>
-                <FormOrder
-                    {...{
-                        getValues,
-                        control,
-                    }}
-                />
+                <FormOrder {...{ order }} />
 
                 <ItemsOrder products={products} />
             </section>

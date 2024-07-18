@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { UseFormSetValue } from 'react-hook-form';
 // types
 import IProductCart from '@/types/productCart';
 import IOrder from '@/types/order';
@@ -12,10 +11,10 @@ import { convertNumberToVND } from '@/utils/convertData';
 
 const GetOrder = ({
     setProducts,
-    setValue,
+    setOrder,
 }: {
     setProducts: React.Dispatch<React.SetStateAction<IProductCart[]>>;
-    setValue: UseFormSetValue<IOrder>;
+    setOrder: React.Dispatch<React.SetStateAction<IOrder | undefined>>;
 }) => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -24,19 +23,13 @@ const GetOrder = ({
         try {
             if (location.state.orderDetail) {
                 const dataOrder = location.state.orderDetail;
-
+                setOrder({
+                    ...dataOrder,
+                    note: dataOrder.note || 'Không có ghi chú',
+                    isPaidBefore: dataOrder.isPaidBefore ? 'Đã thanh toán' : 'Chưa thanh toán',
+                    total: convertNumberToVND(dataOrder.total),
+                });
                 setProducts(dataOrder.orderItems);
-
-                setValue('address', dataOrder.address);
-                setValue('createdDate', dataOrder.createdDate);
-                setValue('isPaidBefore', dataOrder.isPaidBefore ? 'Đã thanh toán' : 'Chưa thanh toán');
-                setValue('lastModifiedBy', dataOrder.lastModifiedBy);
-                setValue('lastModifiedDate', dataOrder.lastModifiedDate);
-                setValue('note', dataOrder.note || 'Không có ghi chú');
-                setValue('paymentType', dataOrder.paymentType);
-                setValue('status', dataOrder.status);
-                setValue('total', convertNumberToVND(dataOrder.total));
-                setValue('user', dataOrder.userId);
             } else {
                 navigate(config.Routes.listBill);
             }
